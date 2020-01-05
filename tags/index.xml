@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on hg8&#39;s Notes</title>
-    <link>hg8.github.com/tags/</link>
+    <link>https;//hg8.github.com/tags/</link>
     <description>Recent content in Tags on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 01 Sep 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="hg8.github.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https;//hg8.github.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>ctf</title>
-      <link>hg8.github.com/tags/ctf/</link>
+      <link>https;//hg8.github.com/tags/ctf/</link>
       <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>hg8.github.com/tags/ctf/</guid>
+      <guid>https;//hg8.github.com/tags/ctf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>hackthebox</title>
-      <link>hg8.github.com/tags/hackthebox/</link>
+      <link>https;//hg8.github.com/tags/hackthebox/</link>
       <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>hg8.github.com/tags/hackthebox/</guid>
+      <guid>https;//hg8.github.com/tags/hackthebox/</guid>
       <description></description>
     </item>
     
