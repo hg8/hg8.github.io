@@ -6,10 +6,74 @@
     <description>Recent content in ctf on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 04 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Craft - HackTheBox</title>
+      <link>/posts/craft/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/craft/</guid>
+      <description>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC craft.htb Starting Nmap 7.</description>
+    </item>
+    
+    <item>
+      <title>Wall - HackTheBox</title>
+      <link>/posts/wall/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/wall/</guid>
+      <description>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall.</description>
+    </item>
+    
+    <item>
+      <title>Jarvis - HackTheBox</title>
+      <link>/posts/jarvis/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/jarvis/</guid>
+      <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&#39;s rated as Medium difficulty I would advise beginners to start with this one.
+It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
+User Flag Recon Let&#39;s start with the classic nmap scan:</description>
+    </item>
+    
+    <item>
+      <title>Networked - HackTheBox</title>
+      <link>/posts/networked/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/networked/</guid>
+      <description>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+    </item>
+    
+    <item>
+      <title>Haystack - HackTheBox</title>
+      <link>/posts/haystack/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/haystack/</guid>
+      <description>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
+First thing first, let&#39;s add the box IP to the hosts file:
+echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7.</description>
+    </item>
     
     <item>
       <title>Writeup - HackTheBox</title>

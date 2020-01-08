@@ -25,7 +25,7 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
 
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
 
-<link rel="shortcut icon" href="/img/favicon/green.png">
+<link rel="shortcut icon" href="/img/favicon.ico">
 
 
 
@@ -87,11 +87,11 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
     
       
         
-          <li><a href="/about">About</a></li>
+          <li><a href="/">Posts</a></li>
         
       
         
-          <li><a href="/">Posts</a></li>
+          <li><a href="/about">About</a></li>
         
       
       
@@ -103,11 +103,11 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
   <ul class="menu__inner menu__inner--mobile">
     
       
-        <li><a href="/about">About</a></li>
+        <li><a href="/">Posts</a></li>
       
     
       
-        <li><a href="/">Posts</a></li>
+        <li><a href="/about">About</a></li>
       
     
     
@@ -232,7 +232,7 @@ Devuan GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 Last login: Sun Sep  <span style="color:#ae81ff">1</span> 05:07:51 <span style="color:#ae81ff">2019</span> from 10.10.10.85
 jkr@writeup:~$ cat user.txt 
-d4e493fd4068afc9eb1aa6a55319f978
+d4e493fd40xxxxxxxxxxxxxx319f978
 jkr@writeup:~$ 
 </code></pre></div><h2 id="root-flag">Root Flag</h2>
 <h3 id="recon-1">Recon</h3>
@@ -294,11 +294,30 @@ Connection from 10.10.10.138:37078
 <span style="color:#75715e"># id</span>
 uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
 <span style="color:#75715e"># cat /root/root.txt</span>
-eeba47f60b48ef92b734f9b6198d7226
+eeba4xxxxxxxxxxxx8d7226
 </code></pre></div><p>That's it! As always do not hesitate to contact me for any questions or feedbacks.</p>
 <p>See you next time !</p>
 <p>-hg8</p>
 
+  </div>
+  
+  <div class="pagination">
+    <div class="pagination__title">
+      <span
+        class="pagination__title-h">Read other posts</span>
+      <hr />
+    </div>
+    <div class="pagination__buttons">
+      
+      <span class="button previous">
+        <a href="/posts/haystack/">
+          <span class="button__icon">←</span>
+          <span class="button__text">Haystack - HackTheBox</span>
+        </a>
+      </span>
+      
+      
+    </div>
   </div>
   
 
