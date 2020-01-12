@@ -22,7 +22,7 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
 
 
 
-
+<link rel="stylesheet" href="/style.css">
 
 
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
@@ -363,14 +363,14 @@ cat &gt; /etc/sysconfig/network-scripts/ifcfg-guly <span style="color:#e6db74">&
 regexp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^[a-zA-Z0-9_\ /-]+</span>$<span style="color:#e6db74">&#34;</span>
 
 <span style="color:#66d9ef">for</span> var in NAME PROXY_METHOD BROWSER_ONLY BOOTPROTO; <span style="color:#66d9ef">do</span>
-	echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">interface </span>$var<span style="color:#e6db74">:</span><span style="color:#e6db74">&#34;</span>
-	read x
-	<span style="color:#66d9ef">while</span> <span style="color:#f92672">[</span><span style="color:#f92672">[</span> ! $x <span style="color:#f92672">=</span>~ $regexp <span style="color:#f92672">]</span><span style="color:#f92672">]</span>; <span style="color:#66d9ef">do</span>
-		echo <span style="color:#e6db74">&#34;wrong input, try again&#34;</span>
-		echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">interface </span>$var<span style="color:#e6db74">:</span><span style="color:#e6db74">&#34;</span>
-		read x
-	<span style="color:#66d9ef">done</span>
-	echo $var<span style="color:#f92672">=</span>$x &gt;&gt; /etc/sysconfig/network-scripts/ifcfg-guly
+    echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">interface </span>$var<span style="color:#e6db74">:</span><span style="color:#e6db74">&#34;</span>
+    read x
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">[</span><span style="color:#f92672">[</span> ! $x <span style="color:#f92672">=</span>~ $regexp <span style="color:#f92672">]</span><span style="color:#f92672">]</span>; <span style="color:#66d9ef">do</span>
+        echo <span style="color:#e6db74">&#34;wrong input, try again&#34;</span>
+        echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">interface </span>$var<span style="color:#e6db74">:</span><span style="color:#e6db74">&#34;</span>
+        read x
+    <span style="color:#66d9ef">done</span>
+    echo $var<span style="color:#f92672">=</span>$x &gt;&gt; /etc/sysconfig/network-scripts/ifcfg-guly
 <span style="color:#66d9ef">done</span>
 
 /sbin/ifup guly0
@@ -417,7 +417,6 @@ interface BROWSER_ONLY:
 hg8
 interface BOOTPROTO:
 hg8
-
 </code></pre></div><p>And bingo, a connection open on our listener:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8599</span>
 Listening on any address <span style="color:#ae81ff">8599</span>

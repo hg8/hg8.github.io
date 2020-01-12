@@ -1,0 +1,8 @@
+.footer__inner .copyright {
+    font-size: 0.7rem;
+}
+
+.posts,.content .post-cover {
+    border: none;
+    padding: 0px;
+}
