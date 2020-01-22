@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>screen on hg8&#39;s Notes</title>
+    <link>/tags/screen/</link>
+    <description>Recent content in screen on hg8&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 07 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/screen/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Wall - HackTheBox</title>
+      <link>/posts/wall/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/wall/</guid>
+      <description>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
+User Flag Recon Let&#39;s start with the classic nmap scan:
+$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall.</description>
+    </item>
+    
+  </channel>
+</rss>

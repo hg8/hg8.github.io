@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>systemctl on hg8&#39;s Notes</title>
+    <link>/tags/systemctl/</link>
+    <description>Recent content in systemctl on hg8&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 22 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/systemctl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Jarvis - HackTheBox</title>
+      <link>/posts/jarvis/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/jarvis/</guid>
+      <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&#39;s rated as Medium difficulty I would advise beginners to start with this one.
+It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
+First thing first, let&#39;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
+User Flag Recon Let&#39;s start with the classic nmap scan:</description>
+    </item>
+    
+  </channel>
+</rss>

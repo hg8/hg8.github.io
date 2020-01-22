@@ -11,7 +11,7 @@ First thing first, let&#39;s add the box IP to the hosts file:
 $ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
 User Flag Recon Let&#39;s start with the classic nmap scan:
 $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7."/>
-<meta name="keywords" content="hackthebox, ctf, networked"/>
+<meta name="keywords" content="hackthebox, ctf, networked, gobuster, php, upload, webshell, weevely, filtering, command-injection, sudo, ifcfg"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/networked/" />
 
@@ -151,6 +151,24 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
     
     #<a href="/tags/networked/">networked</a>&nbsp;
     
+    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+    
+    #<a href="/tags/php/">php</a>&nbsp;
+    
+    #<a href="/tags/upload/">upload</a>&nbsp;
+    
+    #<a href="/tags/webshell/">webshell</a>&nbsp;
+    
+    #<a href="/tags/weevely/">weevely</a>&nbsp;
+    
+    #<a href="/tags/filtering/">filtering</a>&nbsp;
+    
+    #<a href="/tags/command-injection/">command-injection</a>&nbsp;
+    
+    #<a href="/tags/sudo/">sudo</a>&nbsp;
+    
+    #<a href="/tags/ifcfg/">ifcfg</a>&nbsp;
+    
   </span>
   
 
@@ -200,7 +218,7 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 /upload.php <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
 /uploads <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
 </code></pre></div><p>The <code>/backup</code> endpoint is promising. Once opening it we find an archive :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67149664-317cbb00-f2ae-11e9-961d-579ad1cdd818.png" alt="Networked backup page"></p>
 <p>Let's download it and check what's inside:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget http://networked.htb/backup/backup.tar
 2019-10-19 19:57:46 <span style="color:#f92672">(</span>65.6 MB/s<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;backup.tar&#39;</span> saved <span style="color:#f92672">[</span>10240/10240<span style="color:#f92672">]</span>
@@ -258,7 +276,7 @@ $ cat hg82.jpeg
 <p>In the <code>upload.php</code> file we got information about the location of stored images :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">define(&#34;UPLOAD_DIR&#34;, &#34;/var/www/html/uploads/&#34;);
 </code></pre></div><p>We have the location of the upload folder and the name of the file. Let's open it ! Mine is at <a href="http://networked.htb/uploads/10_10_15_101.php.jpg">http://networked.htb/uploads/10_10_15_101.php.jpg</a></p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67150075-50318080-f2b3-11e9-8195-26034691deeb.png" alt="Networked upload"></p>
 <h3 id="pivot-php-webshell---user">Pivot PHP Webshell -&gt; User</h3>
 <p>Now that we have a working process let's replace the <code>phpinfo()</code> by a webshell and we can easily land a shell running as <code>apache</code> user :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">networked.htb:/var/www/html/uploads $ id

@@ -11,7 +11,7 @@ First thing first, let&#39;s add the box IP to the hosts file:
 $ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
 User Flag Recon Let&#39;s start with the classic nmap scan:
 $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall."/>
-<meta name="keywords" content="hackthebox, ctf, wall"/>
+<meta name="keywords" content="hackthebox, ctf, wall, gobuster, wfuzz, centreon, cve-2019-13024, waf, filter, screen"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/wall/" />
 
@@ -151,6 +151,20 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
     
     #<a href="/tags/wall/">wall</a>&nbsp;
     
+    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+    
+    #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
+    
+    #<a href="/tags/centreon/">centreon</a>&nbsp;
+    
+    #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
+    
+    #<a href="/tags/waf/">waf</a>&nbsp;
+    
+    #<a href="/tags/filter/">filter</a>&nbsp;
+    
+    #<a href="/tags/screen/">screen</a>&nbsp;
+    
   </span>
   
 
@@ -178,7 +192,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 13.37 seconds
 </code></pre></div><p>We have a classical web app running on port 80 and the ssh port 22 open.</p>
 <p>Opening <a href="http://wall.htb">http://wall.htb</a> display the Apache2 Ubuntu Default Page as <code>nmap</code> told us:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67693154-8bae0800-f9a1-11e9-995d-b2fb18a8a970.png" alt="Wall website"></p>
 <p>The source code of the page do not reveal any sneaky hidden code so let's move on.</p>
 <p>We launch <code>gobuster</code> to see if we can find interresting files and/or directories :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gobuster dir -u http://wall.htb/ -w ~/SecLists/Discovery/Web-Content/big.txt -x php
@@ -241,7 +255,7 @@ POST:
 </code></pre></div><p>Interresting, the <code>/centreon</code> endpoint slipped from the <code>gobuster</code> enumeration. Maybe a bigger wordlist might have discovered it. For future references I add this endpoint to the wordlist I use the most :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo centreon &gt;&gt; ~/SecLists/Discovery/Web-Content/big.txt
 </code></pre></div><p>We got our initial foothold. Opening the page show the classical Centreon login page :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67695628-ab472f80-f9a5-11e9-8047-3febc7e9a9a9.png" alt="Wall Centreon login page"></p>
 <p>For reference :</p>
 <blockquote>
 <p>Centreon is a network, system, applicative supervision and monitoring tool
@@ -493,8 +507,7 @@ No Sockets found in /tmp/screens/S-www-data.
 uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>,33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>,6000<span style="color:#f92672">(</span>centreon<span style="color:#f92672">)</span>
 </code></pre></div><p>We got our root shell !</p>
 <p>We skipped the pivot to user part (if there was any) but we can now access easily to both flags:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-<span style="color:#75715e"># cat /home/shelby/user.txt</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># cat /home/shelby/user.txt</span>
 fe6194544f45xxxxx5b12f8da8406
 <span style="color:#75715e"># cat /root/root.txt</span>
 1fdbcf8c33exxxxxx2e1b4d5db7

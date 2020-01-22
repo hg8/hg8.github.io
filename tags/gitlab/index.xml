@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gitlab on hg8&#39;s Notes</title>
+    <link>/tags/gitlab/</link>
+    <description>Recent content in gitlab on hg8&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 11 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/gitlab/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bitlab - HackTheBox</title>
+      <link>/posts/bitlab/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/bitlab/</guid>
+      <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+First we add the box ip to our hosts file and let&#39;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+    </item>
+    
+  </channel>
+</rss>

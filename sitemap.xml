@@ -18,12 +18,27 @@
   </url>
   
   <url>
+    <loc>/tags/git/</loc>
+    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gitlab/</loc>
+    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/hackthebox/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
+    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/obfuscation/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -38,7 +53,17 @@
   </url>
   
   <url>
+    <loc>/tags/webshell/</loc>
+    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/about/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/api/</loc>
     <lastmod>2020-01-04T00:00:00+00:00</lastmod>
   </url>
   
@@ -53,6 +78,61 @@
   </url>
   
   <url>
+    <loc>/tags/eval/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/flask/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gogs/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/python/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/vault/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/centreon/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cve-2019-13024/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/filter/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gobuster/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/screen/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/waf/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/wall/</loc>
     <lastmod>2019-12-07T00:00:00+00:00</lastmod>
   </url>
@@ -60,6 +140,26 @@
   <url>
     <loc>/posts/wall/</loc>
     <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/wfuzz/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/command-injection/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cve-2018-12613/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gtfobins/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -73,6 +173,41 @@
   </url>
   
   <url>
+    <loc>/tags/phpmyadmin/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/service/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sql-injection/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sqlmap/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/systemctl/</loc>
+    <lastmod>2019-11-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/filtering/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ifcfg/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/networked/</loc>
     <lastmod>2019-11-17T00:00:00+00:00</lastmod>
   </url>
@@ -83,6 +218,41 @@
   </url>
   
   <url>
+    <loc>/tags/php/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sudo/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/upload/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/weevely/</loc>
+    <lastmod>2019-11-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cve-2018-17246/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/elasticsearch/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/elk/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/haystack/</loc>
     <lastmod>2019-11-02T00:00:00+00:00</lastmod>
   </url>
@@ -90,6 +260,46 @@
   <url>
     <loc>/posts/haystack/</loc>
     <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/kibana/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/lfi/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/logstash/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/steganography/</loc>
+    <lastmod>2019-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cmsms/</loc>
+    <lastmod>2019-09-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/exploit/</loc>
+    <lastmod>2019-09-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/injection/</loc>
+    <lastmod>2019-09-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sqli/</loc>
+    <lastmod>2019-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>

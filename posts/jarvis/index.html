@@ -11,7 +11,7 @@ It rely on bad configurations practices rather than already made exploits which 
 First thing first, let&#39;s add the box IP to the hosts file:
 $ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
 User Flag Recon Let&#39;s start with the classic nmap scan:"/>
-<meta name="keywords" content="hackthebox, ctf, jarvis"/>
+<meta name="keywords" content="hackthebox, ctf, jarvis, waf, gobuster, sql-injection, sqlmap, phpmyadmin, cve-2018-12613, python, systemctl, service, gtfobins, command-injection"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/jarvis/" />
 
@@ -151,6 +151,28 @@ User Flag Recon Let&#39;s start with the classic nmap scan:" />
     
     #<a href="/tags/jarvis/">jarvis</a>&nbsp;
     
+    #<a href="/tags/waf/">waf</a>&nbsp;
+    
+    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+    
+    #<a href="/tags/sql-injection/">sql-injection</a>&nbsp;
+    
+    #<a href="/tags/sqlmap/">sqlmap</a>&nbsp;
+    
+    #<a href="/tags/phpmyadmin/">phpmyadmin</a>&nbsp;
+    
+    #<a href="/tags/cve-2018-12613/">cve-2018-12613</a>&nbsp;
+    
+    #<a href="/tags/python/">python</a>&nbsp;
+    
+    #<a href="/tags/systemctl/">systemctl</a>&nbsp;
+    
+    #<a href="/tags/service/">service</a>&nbsp;
+    
+    #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+    
+    #<a href="/tags/command-injection/">command-injection</a>&nbsp;
+    
   </span>
   
 
@@ -178,7 +200,7 @@ PORT   STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 </code></pre></div><p>Seems like we have somethig super classic: A http (port 80) and SSH (port 22) service open.</p>
 <p>Opening the <code>http://jarvis.htb</code> display the following website :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/66945555-8cfd3d80-f04f-11e9-9481-4cdf99eadcfa.png" alt="Jarvis website"></p>
 <p>Browsing the site shows available rooms, food and&hellip; that's it. The only page that looks dynamic is the room description page:
 Let's keep that in mind.</p>
 <p>Out of curiosity I ran <code>gobuster</code> to see if we can find interresting files and directories but nothing special was found :</p>
@@ -206,10 +228,10 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 <p>Since we have no other interesting entry point so far let's focus on that room page.</p>
 <p>Looking the url <code>http://jarvis.htb/room.php?cod=1</code>, we immediatly notice the <code>cod=1</code> parameter. Let's try some injection here, starting with the most common: SQL Injection.</p>
 <p>Appending various characters to the <code>cod</code> parameters yield an empty room description :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/66947239-d56a2a80-f052-11e9-9af5-ff160024847f.png" alt="Jarvis website cod parameter"></p>
 <p>After a few tries we discover that the classical <code>AND 1=1</code> payload works.</p>
 <p>Opening <code>http://jarvis.htb/room.php?cod=1</code> and <code>http://jarvis.htb/room.php?cod=1 AND 1=1</code> return the exact same result :</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/66947449-3691fe00-f053-11e9-8be6-0a53d6269fc0.png" alt="Jarvis website cod parameter injection"></p>
 <p>Let's automate the process with our favorite SQL injection toolkit: <a href="http://sqlmap.org">SQLMap</a>.</p>
 <p>A very useful option (in our case) is <code>--os-shell</code>, with it SQLMap will if possible use the SQL injection to upload and open a reverse shell to the server.</p>
 <p>Let's let SQLMap do all the dirty work for us:</p>
@@ -314,7 +336,7 @@ $ stty rows &lt;num&gt; columns &lt;cols&gt;
 $connection<span style="color:#f92672">=</span>new mysqli<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;127.0.0.1&#39;</span>,<span style="color:#e6db74">&#39;DBadmin&#39;</span>,<span style="color:#e6db74">&#39;imissyou&#39;</span>,<span style="color:#e6db74">&#39;hotel&#39;</span><span style="color:#f92672">)</span>;
 ?&gt;
 </code></pre></div><p>We can try to connect using the <code>phpmyadmin</code> instance:</p>
-<!-- raw HTML omitted -->
+<p><img src="https://user-images.githubusercontent.com/9076747/67007518-e0bb6580-f0e7-11e9-9b1b-f01b364b2926.png" alt="Jarvis phpmyadmin instance"></p>
 <p>But turn out there is nothing interesting there. Only a empty <code>flag</code> database, probably a joke by one of the users. Let's move on.</p>
 <p>To make the recon task easier, we are going to use the <a href="https://github.com/diego-treitos/linux-smart-enumeration">Linux enumeration tool</a>. For the transfer of the script we will setup a simple http server on our attacking machine:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># In attacker console</span>

@@ -30,11 +30,56 @@
     </item>
     
     <item>
+      <title>git</title>
+      <link>/tags/git/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gitlab</title>
+      <link>/tags/gitlab/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gitlab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>hackthebox</title>
       <link>/tags/hackthebox/</link>
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/hackthebox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>obfuscation</title>
+      <link>/tags/obfuscation/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/obfuscation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>webshell</title>
+      <link>/tags/webshell/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/webshell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>api</title>
+      <link>/tags/api/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/api/</guid>
       <description></description>
     </item>
     
@@ -48,11 +93,146 @@
     </item>
     
     <item>
+      <title>eval</title>
+      <link>/tags/eval/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/eval/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>flask</title>
+      <link>/tags/flask/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/flask/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gogs</title>
+      <link>/tags/gogs/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gogs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>/tags/python/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vault</title>
+      <link>/tags/vault/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/vault/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>centreon</title>
+      <link>/tags/centreon/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/centreon/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cve-2019-13024</title>
+      <link>/tags/cve-2019-13024/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2019-13024/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>filter</title>
+      <link>/tags/filter/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/filter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gobuster</title>
+      <link>/tags/gobuster/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gobuster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>screen</title>
+      <link>/tags/screen/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/screen/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>waf</title>
+      <link>/tags/waf/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/waf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>wall</title>
       <link>/tags/wall/</link>
       <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/wall/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>wfuzz</title>
+      <link>/tags/wfuzz/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/wfuzz/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>command-injection</title>
+      <link>/tags/command-injection/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/command-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cve-2018-12613</title>
+      <link>/tags/cve-2018-12613/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2018-12613/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gtfobins</title>
+      <link>/tags/gtfobins/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gtfobins/</guid>
       <description></description>
     </item>
     
@@ -66,6 +246,69 @@
     </item>
     
     <item>
+      <title>phpmyadmin</title>
+      <link>/tags/phpmyadmin/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/phpmyadmin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>service</title>
+      <link>/tags/service/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/service/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql-injection</title>
+      <link>/tags/sql-injection/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sql-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlmap</title>
+      <link>/tags/sqlmap/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sqlmap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>systemctl</title>
+      <link>/tags/systemctl/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/systemctl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>filtering</title>
+      <link>/tags/filtering/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/filtering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ifcfg</title>
+      <link>/tags/ifcfg/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ifcfg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>networked</title>
       <link>/tags/networked/</link>
       <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
@@ -75,11 +318,146 @@
     </item>
     
     <item>
+      <title>php</title>
+      <link>/tags/php/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sudo</title>
+      <link>/tags/sudo/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sudo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>upload</title>
+      <link>/tags/upload/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/upload/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>weevely</title>
+      <link>/tags/weevely/</link>
+      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/weevely/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cve-2018-17246</title>
+      <link>/tags/cve-2018-17246/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2018-17246/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elasticsearch</title>
+      <link>/tags/elasticsearch/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/elasticsearch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elk</title>
+      <link>/tags/elk/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/elk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>haystack</title>
       <link>/tags/haystack/</link>
       <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/haystack/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kibana</title>
+      <link>/tags/kibana/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/kibana/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lfi</title>
+      <link>/tags/lfi/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lfi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>logstash</title>
+      <link>/tags/logstash/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/logstash/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>steganography</title>
+      <link>/tags/steganography/</link>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/steganography/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cmsms</title>
+      <link>/tags/cmsms/</link>
+      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cmsms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>exploit</title>
+      <link>/tags/exploit/</link>
+      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/exploit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>injection</title>
+      <link>/tags/injection/</link>
+      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqli</title>
+      <link>/tags/sqli/</link>
+      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sqli/</guid>
       <description></description>
     </item>
     
