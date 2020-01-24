@@ -15,6 +15,8 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
 <link rel="canonical" href="/posts/haystack/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -171,12 +173,12 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7." />
   <img src="/img/haystack-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.</p>
+  <div class="post-content"><div>
+        <p>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.</p>
 <p>First thing first, let's add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">echo <span style="color:#e6db74">&#39;10.10.10.115 haystack.htb&#39;</span> &gt;&gt; /etc/hosts
-</code></pre></div><h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+</code></pre></div><h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic <code>nmap</code> scan:</p>
 <pre><code>$ nmap -sV -sT -sC 10.10.10.115
 Starting Nmap 7.70 ( https://nmap.org ) at 2019-08-29 22:08 CEST
@@ -190,7 +192,7 @@ PORT     STATE SERVICE VERSION
 
 Nmap done: 1 IP address (1 host up) scanned in 87.23 seconds
 </code></pre><p>Alright nothing suprising here: SSH, HTTP and 9200 which is port used by Elasticsearch. Let's start.</p>
-<h3 id="http">http</h3>
+<h3 id="http">http<a href="#http" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Once opening <a href="http://haystack.htb">http://haystack.htb</a> we are greeted with a single image.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;&lt;<span style="color:#f92672">body</span>&gt;&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;needle.jpg&#34;</span> /&gt;&lt;/<span style="color:#f92672">body</span>&gt;&lt;/<span style="color:#f92672">html</span>&gt;
 </code></pre></div><p><code>gobuster</code> doesn't find anything else interresting. So let's check this image :</p>
@@ -205,7 +207,7 @@ bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg<span style="color:#f92672">=</span><s
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg==&#34;</span> | base64 -d
 la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
 </code></pre></div><p>A hint. Let's keep <code>clave</code> in mind (key in Spanish). I think there is nothing else to find on the http service so let's move on to the Elasticsearch instance.</p>
-<h3 id="elasticsearch">Elasticsearch</h3>
+<h3 id="elasticsearch">Elasticsearch<a href="#elasticsearch" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Opening port 9200 return the following json:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">y</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">k</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">9200</span>
 <span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
@@ -289,9 +291,9 @@ Last login: Thu Aug <span style="color:#ae81ff">29</span> 16:24:15 <span style="
 <span style="color:#f92672">[</span>security@haystack ~<span style="color:#f92672">]</span>$ cat user.txt
 04d1xxxxxxxxxxxxxxx8eb929
 </code></pre></div><p>First step done. Time for root.</p>
-<h1 id="root-flag">Root flag</h1>
+<h1 id="root-flag">Root flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Now that we have user let's try to elevate privilege. Privilege enumeration scripts output nothing really interresting so let's focus on the ELK stack again which seems the core part of this box.</p>
-<h2 id="pivot-security---kibana-user">Pivot security -&gt; kibana user</h2>
+<h2 id="pivot-security---kibana-user">Pivot security -&gt; kibana user<a href="#pivot-security---kibana-user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Kibana and Logstash are installed but configuration files are inaccesible to the <code>security</code> user :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>security@haystack conf.d<span style="color:#f92672">]</span>$ cat /etc/passwd
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
@@ -373,7 +375,7 @@ $ <span style="color:#75715e"># CTRL + Z</span>
 $ stty raw -echo;fg
                         reset
 $
-</code></pre></div><h2 id="logstash---root">Logstash -&gt; root</h2>
+</code></pre></div><h2 id="logstash---root">Logstash -&gt; root<a href="#logstash---root" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Looking around show that <code>/opt/kibana/</code> turn out to be empty, <code>/etc/elasticsearch/</code> still can't be accessed.</p>
 <p><code>/etc/logstash/</code> belong to <code>kibana</code> group so we can read the content. Let's dig.</p>
 <p>As a reminder Logstash is a tool that collect various logs, parses them, and writes the parsed data to an Elasticsearch cluster :</p>
@@ -473,7 +475,7 @@ bash: no hay control de trabajos en este shell
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

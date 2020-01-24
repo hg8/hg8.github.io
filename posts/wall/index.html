@@ -16,6 +16,8 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
 <link rel="canonical" href="/posts/wall/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -172,13 +174,13 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
   <img src="/img/wall-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.</p>
+  <div class="post-content"><div>
+        <p>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.</p>
 <p>First thing first, let's add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.157 wall.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>and let's start!</p>
-<h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic nmap scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC wall.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-28 16:25 CET
@@ -517,7 +519,7 @@ fe6194544f45xxxxx5b12f8da8406
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

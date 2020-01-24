@@ -29,9 +29,9 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
       <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi there My name is hg8, I am InfoSec enthusiast and security researcher. I setup this website to keep notes of my various work and especially CTF writeups. Feel free to drop me a message for any question, feedback or for help on:
-hello at hg8 dot rocks
-Cheers!</description>
+      <description>Hi there My name is hg8, I am InfoSec enthusiast and security researcher. I setup this website to keep notes of my various work and especially CTF writeups. I&#39;m writing all of this down for mainly three purposes:
+ Share it with you. Systematize it for future reference and improvement. Learn from your feedback.  Your questions and observations are very welcome!
+Feel free to drop me a message on:</description>
     </item>
     
     <item>

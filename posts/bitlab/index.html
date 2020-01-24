@@ -15,6 +15,8 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
 <link rel="canonical" href="/posts/bitlab/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -163,11 +165,11 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
   <img src="/img/bitlab-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.</p>
+  <div class="post-content"><div>
+        <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.</p>
 <p>First we add the box ip to our hosts file and let's start!</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.114 bitlab.htb&#34;</span> &gt;&gt; /etc/hosts
-</code></pre></div><h1 id="user-flag">User flag.</h1>
+</code></pre></div><h1 id="user-flag">User flag.<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Let's start with the classic nmap scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nmap -sV -sT -sC bitlab.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-26 02:00 CEST
@@ -240,7 +242,7 @@ weevely&gt; id
 uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
 www-data@bitlab:/var/www/html/profile $
 </code></pre></div><p>We are in as user <code>www-data</code>.</p>
-<h2 id="pivot-www-data---clave-user">Pivot www-data -&gt; clave user</h2>
+<h2 id="pivot-www-data---clave-user">Pivot www-data -&gt; clave user<a href="#pivot-www-data---clave-user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's do some recon to get the user flag :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/ $ ls -l /home
 total <span style="color:#ae81ff">4</span>
@@ -292,14 +294,14 @@ clave@bitlab:~$ cat user.txt
 1e3fxxxxxxxxxxxxxxxxb8154
 </code></pre></div><p>That was it, it was easy to loose time on this one but the password was <code>c3NoLXN0cjBuZy1wQHNz==</code> without decoding.</p>
 <p>Let's move to root.</p>
-<h1 id="root-flag">Root Flag</h1>
-<h2 id="recon">Recon</h2>
+<h1 id="root-flag">Root Flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>The recon part was quite quick, a Windows executable named <code>RemoteConnection.exe</code> was present on the home folder. Let's pull it and start the analysis:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ scp clave@bitlab.htb:~/RemoteConnection.exe .
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 RemoteConnection.exe                                                100%   14KB 279.5KB/s   00:00
 </code></pre></div>
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

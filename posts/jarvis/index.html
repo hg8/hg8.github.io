@@ -16,6 +16,8 @@ User Flag Recon Let&#39;s start with the classic nmap scan:"/>
 <link rel="canonical" href="/posts/jarvis/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -180,14 +182,14 @@ User Flag Recon Let&#39;s start with the classic nmap scan:" />
   <img src="/img/jarvis-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Jarvis was a pretty straight forward box and &ldquo;textbook case&rdquo; style. While it's rated as Medium difficulty I would advise beginners to start with this one.</p>
+  <div class="post-content"><div>
+        <p>Jarvis was a pretty straight forward box and &ldquo;textbook case&rdquo; style. While it's rated as Medium difficulty I would advise beginners to start with this one.</p>
 <p>It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.</p>
 <p>First thing first, let's add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.143 jarvis.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>Let's go !</p>
-<h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic <code>nmap</code> scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC jarvis.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-16 19:16 CEST
@@ -224,7 +226,7 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 <blockquote>
 <p>Hey you have been banned for 90 seconds, don't be bad</p>
 </blockquote>
-<h2 id="sql-injection">SQL Injection</h2>
+<h2 id="sql-injection">SQL Injection<a href="#sql-injection" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Since we have no other interesting entry point so far let's focus on that room page.</p>
 <p>Looking the url <code>http://jarvis.htb/room.php?cod=1</code>, we immediatly notice the <code>cod=1</code> parameter. Let's try some injection here, starting with the most common: SQL Injection.</p>
 <p>Appending various characters to the <code>cod</code> parameters yield an empty room description :</p>
@@ -328,7 +330,7 @@ $ reset
 $ export SHELL<span style="color:#f92672">=</span>bash
 $ export TERM<span style="color:#f92672">=</span>xterm-256color
 $ stty rows &lt;num&gt; columns &lt;cols&gt;
-</code></pre></div><h2 id="pivot-www-data---user-pepper">Pivot www-data -&gt; user (pepper)</h2>
+</code></pre></div><h2 id="pivot-www-data---user-pepper">Pivot www-data -&gt; user (pepper)<a href="#pivot-www-data---user-pepper" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Alright, so now we have shell on the <code>www-data</code> user. Let's try to move to the user to find the first flag.</p>
 <p>Looking around the webapp files we find the database credentials:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@jarvis:/var/www/html$ cat connection.php
@@ -442,15 +444,15 @@ pepper@jarvis:~$ id
 uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>pepper<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>pepper<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>pepper<span style="color:#f92672">)</span>
 pepper@jarvis:~$ cat user.txt
 2afxxxxxxxxxxxxxxc44f
-</code></pre></div><h1 id="root-flag">Root Flag</h1>
-<h2 id="recon-1">Recon</h2>
+</code></pre></div><h1 id="root-flag">Root Flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon-1">Recon<a href="#recon-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p><em>Note: To make it easier I added my ssh pub key to <code>authorized_keys</code> to connect to the <code>pepper</code> account by SSH:</em></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;ssh-rsa XXXXX&#34;</span> &gt;&gt; ~/.ssh/authorized_keys
 </code></pre></div><p>The recon phase will be quick here since we already a very valuable information in the user recon phase : <code>/bin/systemctl</code> have the SUID bit set :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l /bin/systemctl
 -rwsr-x--- <span style="color:#ae81ff">1</span> root pepper <span style="color:#ae81ff">174520</span> Feb <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2019</span> /bin/systemctl
 </code></pre></div><p>This mean that if we manage to make <code>systemctl</code> run a command for us, this one will be automatically run as root user.</p>
-<h2 id="systemctl-privilege-escalation">Systemctl privilege escalation</h2>
+<h2 id="systemctl-privilege-escalation">Systemctl privilege escalation<a href="#systemctl-privilege-escalation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>For this kind of need, <a href="https://gtfobins.github.io/">GTFOBins</a> is an incredibly useful project:</p>
 <blockquote>
 <p>GTFOBins is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.</p>
@@ -484,7 +486,7 @@ d41dxxxxxxxxxxxxxxx71
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

