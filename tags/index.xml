@@ -212,88 +212,16 @@
     <item>
       <title>command-injection</title>
       <link>/tags/command-injection/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/command-injection/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>cve-2018-12613</title>
-      <link>/tags/cve-2018-12613/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/cve-2018-12613/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gtfobins</title>
-      <link>/tags/gtfobins/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/gtfobins/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>jarvis</title>
-      <link>/tags/jarvis/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/jarvis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>phpmyadmin</title>
-      <link>/tags/phpmyadmin/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/phpmyadmin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>service</title>
-      <link>/tags/service/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/service/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sql-injection</title>
-      <link>/tags/sql-injection/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/sql-injection/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sqlmap</title>
-      <link>/tags/sqlmap/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/sqlmap/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>systemctl</title>
-      <link>/tags/systemctl/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/systemctl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>filtering</title>
       <link>/tags/filtering/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/filtering/</guid>
       <description></description>
@@ -302,7 +230,7 @@
     <item>
       <title>ifcfg</title>
       <link>/tags/ifcfg/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/ifcfg/</guid>
       <description></description>
@@ -311,7 +239,7 @@
     <item>
       <title>networked</title>
       <link>/tags/networked/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/networked/</guid>
       <description></description>
@@ -320,7 +248,7 @@
     <item>
       <title>php</title>
       <link>/tags/php/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/php/</guid>
       <description></description>
@@ -329,7 +257,7 @@
     <item>
       <title>sudo</title>
       <link>/tags/sudo/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/sudo/</guid>
       <description></description>
@@ -338,7 +266,7 @@
     <item>
       <title>upload</title>
       <link>/tags/upload/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/upload/</guid>
       <description></description>
@@ -347,9 +275,81 @@
     <item>
       <title>weevely</title>
       <link>/tags/weevely/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/weevely/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cve-2018-12613</title>
+      <link>/tags/cve-2018-12613/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2018-12613/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gtfobins</title>
+      <link>/tags/gtfobins/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gtfobins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jarvis</title>
+      <link>/tags/jarvis/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/jarvis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>phpmyadmin</title>
+      <link>/tags/phpmyadmin/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/phpmyadmin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>service</title>
+      <link>/tags/service/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/service/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql-injection</title>
+      <link>/tags/sql-injection/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sql-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlmap</title>
+      <link>/tags/sqlmap/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sqlmap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>systemctl</title>
+      <link>/tags/systemctl/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/systemctl/</guid>
       <description></description>
     </item>
     
@@ -428,7 +428,7 @@
     <item>
       <title>cmsms</title>
       <link>/tags/cmsms/</link>
-      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/cmsms/</guid>
       <description></description>
@@ -437,7 +437,7 @@
     <item>
       <title>exploit</title>
       <link>/tags/exploit/</link>
-      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/exploit/</guid>
       <description></description>
@@ -446,7 +446,7 @@
     <item>
       <title>injection</title>
       <link>/tags/injection/</link>
-      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/injection/</guid>
       <description></description>
@@ -455,7 +455,7 @@
     <item>
       <title>sqli</title>
       <link>/tags/sqli/</link>
-      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/sqli/</guid>
       <description></description>

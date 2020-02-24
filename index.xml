@@ -18,8 +18,8 @@
       
       <guid>/posts/bitlab/</guid>
       <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
-First we add the box ip to our hosts file and let&#39;s start!
-$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+First we add the box ip to our hosts file and let&amp;rsquo;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
 nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
     </item>
     
@@ -29,9 +29,9 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
       <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi there My name is hg8, I am InfoSec enthusiast and security researcher. I setup this website to keep notes of my various work and especially CTF writeups. I&#39;m writing all of this down for mainly three purposes:
- Share it with you. Systematize it for future reference and improvement. Learn from your feedback.  Your questions and observations are very welcome!
-Feel free to drop me a message on:</description>
+      <description>whoami hg8 Information Security Researcher CTF Enthusiast &amp;amp; Bug Hunter  Hi there, My name is hg8, I am Information Security Researcher and CTF enthusiast. I set up this website to keep notes of my various work and especially CTF writeups.
+I&amp;rsquo;m writing all of this down for mainly three purposes:
+ Share it with you. Systematize it for future reference and improvement. Learn from your feedback.  Your questions and observations are very welcome!</description>
     </item>
     
     <item>
@@ -41,9 +41,9 @@ Feel free to drop me a message on:</description>
       
       <guid>/posts/craft/</guid>
       <description>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC craft.htb Starting Nmap 7.</description>
     </item>
     
@@ -54,36 +54,36 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7.</description>
       
       <guid>/posts/wall/</guid>
       <description>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall.</description>
-    </item>
-    
-    <item>
-      <title>Jarvis - HackTheBox</title>
-      <link>/posts/jarvis/</link>
-      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/jarvis/</guid>
-      <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&#39;s rated as Medium difficulty I would advise beginners to start with this one.
-It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
-User Flag Recon Let&#39;s start with the classic nmap scan:</description>
     </item>
     
     <item>
       <title>Networked - HackTheBox</title>
       <link>/posts/networked/</link>
-      <pubDate>Sun, 17 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 16 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/networked/</guid>
       <description>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+    </item>
+    
+    <item>
+      <title>Jarvis - HackTheBox</title>
+      <link>/posts/jarvis/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/jarvis/</guid>
+      <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&amp;rsquo;s rated as Medium difficulty I would advise beginners to start with this one.
+It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:</description>
     </item>
     
     <item>
@@ -93,20 +93,29 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
       
       <guid>/posts/haystack/</guid>
       <description>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
-First thing first, let&#39;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7.</description>
     </item>
     
     <item>
       <title>Writeup - HackTheBox</title>
       <link>/posts/writeup/</link>
-      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/writeup/</guid>
-      <description>Writeup was my first machine I solved to start my CTF journey. It&#39;s an easy rated box but still interesting and perfect to jump into the CTF bath!
-User Flag Recon Let&#39;s start with the classic nmap:
+      <description>Writeup was my first machine I solved to start my CTF journey. It&amp;rsquo;s an easy rated box but still interesting and perfect to jump into the CTF bath!
+User Flag Recon Let&amp;rsquo;s start with the classic nmap:
 $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u6 (protocol 2.</description>
+    </item>
+    
+    <item>
+      <title>Search</title>
+      <link>/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/search/</guid>
+      <description>   Results:     </description>
     </item>
     
   </channel>

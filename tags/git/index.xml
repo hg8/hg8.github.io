@@ -18,8 +18,8 @@
       
       <guid>/posts/bitlab/</guid>
       <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
-First we add the box ip to our hosts file and let&#39;s start!
-$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&#39;s start with the classic nmap scan:
+First we add the box ip to our hosts file and let&amp;rsquo;s start!
+$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
 nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
     </item>
     
@@ -30,9 +30,9 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
       
       <guid>/posts/craft/</guid>
       <description>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC craft.htb Starting Nmap 7.</description>
     </item>
     

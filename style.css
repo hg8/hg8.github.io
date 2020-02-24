@@ -1,8 +1,83 @@
+:root {
+  --term-green: #0ED839;
+}
+
 .footer__inner .copyright {
     font-size: 0.7rem;
 }
 
-.posts,.content .post-cover {
-    border: none;
-    padding: 0px;
+
+.logo {
+    font-family: monospace;
+}
+
+.post-cover {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 70%;
+    box-shadow: 0 12px 40px rgba(0,0,0,.15);
+}
+
+.logo__cursor { 
+    background: var(--term-green);
+    border-radius: 1px;
+    animation: cursor 1.2s infinite;
+}
+
+.logo__text::before {
+    color: var(--term-green);
+    content: "$";
+    margin-right: 0.5rem;
+    display: inline-flex;
+}
+
+.logo__mark {
+    display: none;
+}
+
+.credits {
+    color: var(--dark-color-secondary);
+    padding: 40px 20px;
+    flex-grow: 0;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
+.credits>:first-child:not(:only-child) {
+    border-right: 1px solid;
+    padding-right: 10px;
+    margin-right: 10px;
+
+}
+
+.footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 760px;
+    max-width: 100%;
+}
+
+.footer__content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--term-green);
+}
+
+.footer__content>:not(:last-child) {
+    border-right: 1px solid;
+    padding: 0 15px;
+    text-align: center;
+}
+
+.footer__content > :last-child {
+    padding: 0 15px;
+}
+
+.menu {
+    padding-right: 0px;
 }

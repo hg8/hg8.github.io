@@ -18,8 +18,8 @@
       
       <guid>/posts/haystack/</guid>
       <description>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
-First thing first, let&#39;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7.</description>
     </item>
     

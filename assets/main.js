@@ -86,25 +86,14 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./source/js/languageSelector.js":
-/*!***************************************!*\
-  !*** ./source/js/languageSelector.js ***!
-  \***************************************/
+/***/ "./source/js/index.js":
+/*!****************************!*\
+  !*** ./source/js/index.js ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("var mobileQuery = getComputedStyle(document.body).getPropertyValue(\"--phoneWidth\");\n\nvar isMobile = function isMobile() {\n  return window.matchMedia(mobileQuery).matches;\n};\n\nif (!isMobile()) {\n  languageSelector = document.querySelector(\".language-selector-current\");\n  moreLanguagesContainer = document.querySelector(\".language-selector__more\");\n  document.body.addEventListener(\"click\", function () {\n    if (moreLanguagesContainer && !moreLanguagesContainer.classList.contains(\"hidden\")) {\n      moreLanguagesContainer.classList.add(\"hidden\");\n    }\n  });\n  languageSelector && languageSelector.addEventListener(\"click\", function (e) {\n    e.stopPropagation();\n    moreLanguagesContainer.classList.toggle(\"hidden\");\n  });\n}\n\n//# sourceURL=webpack:///./source/js/languageSelector.js?");
-
-/***/ }),
-
-/***/ "./source/js/main.js":
-/*!***************************!*\
-  !*** ./source/js/main.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("// Add your script here\n\n//# sourceURL=webpack:///./source/js/main.js?");
+eval("// Add your script here\n\n//# sourceURL=webpack:///./source/js/index.js?");
 
 /***/ }),
 
@@ -115,18 +104,29 @@ eval("// Add your script here\n\n//# sourceURL=webpack:///./source/js/main.js?")
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("var container = document.querySelector(\".container\");\nvar menu = document.querySelector(\".menu\");\nvar mobileMenuTrigger = document.querySelector(\".menu-trigger\");\nvar desktopMenu = document.querySelector(\".menu__inner--desktop\");\nvar desktopMenuTrigger = document.querySelector(\".menu__sub-inner-more-trigger\");\nvar menuMore = document.querySelector(\".menu__sub-inner-more\");\nvar mobileQuery = getComputedStyle(document.body).getPropertyValue(\"--phoneWidth\");\n\nvar isMobile = function isMobile() {\n  return window.matchMedia(mobileQuery).matches;\n};\n\nvar handleMenuClasses = function handleMenuClasses() {\n  mobileMenuTrigger && mobileMenuTrigger.classList.toggle(\"hidden\", !isMobile());\n  menu && menu.classList.toggle(\"hidden\", isMobile());\n  menuMore && menuMore.classList.toggle(\"hidden\", !isMobile());\n}; // Common\n\n\nmenu && menu.addEventListener(\"click\", function (e) {\n  return e.stopPropagation();\n});\nmenuMore && menuMore.addEventListener(\"click\", function (e) {\n  return e.stopPropagation();\n});\nhandleMenuClasses();\ndocument.body.addEventListener(\"click\", function () {\n  if (!isMobile() && menuMore && !menuMore.classList.contains(\"hidden\")) {\n    menuMore.classList.add(\"hidden\");\n  } else if (isMobile() && !menu.classList.contains(\"hidden\")) {\n    menu.classList.add(\"hidden\");\n  }\n});\nwindow.addEventListener(\"resize\", handleMenuClasses); // Mobile menu\n\nmobileMenuTrigger && mobileMenuTrigger.addEventListener(\"click\", function (e) {\n  e.stopPropagation();\n  menu && menu.classList.toggle(\"hidden\");\n}); // Desktop menu\n\ndesktopMenuTrigger && desktopMenuTrigger.addEventListener(\"click\", function (e) {\n  e.stopPropagation();\n  menuMore && menuMore.classList.toggle(\"hidden\");\n\n  if (menuMore.getBoundingClientRect().right > container.getBoundingClientRect().right) {\n    menuMore.style.left = \"auto\";\n    menuMore.style.right = 0;\n  }\n});\n\n//# sourceURL=webpack:///./source/js/menu.js?");
+eval("var container = document.querySelector(\".container\");\nvar menu = document.querySelector(\".menu\");\nvar mobileMenuTrigger = document.querySelector(\".menu-trigger\");\nvar desktopMenu = document.querySelector(\".menu__inner--desktop\");\nvar desktopMenuTrigger = document.querySelector(\".menu__sub-inner-more-trigger\");\nvar menuMore = document.querySelector(\".menu__sub-inner-more\");\nvar mobileQuery = getComputedStyle(document.body).getPropertyValue(\"--phoneWidth\");\n\nvar isMobile = function isMobile() {\n  return window.matchMedia(mobileQuery).matches;\n};\n\nvar isMobileMenu = function isMobileMenu() {\n  mobileMenuTrigger && mobileMenuTrigger.classList.toggle(\"hidden\", !isMobile());\n  menu && menu.classList.toggle(\"hidden\", isMobile());\n  menuMore && menuMore.classList.toggle(\"hidden\", !isMobile());\n}; // Common\n\n\nmenu && menu.addEventListener(\"click\", function (e) {\n  return e.stopPropagation();\n});\nmenuMore && menuMore.addEventListener(\"click\", function (e) {\n  return e.stopPropagation();\n});\nisMobileMenu();\ndocument.body.addEventListener(\"click\", function () {\n  if (!isMobile() && menuMore && !menuMore.classList.contains(\"hidden\")) {\n    menuMore.classList.add(\"hidden\");\n  } else if (isMobile() && !menu.classList.contains(\"hidden\")) {\n    menu.classList.add(\"hidden\");\n  }\n});\nwindow.addEventListener(\"resize\", isMobileMenu); // Mobile menu\n\nmobileMenuTrigger && mobileMenuTrigger.addEventListener(\"click\", function (e) {\n  e.stopPropagation();\n  menu && menu.classList.toggle(\"hidden\");\n}); // Desktop menu\n\ndesktopMenuTrigger && desktopMenuTrigger.addEventListener(\"click\", function (e) {\n  e.stopPropagation();\n  menuMore && menuMore.classList.toggle(\"hidden\");\n\n  if (menuMore && menuMore.getBoundingClientRect().right > container.getBoundingClientRect().right) {\n    menuMore.style.left = \"auto\";\n    menuMore.style.right = 0;\n  }\n});\n\n//# sourceURL=webpack:///./source/js/menu.js?");
+
+/***/ }),
+
+/***/ "./source/js/theme.js":
+/*!****************************!*\
+  !*** ./source/js/theme.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("// Toggle theme\nvar getTheme = window.localStorage && window.localStorage.getItem(\"theme\");\nvar themeToggle = document.querySelector(\".theme-toggle\");\nvar isDark = getTheme === \"dark\";\n\nif (getTheme !== null) {\n  document.body.classList.toggle(\"dark-theme\", isDark);\n}\n\nthemeToggle.addEventListener(\"click\", function () {\n  document.body.classList.toggle(\"dark-theme\");\n  window.localStorage && window.localStorage.setItem(\"theme\", document.body.classList.contains(\"dark-theme\") ? \"dark\" : \"light\");\n});\n\n//# sourceURL=webpack:///./source/js/theme.js?");
 
 /***/ }),
 
 /***/ 0:
-/*!*************************************************************************************!*\
-  !*** multi ./source/js/main.js ./source/js/menu.js ./source/js/languageSelector.js ***!
-  \*************************************************************************************/
+/*!***************************************************************************!*\
+  !*** multi ./source/js/index.js ./source/js/menu.js ./source/js/theme.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("__webpack_require__(/*! /Users/radek/Documents/Git/Moje/terminal/themes/terminal/source/js/main.js */\"./source/js/main.js\");\n__webpack_require__(/*! /Users/radek/Documents/Git/Moje/terminal/themes/terminal/source/js/menu.js */\"./source/js/menu.js\");\nmodule.exports = __webpack_require__(/*! /Users/radek/Documents/Git/Moje/terminal/themes/terminal/source/js/languageSelector.js */\"./source/js/languageSelector.js\");\n\n\n//# sourceURL=webpack:///multi_./source/js/main.js_./source/js/menu.js_./source/js/languageSelector.js?");
+eval("__webpack_require__(/*! /Users/radek/Documents/Git/Moje/hello-friend/themes/hello-friend/source/js/index.js */\"./source/js/index.js\");\n__webpack_require__(/*! /Users/radek/Documents/Git/Moje/hello-friend/themes/hello-friend/source/js/menu.js */\"./source/js/menu.js\");\nmodule.exports = __webpack_require__(/*! /Users/radek/Documents/Git/Moje/hello-friend/themes/hello-friend/source/js/theme.js */\"./source/js/theme.js\");\n\n\n//# sourceURL=webpack:///multi_./source/js/index.js_./source/js/menu.js_./source/js/theme.js?");
 
 /***/ })
 

