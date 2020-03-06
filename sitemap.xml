@@ -33,11 +33,6 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/obfuscation/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
@@ -89,6 +84,11 @@
   
   <url>
     <loc>/tags/gogs/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
     <lastmod>2020-01-04T00:00:00+00:00</lastmod>
   </url>
   

@@ -89,7 +89,7 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
     
     <li>
 <a href="/search" title="Search">
-<img src="/icon/search.svg" alt="search" height="24">
+<img src="/icon/search.svg" alt="search" height="20">
 </a>
 <li>
   </ul>
@@ -218,15 +218,15 @@ needle.jpg: JPEG image data, JFIF standard 1.01, resolution <span style="color:#
 </code></pre></div><p>So far so good, nothing suspicious. Let&rsquo;s see if we can find strings in it :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strings needle.jpg
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
-bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg<span style="color:#f92672">=</span><span style="color:#f92672">=</span>
+bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg<span style="color:#f92672">==</span>
 </code></pre></div><p>Let&rsquo;s decode this base64 string :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg==&#34;</span> | base64 -d
 la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
 </code></pre></div><p>A hint. Let&rsquo;s keep <code>clave</code> in mind (key in Spanish). I think there is nothing else to find on the http service so let&rsquo;s move on to the Elasticsearch instance.</p>
 <h3 id="elasticsearch">Elasticsearch</h3>
 <p>Opening port 9200 return the following json:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">y</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">k</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">9200</span>
-<span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
+<span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 {
     <span style="color:#f92672">&#34;cluster_name&#34;</span>: <span style="color:#e6db74">&#34;elasticsearch&#34;</span>,
@@ -255,8 +255,8 @@ quotes  ZG2D1IqkQNiNZmi2HRImnQ 5 1  253 0 262.7kb 262.7kb
 bank    eSVpNfCfREyYoVigNWcrMw 5 1 1000 0 483.2kb 483.2kb
 </code></pre><p>So we have <code>bank</code> with 1000 records and <code>quotes</code> with 253 records. Let&rsquo;s search across those documents to see if we can find something interesting with our previous hint in mind.</p>
 <p>According the the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.4/search-search.html">documentation</a>, we can use the <code>_search</code> endpoint to search across all documents. Searching for the keyword <code>key</code> doesn&rsquo;t seem to return any interesting user or information. Let&rsquo;s try with the <code>clave</code> keyword we found in the image :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#e6db74">&#34;haystack.htb:9200/_search?q=clave&#34;</span>
-<span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#e6db74">&#34;haystack.htb:9200/_search?q=clave&#34;</span>
+<span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 
 {
@@ -325,8 +325,8 @@ kibana:x:994:992:kibana service user:/home/kibana:/sbin/nologin
 cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
 </code></pre></div><p>Seems like we will need to pivot to <code>Kibana</code> or <code>Logstash</code> user to make progress.</p>
 <p>For now we don&rsquo;t have informations about neither Kibana nor Logstash. Let&rsquo;s check Elasticsearch again :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">p</span> <span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">y</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">k</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">h</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">b</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">9200</span>
-<span style="color:#960050;background-color:#1e0010">H</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">T</span><span style="color:#960050;background-color:#1e0010">P</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">O</span><span style="color:#960050;background-color:#1e0010">K</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
+<span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 {
 
@@ -428,7 +428,7 @@ input <span style="color:#f92672">{</span>
 
 $ cat output.conf
 output <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
 		stdout <span style="color:#f92672">{</span> codec <span style="color:#f92672">=</span>&gt; json <span style="color:#f92672">}</span>
 		exec <span style="color:#f92672">{</span>
 			command <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;%{comando} &amp;&#34;</span>
@@ -451,15 +451,15 @@ mode =&gt; &quot;read&quot;
 <p>Send the matched data to be executed in background :</p>
 </li>
 </ol>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">x</span><span style="color:#960050;background-color:#1e0010">e</span><span style="color:#960050;background-color:#1e0010">c</span> {
-    <span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">o</span><span style="color:#960050;background-color:#1e0010">m</span><span style="color:#960050;background-color:#1e0010">m</span><span style="color:#960050;background-color:#1e0010">a</span><span style="color:#960050;background-color:#1e0010">n</span><span style="color:#960050;background-color:#1e0010">d</span> <span style="color:#960050;background-color:#1e0010">=</span><span style="color:#960050;background-color:#1e0010">&gt;</span> <span style="color:#f92672">&#34;%{comando} &amp;&#34;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">exec</span> {
+    <span style="color:#960050;background-color:#1e0010">command</span> <span style="color:#960050;background-color:#1e0010">=&gt;</span> <span style="color:#f92672">&#34;%{comando} &amp;&#34;</span>
 }
 </code></pre></div><p>Good, it seems we can write any command in a file named <code>/opt/kibana/logstash_*</code> and it should be run as root. Neat.
 But first we have to make sure the command match the filter to be parsed correctly by logstash.</p>
 <p>Let&rsquo;s understand that filter :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat filter.conf
 filter <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
 		grok <span style="color:#f92672">{</span>
 			match <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;message&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;Ejecutar\s*comando\s*:\s+%{GREEDYDATA:comando}&#34;</span> <span style="color:#f92672">}</span>
 		<span style="color:#f92672">}</span>
@@ -546,7 +546,7 @@ bash: no hay control de trabajos en este shell
           &nbsp; 
           <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
           &nbsp;
-          <a class="social-icon" href="https://www.hackthebox.eu/home/users/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
           &nbsp; 
           <a class="social-icon" href="https://hg8.rocks/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
         </span>
