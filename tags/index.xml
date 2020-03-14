@@ -6,10 +6,91 @@
     <description>Recent content in Tags on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 14 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ctf</title>
+      <link>/tags/ctf/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cve-2019-12840</title>
+      <link>/tags/cve-2019-12840/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2019-12840/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gobuster</title>
+      <link>/tags/gobuster/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gobuster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hackthebox</title>
+      <link>/tags/hackthebox/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/hackthebox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>john</title>
+      <link>/tags/john/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/john/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>postman</title>
+      <link>/tags/postman/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/postman/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redis</title>
+      <link>/tags/redis/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/redis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ssh</title>
+      <link>/tags/ssh/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ssh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>webmin</title>
+      <link>/tags/webmin/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/webmin/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>bitlab</title>
@@ -17,15 +98,6 @@
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/bitlab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ctf</title>
-      <link>/tags/ctf/</link>
-      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     
@@ -44,15 +116,6 @@
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/gitlab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>hackthebox</title>
-      <link>/tags/hackthebox/</link>
-      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/hackthebox/</guid>
       <description></description>
     </item>
     
@@ -161,15 +224,6 @@
       <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/filter/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gobuster</title>
-      <link>/tags/gobuster/</link>
-      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/gobuster/</guid>
       <description></description>
     </item>
     

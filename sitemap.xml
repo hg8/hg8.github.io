@@ -3,17 +3,72 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/tags/ctf/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cve-2019-12840/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gobuster/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/hackthebox/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/john/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/postman/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/postman/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/redis/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ssh/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/webmin/</loc>
+    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/bitlab/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/posts/bitlab/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ctf/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -28,22 +83,7 @@
   </url>
   
   <url>
-    <loc>/tags/hackthebox/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/obfuscation/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -114,11 +154,6 @@
   
   <url>
     <loc>/tags/filter/</loc>
-    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/gobuster/</loc>
     <lastmod>2019-12-07T00:00:00+00:00</lastmod>
   </url>
   
