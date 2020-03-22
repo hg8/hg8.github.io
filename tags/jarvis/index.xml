@@ -20,7 +20,7 @@
       <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&amp;rsquo;s rated as Medium difficulty I would advise beginners to start with this one.
 It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:</description>
     </item>
     

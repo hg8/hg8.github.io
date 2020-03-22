@@ -19,7 +19,7 @@
       <guid>/posts/writeup/</guid>
       <description>Writeup was my first machine I solved to start my CTF journey. It&amp;rsquo;s an easy rated box but still interesting and perfect to jump into the CTF bath!
 User Flag Recon Let&amp;rsquo;s start with the classic nmap:
-$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u6 (protocol 2.</description>
+[hg8@archbook ~]$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u6 (protocol 2.</description>
     </item>
     
   </channel>

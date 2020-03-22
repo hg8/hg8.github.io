@@ -19,9 +19,9 @@
       <guid>/posts/networked/</guid>
       <description>Networking was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.146 networked.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-$ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+[hg8@archbook ~]$ nmap -sV -sT -sC networked.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST Nmap scan report for networked.htb (10.10.10.146) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
     </item>
     
   </channel>

@@ -19,9 +19,9 @@
       <guid>/posts/wall/</guid>
       <description>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall.</description>
+[hg8@archbook ~]$ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-28 16:25 CET Nmap scan report for wall.</description>
     </item>
     
     <item>
@@ -33,7 +33,7 @@ $ nmap -sV -sT -sC wall.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
       <description>Jarvis was a pretty straight forward box and &amp;ldquo;textbook case&amp;rdquo; style. While it&amp;rsquo;s rated as Medium difficulty I would advise beginners to start with this one.
 It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
+[hg8@archbook ~]$ echo &amp;#34;10.10.10.143 jarvis.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts Let&amp;rsquo;s go !
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:</description>
     </item>
     
