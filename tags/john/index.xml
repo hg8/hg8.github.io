@@ -17,7 +17,7 @@
       <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/postman/</guid>
-      <description>Postman was an &amp;ldquo;easy&amp;rdquo; rated box quite quick to solve. It can be really interesting if you want to try to play with the now widely used Redis.
+      <description>Postman was an &amp;ldquo;easy&amp;rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.
 Tl;Dr: The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from redis user to Matt user.</description>
     </item>
     

