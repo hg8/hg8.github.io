@@ -205,21 +205,20 @@ Burn it to a <a href="https://wiki.archlinux.org/index.php/USB_flash_installatio
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo dd bs<span style="color:#f92672">=</span>4M <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>path/to/archlinux.iso of<span style="color:#f92672">=</span>/dev/sdx status<span style="color:#f92672">=</span>progress oflag<span style="color:#f92672">=</span>sync
 </code></pre></div><p>If on Windows you can use <a href="http://rufus.ie/">Rufus</a> which worked great every-time I used it.</p>
 <h3 id="boot-from-usb">Boot from USB</h3>
-<p>To access the Boot menu, first disable Secure Boot in the BIOS (Enter with &lt;<code>F12</code>).<br>
-<code>Security Setting &gt; Secure Boot &gt; Disable</code>.</p>
-<p>Then hold down <code>F2</code> while booting to enter the BIOS device selection and choose your Arch USB.</p>
+<p>To access the Boot menu, first disable Secure Boot in the BIOS (Enter with &lt;<code>F12</code>).</p>
+<pre><code>Security Setting &gt; Secure Boot &gt; Disable
+</code></pre><p>Then hold down <code>F2</code> while booting to enter the BIOS device selection and choose your Arch USB.</p>
 <h3 id="make-fonts-readable">Make Fonts Readable</h3>
-<p>Make the console font larger so it&rsquo;s readable, we&rsquo;ll set a permanent font
-later:<br>
-<code># setfont latarcyrheb-sun32</code></p>
-<h3 id="connect-to-internet">Connect to internet</h3>
-<p>Most of this next part is from the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Install Guide</a>.<br>
-<code># wifi-menu</code><br>
-Check that it works, it may take a few seconds for networking to come up.<br>
-<code># ping archlinux.org</code>.</p>
-<p>Update the system clock.<br>
-<code># timedatectl set-ntp true</code></p>
-<h3 id="partition-and-format">Partition and Format</h3>
+<p>Make the console font larger so it&rsquo;s readable, we&rsquo;ll set a permanent font later:</p>
+<pre><code># setfont latarcyrheb-sun32
+</code></pre><h3 id="connect-to-internet">Connect to internet</h3>
+<p>Most of this next part is from the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Install Guide</a>.</p>
+<pre><code># wifi-menu
+</code></pre><p>Check that it works, it may take a few seconds for networking to come up.</p>
+<pre><code># ping archlinux.org
+</code></pre><p>Update the system clock.</p>
+<pre><code># timedatectl set-ntp true
+</code></pre><h3 id="partition-and-format">Partition and Format</h3>
 <p>This install will use full disk encryption, with the exception of the EFI
 boot partition.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gdisk /dev/nvme0n1
