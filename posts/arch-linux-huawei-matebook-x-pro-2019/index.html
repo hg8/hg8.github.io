@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>Arch Linux install on Huawei MateBook Pro X 2019 :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="A few people asked me what was I using as my daily driver.
+I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
+Super satisfied about it, I have no complaints and it&amp;rsquo;s perfect for my daily workflow.
+Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;rsquo;t work out of the box."/>
+<meta name="keywords" content="arch linux, linux, huawei, matebook x pro, guide"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/arch-linux-huawei-matebook-x-pro-2019/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+
+<link rel="stylesheet" href="/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="/img/favicon.png">
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Arch Linux install on Huawei MateBook Pro X 2019"/>
+<meta name="twitter:description" content="A few people asked me what was I using as my daily driver.  
+I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
+
+Super satisfied about it, I have no complaints and it&amp;#39;s perfect for my daily workflow. Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;#39;t work out of the box.
+
+This guide describe how to make a full installation of Arch Linux on the Huawei MateBook Pro X 2019 with Full Disk Encryption.
+"/>
+
+
+
+<meta property="og:title" content="Arch Linux install on Huawei MateBook Pro X 2019" />
+<meta property="og:description" content="A few people asked me what was I using as my daily driver.  
+I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
+
+Super satisfied about it, I have no complaints and it&amp;#39;s perfect for my daily workflow. Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;#39;t work out of the box.
+
+This guide describe how to make a full installation of Arch Linux on the Huawei MateBook Pro X 2019 with Full Disk Encryption.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/arch-linux-huawei-matebook-x-pro-2019/" />
+<meta property="article:published_time" content="2020-04-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-01T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="20">
+</a>
+<li>
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/tags">Tags</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h2 class="post-title"><a href="/posts/arch-linux-huawei-matebook-x-pro-2019/">Arch Linux install on Huawei MateBook Pro X 2019</a></h2>
+    <div class="post-meta">
+      
+        <span class="post-date">
+          2020-04-01
+        </span>
+
+        
+          
+        
+      
+
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 8 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/arch-linux/">arch linux</a>&nbsp;
+        
+          #<a href="/tags/linux/">linux</a>&nbsp;
+        
+          #<a href="/tags/huawei/">huawei</a>&nbsp;
+        
+          #<a href="/tags/matebook-x-pro/">matebook x pro</a>&nbsp;
+        
+          #<a href="/tags/guide/">guide</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/matebook-x-2019.jpg" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <p>A few people asked me what was I using as my daily driver.<br>
+I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.</p>
+<p>Super satisfied about it, I have no complaints and it&rsquo;s perfect for my daily workflow.<br>
+Here is a guide I wrote on how to install Arch Linux and fix the little things that don&rsquo;t work out of the box.</p>
+<p>This guide describe how to make a full installation of Arch Linux on the Huawei MateBook Pro X 2019 with Full Disk Encryption.</p>
+<p>For the record this was done with a new Huawei MateBook Pro X 2019 Intel Core i7-8565U, 8GB RAM, 512GB SSD.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="update-bios-if-possible">Update BIOS if possible</h3>
+<p>Boot into Windows 10 once, and let it go through it&rsquo;s whole setup so you can update the BIOS.</p>
+<h3 id="create-an-arch-boot-usb-key">Create an Arch Boot USB Key</h3>
+<p>Download the <a href="https://www.archlinux.org/download/">Arch ISO</a>.<br>
+Burn it to a <a href="https://wiki.archlinux.org/index.php/USB_flash_installation_media">UBS Key</a> like so:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo dd bs<span style="color:#f92672">=</span>4M <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>path/to/archlinux.iso of<span style="color:#f92672">=</span>/dev/sdx status<span style="color:#f92672">=</span>progress oflag<span style="color:#f92672">=</span>sync
+</code></pre></div><p>If on Windows you can use <a href="http://rufus.ie/">Rufus</a> which worked great every-time I used it.</p>
+<h3 id="boot-from-usb">Boot from USB</h3>
+<p>To access the Boot menu, first disable Secure Boot in the BIOS (Enter with &lt;<code>F12</code>).<br>
+<code>Security Setting &gt; Secure Boot &gt; Disable</code>.</p>
+<p>Then hold down <code>F2</code> while booting to enter the BIOS device selection and choose your Arch USB.</p>
+<h3 id="make-fonts-readable">Make Fonts Readable</h3>
+<p>Make the console font larger so it&rsquo;s readable, we&rsquo;ll set a permanent font
+later:<br>
+<code># setfont latarcyrheb-sun32</code></p>
+<h3 id="connect-to-internet">Connect to internet</h3>
+<p>Most of this next part is from the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Install Guide</a>.<br>
+<code># wifi-menu</code><br>
+Check that it works, it may take a few seconds for networking to come up.<br>
+<code># ping archlinux.org</code>.</p>
+<p>Update the system clock.<br>
+<code># timedatectl set-ntp true</code></p>
+<h3 id="partition-and-format">Partition and Format</h3>
+<p>This install will use full disk encryption, with the exception of the EFI
+boot partition.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gdisk /dev/nvme0n1
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">GPT fdisk <span style="color:#f92672">(</span>gdisk<span style="color:#f92672">)</span> version 1.0.1
+Command <span style="color:#f92672">(</span>? <span style="color:#66d9ef">for</span> help<span style="color:#f92672">)</span>: o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? <span style="color:#f92672">(</span>Y/N<span style="color:#f92672">)</span>: Y
+Command <span style="color:#f92672">(</span>? <span style="color:#66d9ef">for</span> help<span style="color:#f92672">)</span>: n
+Partition number <span style="color:#f92672">(</span>1-128, default 1<span style="color:#f92672">)</span>: 
+First sector <span style="color:#f92672">(</span>34-242187466, default <span style="color:#f92672">=</span> 2048<span style="color:#f92672">)</span> or <span style="color:#f92672">{</span>+-<span style="color:#f92672">}</span>size<span style="color:#f92672">{</span>KMGTP<span style="color:#f92672">}</span>: 
+Last sector <span style="color:#f92672">(</span>2048-242187466, default <span style="color:#f92672">=</span> 242187466<span style="color:#f92672">)</span> or <span style="color:#f92672">{</span>+-<span style="color:#f92672">}</span>size<span style="color:#f92672">{</span>KMGTP<span style="color:#f92672">}</span>: +512M
+Current type is <span style="color:#e6db74">&#39;Linux filesystem&#39;</span>
+Hex code or GUID <span style="color:#f92672">(</span>L to show codes, Enter <span style="color:#f92672">=</span> 8300<span style="color:#f92672">)</span>: EF00
+Changed type of partition to <span style="color:#e6db74">&#39;EFI System&#39;</span>
+Command <span style="color:#f92672">(</span>? <span style="color:#66d9ef">for</span> help<span style="color:#f92672">)</span>: n
+Partition number <span style="color:#f92672">(</span>2-128, default 2<span style="color:#f92672">)</span>: 
+First sector <span style="color:#f92672">(</span>34-242187466, default <span style="color:#f92672">=</span> 1050624<span style="color:#f92672">)</span> or <span style="color:#f92672">{</span>+-<span style="color:#f92672">}</span>size<span style="color:#f92672">{</span>KMGTP<span style="color:#f92672">}</span>: 
+Last sector <span style="color:#f92672">(</span>1050624-242187466, default <span style="color:#f92672">=</span> 242187466<span style="color:#f92672">)</span> or <span style="color:#f92672">{</span>+-<span style="color:#f92672">}</span>size<span style="color:#f92672">{</span>KMGTP<span style="color:#f92672">}</span>: 
+Current type is <span style="color:#e6db74">&#39;Linux filesystem&#39;</span>
+Hex code or GUID <span style="color:#f92672">(</span>L to show codes, Enter <span style="color:#f92672">=</span> 8300<span style="color:#f92672">)</span>: 
+Changed type of partition to <span style="color:#e6db74">&#39;Linux filesystem&#39;</span>
+Command <span style="color:#f92672">(</span>? <span style="color:#66d9ef">for</span> help<span style="color:#f92672">)</span>: p
+Disk /dev/sda: <span style="color:#ae81ff">242187500</span> sectors, 115.5 GiB
+Logical sector size: <span style="color:#ae81ff">512</span> bytes
+Disk identifier <span style="color:#f92672">(</span>GUID<span style="color:#f92672">)</span>: 9FB9AC2C-8F29-41AE-8D61-21EA9E0B4C2A
+Partition table holds up to <span style="color:#ae81ff">128</span> entries
+First usable sector is 34, last usable sector is <span style="color:#ae81ff">242187466</span>
+Partitions will be aligned on 2048-sector boundaries
+Total free space is <span style="color:#ae81ff">2014</span> sectors <span style="color:#f92672">(</span>1007.0 KiB<span style="color:#f92672">)</span>
+Number  Start <span style="color:#f92672">(</span>sector<span style="color:#f92672">)</span>    End <span style="color:#f92672">(</span>sector<span style="color:#f92672">)</span>  Size       Code  Name
+   <span style="color:#ae81ff">1</span>            <span style="color:#ae81ff">2048</span>         <span style="color:#ae81ff">1050623</span>   512.0 MiB   EF00  EFI System
+   <span style="color:#ae81ff">2</span>         <span style="color:#ae81ff">1050624</span>       <span style="color:#ae81ff">242187466</span>   115.0 GiB   <span style="color:#ae81ff">8300</span>  Linux filesystem
+Command <span style="color:#f92672">(</span>? <span style="color:#66d9ef">for</span> help<span style="color:#f92672">)</span>: w
+</code></pre></div><h3 id="setup-disk-encryption">Setup Disk Encryption</h3>
+<p>I chose the relatively simple LVM on LUKS setup combining instructions from:
+<a href="https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS">Encrypting_an_entire_system</a></p>
+<p>There will be a single LUKS2 volume with LVM on top. LVM will then divide that volume into <code>root</code>, <code>home</code> and <code>swap</code>.<br>
+Setup and open the LUKS2 volume</p>
+<pre><code># cryptsetup luksFormat --type luks2 /dev/nvme0n1p2
+# cryptsetup open /dev/nvme0n1p2 S3V0
+</code></pre><p>Setup LVM, with swap at least as large as RAM to support hibernate</p>
+<pre><code># pvcreate /dev/mapper/S3V0
+# vgcreate archvg /dev/mapper/S3V0
+# lvcreate -L 16G S3V0 -n swap
+# lvcreate -L 64G S3V0 -n root
+# lvcreate -l 100%FREE S3V0 -n home
+</code></pre><p>Format the filesystems</p>
+<pre><code># mkfs.vfat -F32 /dev/nvme0n1p1
+# mkfs.ext4 /dev/S3V0/root
+# mkfs.ext4 /dev/S3V0/home
+# mkswap /dev/S3V0/swap
+</code></pre><p>Mount the partitions</p>
+<pre><code># mount /dev/S3V0/root /mnt
+# mkdir /mnt/home
+# mount /dev/S3V0/home /mnt/home
+# swapon /dev/S3V0/swap
+</code></pre><p>Mount the boot/ESP volume</p>
+<pre><code># mkdir /mnt/boot
+# mount /dev/nvme0n1p1 /mnt/boot
+</code></pre><p>Install the base system.</p>
+<pre><code># pacstrap /mnt base base-devel
+</code></pre><p>Generate the fstab.</p>
+<pre><code># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+</code></pre><h3 id="basic-configuration">Basic Configuration</h3>
+<p>This is mostly straight from the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki Installation Guide</a></p>
+<p>Chroot to the new arch install</p>
+<pre><code># arch-chroot /mnt
+</code></pre><p>Set the timezone and <code>hwclock</code></p>
+<pre><code># ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+# hwclock --systohc
+</code></pre><p>Setup Locales, uncomment any needed in <code>/etc/locale.gen</code> and generate
+them</p>
+<pre><code># locale-gen
+# echo 'LANG=en_US.UTF-8' &gt; /etc/locale.conf
+</code></pre><p>Set a hostname</p>
+<pre><code># echo marchbook &gt;&gt; /etc/hostname
+</code></pre><h3 id="make-the-system-bootable">Make the system bootable</h3>
+<p>Install Intel Microcode Updates, this will install an <code>initrd</code> image that we add to our boot loader config.</p>
+<pre><code># pacman -S intel-ucode
+</code></pre><p>Next setup <code>systemd-boot</code></p>
+<pre><code># bootctl --path=/boot install
+</code></pre><p>Get the encrypted volume UUID for use in the <code>systemd-boot</code> config.</p>
+<pre><code># blkid /dev/nvme0n1p2
+</code></pre><p>Add a menu entry for Arch and configure the loader :</p>
+<pre><code># vim /boot/loader/loader.conf
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">timeout <span style="color:#ae81ff">0</span>
+default arch
+entries <span style="color:#ae81ff">0</span>
+</code></pre></div><pre><code># vim /boot/loader/entries/arch.conf
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">title    Arch Linux
+linux /vmlinuz-linux
+initrd    /initramfs-linux.img
+options cryptdevice<span style="color:#f92672">=</span>UUID<span style="color:#f92672">=</span>&lt;your partition UUID&gt;:lvm:allow-discards resume<span style="color:#f92672">=</span>/dev/mapper/S3V0-swap root<span style="color:#f92672">=</span>/dev/mapper/S3V0-root initrd<span style="color:#f92672">=</span>/intel-ucode.img rw
+</code></pre></div><p>Add the <code>keyboard</code>, <code>encrypt</code> and <code>lvm2</code> hooks to <code>/etc/mkinitcpio.conf</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">HOOKS<span style="color:#f92672">=(</span>base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems fsck<span style="color:#f92672">)</span>
+</code></pre></div><p>Then setup KMS :</p>
+<blockquote>
+<p>Kernel Mode Setting (KMS) is a method for setting display resolution and depth in the kernel space rather than user space.<br>
+<a href="https://wiki.archlinux.org/index.php/Kernel_mode_setting">Arch Linux Wiki</a></p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">MODULES<span style="color:#f92672">=(</span>... i915 ...<span style="color:#f92672">)</span>
+</code></pre></div><p>Regenerate <code>initramfs</code></p>
+<pre><code># mkinitcpio -p linux 
+</code></pre><p>Install some packages so <code>wifi-menu</code> works after reboot.</p>
+<pre><code># pacman -S dialog wpa_supplicant
+</code></pre><p>Set the root password</p>
+<pre><code># passwd
+</code></pre><p>Reboot</p>
+<pre><code># exit
+# reboot
+</code></pre><h2 id="post-install-configuration">Post Install Configuration</h2>
+<h3 id="connect-to-internet-1">Connect to internet</h3>
+<p>Get wifi back online after first boot.</p>
+<pre><code># wifi-menu
+</code></pre><p>Get networking to come up automatically with <code>netctl</code></p>
+<pre><code># systemctl enable netctl-auto@wlp0s20f3.service
+</code></pre><blockquote>
+<p>netctl profiles will be started/stopped automatically as you move from the range of one network into the range of another network (roaming).</p>
+</blockquote>
+<h3 id="create-a-regular-user">Create a regular user</h3>
+<pre><code># useradd -G wheel -m hugo
+# passwd hugo
+</code></pre><p>Then log out and switch to that user.</p>
+<h2 id="setup-power-saving">Setup power saving</h2>
+<p>Enable TLP for powersaving</p>
+<pre><code># pacman -S tlp tlp-rdw
+# systemctl enable tlp.service
+# systemctl enable tlp-sleep.service
+# systemctl mask systemd-rfkill.service
+# systemctl mask systemd-rfkill.socket
+</code></pre><p>Install <code>ethtool</code>, <code>lsb-release</code> and <code>smartmontools</code> following the suggestion of <code>tlp-stat</code>
+<code># pacman -S ethtool lsb-release smartmontools</code></p>
+<h3 id="get-x11-working">Get X11 Working</h3>
+<p><em>This configuration is fitted to me, update it according to your needs</em></p>
+<p>Install <code>X11</code>, <code>bspwm</code>, and a few other nice things</p>
+<pre><code># pacman -S bspwm sxhkd nvidia xorg-server xorg-font-util xorg-fonts-75dpi xorg-fonts-100dpi xorg-mkfontdir xorg-mkfontscale xorg-xdpyinfo xorg-xrandr xorg-xset bumblebee bbswitch termite firefox mesa xf86-video-intel xbindkeys xorg-xmodmap xorg-xrdb
+</code></pre><p>Enable Bumblebee with bbswitch for Nvidia / Intel switching</p>
+<pre><code># systemctl enable bumblebeed.service
+# gpasswd -a $USER bumblebee
+</code></pre><h3 id="other-useful-app">Other useful app</h3>
+<p>Few apps I need :</p>
+<pre><code># pacman -S zsh vim git compton xorg-xinit python-pip python2 light openssh pass polybar rofi randr xorg-xsetroot feh noto-fonts-cjk arc-gtk-theme thunar lxappearance vlc gvfs thunar-archive-plugin thunar-volman tumbler raw-thumbnailer gvfs-mtp gpicview xorg-xkill exa bat xss-lock xautolock autocutsel dunst ncdu chromium unzip zip p7zip pacman-contrib tldr xdg-user-dirs scrot xclip blueman
+</code></pre><h3 id="setup-my-dot-files">Setup my dot files</h3>
+<p>Install my dotfiles setup <a href="https://github.com/hg8/dotfiles">github.com/hg8/dotfiles</a></p>
+<p><img src="https://github.com/hg8/dotfiles/raw/master/screenshot/2019-04-17-163339_3200x1800_scrot.png" alt="hg8 dotfile"></p>
+<h3 id="install-a-aur-helper">Install a AUR Helper</h3>
+<p>Install <code>trizen</code> to build packages from Arch AUR</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git clone https://aur.archlinux.org/trizen.git
+$ cd trizen
+$ makepkg -si
+</code></pre></div><h3 id="automatic-startx-at-user-login">Automatic startx at user login</h3>
+<p>Edit your <code>~/.profile</code> (<code>~/.zprofile</code> for zsh users) with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat .zprofile                  
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> ! $DISPLAY <span style="color:#f92672">&amp;&amp;</span> $XDG_VTNR -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+  exec startx
+<span style="color:#66d9ef">fi</span>
+</code></pre></div><h3 id="make-pacman-faster">Make Pacman faster</h3>
+<p>Sort the <code>pacman</code> mirrors by speed
+<a href="https://wiki.archlinux.org/index.php/mirrors#Sorting_mirrors">Arch Wiki Sorting Mirrors</a></p>
+<h2 id="various-configurations">Various configurations</h2>
+<h3 id="setup-the-linux-console-font-for-hidpi">Setup the Linux Console font for HiDPi</h3>
+<p>Set a readable console font:</p>
+<pre><code># pacman -S terminus-font
+</code></pre><p>Create <code>/etc/vconsole.conf</code> with contents:</p>
+<pre><code>FONT=ter-132n
+</code></pre><h3 id="setup-user-dirs">Setup user dirs</h3>
+<p>Setup basic user directories (Documents, Pictures, etc&hellip;)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo pacman -S xdg-user-dirs
+xdg-user-dirs-update
+</code></pre></div><h3 id="configure-the-trackpad">Configure the Trackpad</h3>
+<p>Info from: <a href="https://williambharding.com/blog/linux-to-macbook/linux-with-a-macbook-touchpad-feel-pt-2/">Linux with a Macbook Touchpad Feel, Pt 2</a></p>
+<p>I&rsquo;m using Synamptics based on the recommendations from the above link.</p>
+<p>Here is how I configured it.</p>
+<pre><code># pacman -S xf86-input-synaptics
+</code></pre><p>Then I created <code>/etc/X11/xorg.conf.d/30-synaptics.conf</code> with these contents:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Section <span style="color:#e6db74">&#34;InputClass&#34;</span>
+        Identifier <span style="color:#e6db74">&#34;touchpad catchall&#34;</span>
+        Driver <span style="color:#e6db74">&#34;synaptics&#34;</span>
+        MatchIsTouchpad <span style="color:#e6db74">&#34;on&#34;</span>
+        <span style="color:#75715e"># Enabling tap-to-click is a perilous choice that begets needing to set up palm detection/ignoring. Since I am fine clicking my touchpad, I sidestep the issue by disabling tapping.</span> 
+        Option <span style="color:#e6db74">&#34;TapButton1&#34;</span> <span style="color:#e6db74">&#34;0&#34;</span>
+        Option <span style="color:#e6db74">&#34;TapButton2&#34;</span> <span style="color:#e6db74">&#34;0&#34;</span>
+        Option <span style="color:#e6db74">&#34;TapButton3&#34;</span> <span style="color:#e6db74">&#34;0&#34;</span>
+    <span style="color:#75715e"># Using negative values for ScrollDelta implements natural scroll, a la Macbook default.</span> 
+        Option <span style="color:#e6db74">&#34;VertScrollDelta&#34;</span> <span style="color:#e6db74">&#34;-80&#34;</span>
+    Option <span style="color:#e6db74">&#34;HorizScrollDelta&#34;</span> <span style="color:#e6db74">&#34;-80&#34;</span>
+        <span style="color:#75715e"># https://wiki.archlinux.org/index.php/Touchpad_Synaptics has a very buried note about this option</span>
+    <span style="color:#75715e"># tl;dr this defines right button to be rightmost 7% and bottommost 5%</span>
+    Option <span style="color:#e6db74">&#34;SoftButtonAreas&#34;</span> <span style="color:#e6db74">&#34;93% 0 95% 0 0 0 0 0&#34;</span>  
+        MatchDevicePath <span style="color:#e6db74">&#34;/dev/input/event*&#34;</span>
+EndSection
+</code></pre></div><h3 id="hibernate-on-low-battery">Hibernate on Low Battery</h3>
+<p>Suspend on low battery to <code>/etc/udev/rules.d/99-lowbat.rules</code></p>
+<pre><code>$ cat /etc/udev/rules.d/99-lowbat.rules         
+# Suspend the system when battery level drops to 5% or lower
+SUBSYSTEM==&quot;power_supply&quot;, ATTR{status}==&quot;Discharging&quot;, ATTR{capacity}==&quot;[0-5]&quot;, RUN+=&quot;/usr/bin/systemctl suspend&quot;
+</code></pre><h3 id="time-sync">Time Sync</h3>
+<p>Setup time sync
+<a href="https://wiki.archlinux.org/index.php/Systemd-timesyncd">Arch Wiki Systemd-timesyncd</a>
+Edit <code>/etc/systemd/timesyncd.conf</code> uncomment these lines:</p>
+<pre><code>NTP=0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org
+FallbackNTP=0.pool.ntp.org 1.pool.ntp.org 0.us.pool.ntp.org
+</code></pre><p>Then start it:</p>
+<pre><code># timedatectl set-ntp true 
+</code></pre><h2 id="fixes">Fixes</h2>
+<h3 id="40-surround-speakers">4.0 Surround Speakers</h3>
+<p>To fix Huawei Matebook X Pro Speakers on Linux follow this <a href="https://github.com/hg8/arch-matebook-x-pro-2019/blob/master/guide-fix-matebook-x-pro-speakers-linux.md">guide</a></p>
+<h3 id="volume-and-screen-brightness-buttons-work">Volume and Screen Brightness Buttons Work</h3>
+<p>Instructions generally came from  <a href="https://wiki.archlinux.org/index.php/Xbindkeys">Arch Wiki Xbindkeys</a></p>
+<p>To set the backlight we need <code>light</code></p>
+<pre><code># pacman -S light
+</code></pre><p>We&rsquo;ll need <code>xbindkeys</code></p>
+<pre><code># pacman -S xbindkeys
+$ xbindkeys -d &gt; ~/.xbindkeysrc
+</code></pre><p>Here is an example on how to use it :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">XF86AudioRaiseVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -1000
+XF86AudioLowerVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -1000
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+XF86MonBrightnessUp
+    light -A <span style="color:#ae81ff">10</span>
+
+XF86MonBrightnessDown
+    light -U <span style="color:#ae81ff">10</span>
+</code></pre></div><p>You can also use my script <a href="https://github.com/hg8/dotfiles/blob/master/bin/brightness">brightness</a> and <a href="https://github.com/hg8/dotfiles/blob/master/bin/volume">volume</a> to show notifications on volume and brightness change using dunst.<br>
+<img src="https://user-images.githubusercontent.com/9076747/58159341-cf227e80-7c6b-11e9-90b0-59f394ac3e93.png" alt="2019-05-22-082913_373x102_scrot"></p>
+<p><img src="https://user-images.githubusercontent.com/9076747/58159343-cfbb1500-7c6b-11e9-9aad-7d8ba1d858b9.png" alt="2019-05-22-082926_356x102_scrot"></p>
+<h2 id="maintenance">Maintenance</h2>
+<h3 id="bios-updates">BIOS Updates</h3>
+<p>Huawei provides downloadable BIOS updates packaged for Windows. With some effort, these can be installed from Linux.
+<a href="https://github.com/nekr0z/linux-on-huawei-matebook-13-2019#bios-updates">The following method is available</a>.
+Note that it would maybe be safer (no messing up with UEFI boot record) to use a Win2Go USB key to update BIOS.
+Will report after my personal tries.</p>
+
+    </div>
+    
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+            
+              <span class="button next">
+                <a href="/posts/postman/">
+                  <span class="button__text">Postman - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
+      
+    
+
+
+    
+      
+        
+
+      
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.sh" target="_blank" rel="noopener">hg8.sh</a></span>
+        <span>
+          &nbsp; 
+          <a class="social-icon" href="https://twitter.com/_hg8_" target="_blank" rel="noopener" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          &nbsp;
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://hg8.sh/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+        </span>
+      </div>
+    
+  </div>
+</footer>
+
+
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+      
+    </div>
+
+    
+  </body>
+</html>

@@ -6,7 +6,7 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+<meta name="description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering. dflsd
 First we add the box ip to our hosts file and let&amp;rsquo;s start!
 [hg8@archbook ~]$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
 nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7."/>
@@ -182,7 +182,7 @@ nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-2
     
 
     <div class="post-content">
-      <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.</p>
+      <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering. dflsd</p>
 <p>First we add the box ip to our hosts file and let&rsquo;s start!</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.114 bitlab.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><h1 id="user-flag">User flag.</h1>
@@ -315,7 +315,7 @@ clave@bitlab:~$ cat user.txt
 <p>The recon part was quite quick, a Windows executable named <code>RemoteConnection.exe</code> was present on the home folder. Let&rsquo;s pull it and start the analysis:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ scp clave@bitlab.htb:~/RemoteConnection.exe .
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
-RemoteConnection.exe                                                100%   14KB 279.5KB/s   00:00
+RemoteConnection.exe               100%   14KB 279.5KB/s   00:00
 </code></pre></div>
     </div>
     

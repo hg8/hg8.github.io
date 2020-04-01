@@ -12,6 +12,18 @@
     
     
     <item>
+      <title>Arch Linux install on Huawei MateBook Pro X 2019</title>
+      <link>/posts/arch-linux-huawei-matebook-x-pro-2019/</link>
+      <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/arch-linux-huawei-matebook-x-pro-2019/</guid>
+      <description>A few people asked me what was I using as my daily driver.
+I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
+Super satisfied about it, I have no complaints and it&amp;rsquo;s perfect for my daily workflow.
+Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;rsquo;t work out of the box.</description>
+    </item>
+    
+    <item>
       <title>Postman - HackTheBox</title>
       <link>/posts/postman/</link>
       <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
@@ -27,7 +39,7 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/bitlab/</guid>
-      <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering.
+      <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering. dflsd
 First we add the box ip to our hosts file and let&amp;rsquo;s start!
 [hg8@archbook ~]$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
 nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
