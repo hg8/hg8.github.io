@@ -75,7 +75,7 @@ User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
       <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/wall/</guid>
-      <description>Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
+      <description>Wall was an interesting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
 First thing first, let&amp;rsquo;s add the box IP to the hosts file:
 [hg8@archbook ~]$ echo &amp;#34;10.10.10.157 wall.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
 User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
