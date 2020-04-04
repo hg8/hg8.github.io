@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     
-      <title>hackthebox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+      <title>shell_exec :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content=""/>
 <meta name="keywords" content="ctf, hackthebox, htb, security"/>
 <meta name="robots" content="noodp"/>
-<link rel="canonical" href="/tags/hackthebox/" />
+<link rel="canonical" href="/tags/shell_exec/" />
 
 
 
@@ -30,20 +30,20 @@
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="hackthebox"/>
+<meta name="twitter:title" content="shell_exec"/>
 <meta name="twitter:description" content=""/>
 
 
 
-<meta property="og:title" content="hackthebox" />
+<meta property="og:title" content="shell_exec" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="/tags/hackthebox/" />
+<meta property="og:url" content="/tags/shell_exec/" />
 <meta property="og:updated_time" content="2020-04-04T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
-<link rel="alternate" type="application/rss+xml" href="/tags/hackthebox/index.xml" title="hg8's Notes" />
+<link rel="alternate" type="application/rss+xml" href="/tags/shell_exec/index.xml" title="hg8's Notes" />
 
 
 
@@ -202,244 +202,9 @@ The root flag required to access a CMS after brute-forcing the admin password fo
       
     </div>
     
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/postman/">Postman - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-03-14
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 11 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/postman/">postman</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/webmin/">webmin</a>&nbsp;
-          
-            #<a href="/tags/redis/">redis</a>&nbsp;
-          
-            #<a href="/tags/cve-2019-12840/">cve-2019-12840</a>&nbsp;
-          
-            #<a href="/tags/ssh/">ssh</a>&nbsp;
-          
-            #<a href="/tags/john/">john</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/postman-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          <p>Postman was an &ldquo;easy&rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.</p>
-<p><strong>Tl;Dr:</strong> The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from <code>redis</code> user to <code>Matt</code> user.<br>
-Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.</p>
-<p>Alright, let&rsquo;s get into it!</p>
-
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/postman/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/bitlab/">Bitlab - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-01-11
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 6 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/bitlab/">bitlab</a>&nbsp;
-          
-            #<a href="/tags/obfuscation/">obfuscation</a>&nbsp;
-          
-            #<a href="/tags/webshell/">webshell</a>&nbsp;
-          
-            #<a href="/tags/git/">git</a>&nbsp;
-          
-            #<a href="/tags/gitlab/">gitlab</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/bitlab-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Bitlab box was an insteresting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was a good Reverse Engineering challenge.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/bitlab/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/craft/">Craft - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-01-04
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 13 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/craft/">craft</a>&nbsp;
-          
-            #<a href="/tags/gogs/">gogs</a>&nbsp;
-          
-            #<a href="/tags/api/">api</a>&nbsp;
-          
-            #<a href="/tags/flask/">flask</a>&nbsp;
-          
-            #<a href="/tags/python/">python</a>&nbsp;
-          
-            #<a href="/tags/eval/">eval</a>&nbsp;
-          
-            #<a href="/tags/git/">git</a>&nbsp;
-          
-            #<a href="/tags/vault/">vault</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/craft-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/craft/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/wall/">Wall - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-12-07
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 9 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/wall/">wall</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
-          
-            #<a href="/tags/centreon/">centreon</a>&nbsp;
-          
-            #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
-          
-            #<a href="/tags/waf/">waf</a>&nbsp;
-          
-            #<a href="/tags/filter/">filter</a>&nbsp;
-          
-            #<a href="/tags/screen/">screen</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/wall-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/wall/">Read more →</a></div>
-      
-    </div>
-    
     <div class="pagination">
   <div class="pagination__buttons">
     
-    
-      <span class="button next">
-        <a href="/tags/hackthebox/page/2/">
-          <span class="button__text">Older posts</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
     
   </div>
 </div>

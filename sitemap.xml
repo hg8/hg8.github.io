@@ -3,6 +3,76 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/tags/ctf/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/docker/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/docker-registry/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/enumeration/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/hackthebox/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/php/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/registry/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/registry/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/restic/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/shell_exec/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sudo/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/webshell/</loc>
+    <lastmod>2020-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/arch-linux/</loc>
     <lastmod>2020-04-01T00:00:00+00:00</lastmod>
   </url>
@@ -33,32 +103,12 @@
   </url>
   
   <url>
-    <loc>/posts/</loc>
-    <lastmod>2020-04-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-04-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ctf/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/cve-2019-12840/</loc>
     <lastmod>2020-03-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/gobuster/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/hackthebox/</loc>
     <lastmod>2020-03-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -114,11 +164,6 @@
   
   <url>
     <loc>/tags/obfuscation/</loc>
-    <lastmod>2020-01-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/webshell/</loc>
     <lastmod>2020-01-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -234,16 +279,6 @@
   
   <url>
     <loc>/posts/networked/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/php/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/sudo/</loc>
     <lastmod>2019-11-16T00:00:00+00:00</lastmod>
   </url>
   

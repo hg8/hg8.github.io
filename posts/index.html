@@ -39,7 +39,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="/posts/" />
-<meta property="og:updated_time" content="2020-04-01T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+<meta property="og:updated_time" content="2020-04-04T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
@@ -138,6 +138,69 @@
   
 
   <div class="posts">
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/registry/">Registry- HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-04-04
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 19 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/registry/">registry</a>&nbsp;
+          
+            #<a href="/tags/docker/">docker</a>&nbsp;
+          
+            #<a href="/tags/docker-registry/">docker-registry</a>&nbsp;
+          
+            #<a href="/tags/php/">php</a>&nbsp;
+          
+            #<a href="/tags/shell_exec/">shell_exec</a>&nbsp;
+          
+            #<a href="/tags/webshell/">webshell</a>&nbsp;
+          
+            #<a href="/tags/enumeration/">enumeration</a>&nbsp;
+          
+            #<a href="/tags/sudo/">sudo</a>&nbsp;
+          
+            #<a href="/tags/restic/">restic</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/registry-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance to understand how things works &ldquo;behind the scene&rdquo; and to read all documentations carefully to not miss anything. I recommend this box for people who finished few medium difficulty boxes and wants to level-up.</p>
+<p><strong>Tl;Dr:</strong> The user flag consisted in finding an <code>INSTALL</code> archive containing install instruction and certificate to deploy an online docker registry, this certificate was used on the docker registry running on the box. Using this cert we could connect to the registry API and pull the docker image available on it. Running the docker image locally and doing recon into it allows to find an SSH key along with its passphrase. This key would allow to connect to the <code>bolt</code> user account and grab the user flag.<br>
+The root flag required to access a CMS after brute-forcing the admin password found in a sqlite database. From the CMS we pivot from the <code>bolt</code> user to <code>www-data</code> user by exploiting insecure file upload vulnerability. From <code>www-data</code> a backup software - restic - can be run as sudo without password. Using this software we are able to backup the whole <code>/root/</code> folder and restore its content with read privileges for <code>www-data</code> including the <code>root.txt</code> flag and a <code>.ssh/id_rsa</code> key allowing us to get a full shell as root.</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/registry/">Read more →</a></div>
+      
+    </div>
     
     <div class="post on-list">
       <h1 class="post-title"><a href="/posts/arch-linux-huawei-matebook-x-pro-2019/">Arch Linux install on Huawei MateBook Pro X 2019</a></h1>
@@ -358,64 +421,6 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
       </div>
       
         <div><a class="read-more button" href="/posts/craft/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/wall/">Wall - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-12-07
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 9 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/wall/">wall</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
-          
-            #<a href="/tags/centreon/">centreon</a>&nbsp;
-          
-            #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
-          
-            #<a href="/tags/waf/">waf</a>&nbsp;
-          
-            #<a href="/tags/filter/">filter</a>&nbsp;
-          
-            #<a href="/tags/screen/">screen</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/wall-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/wall/">Read more →</a></div>
       
     </div>
     

@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Registry- HackTheBox</title>
+      <link>/posts/registry/</link>
+      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/registry/</guid>
+      <description>Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works &amp;ldquo;behind the scene&amp;rdquo; and to read all documentations carefully to not miss anything. I recommend this box for people who finished few medium difficulty boxes and wants to level-up.
+Tl;Dr: The user flag consisted in finding an INSTALL archive containing install instruction and certificate to deploy an online docker registry, this certificate was used on the docker registry running on the box.</description>
+    </item>
+    
+    <item>
       <title>Arch Linux install on Huawei MateBook Pro X 2019</title>
       <link>/posts/arch-linux-huawei-matebook-x-pro-2019/</link>
       <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
