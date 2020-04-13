@@ -39,7 +39,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="/tags/hackthebox/" />
-<meta property="og:updated_time" content="2020-04-04T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+<meta property="og:updated_time" content="2020-04-11T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
@@ -140,7 +140,71 @@
   <div class="posts">
     
     <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/registry/">Registry- HackTheBox</a></h1>
+      <h1 class="post-title"><a href="/posts/traverxec/">Traverxec - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-04-11
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 10 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/traverxec/">traverxec</a>&nbsp;
+          
+            #<a href="/tags/nhttpd/">nhttpd</a>&nbsp;
+          
+            #<a href="/tags/nostromo/">nostromo</a>&nbsp;
+          
+            #<a href="/tags/directory-transversal/">Directory Transversal</a>&nbsp;
+          
+            #<a href="/tags/cve-2019-16278/">CVE-2019-16278</a>&nbsp;
+          
+            #<a href="/tags/john/">john</a>&nbsp;
+          
+            #<a href="/tags/journalctl/">journalctl</a>&nbsp;
+          
+            #<a href="/tags/less/">less</a>&nbsp;
+          
+            #<a href="/tags/gtfobins/">GTFOBins</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/traverxec-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a few tricks and got me sometimes very frustrated because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!</p>
+<p><strong>Tl;Dr:</strong> The user flag was accessible after using a Remote Code Execution exploit on the <code>nhttpd</code> web server running, giving us access to the <code>www-data</code> user. From here you were able to <em>enter</em> the user home directory and access to a backup archive containing its SSH private key. After brute-forcing the passphrase you could connect to the user account and grab the flag.<br>
+The root flag consisted in exploiting a misconfiguration in <code>sudo</code> config allowing to view <code>journalctl</code> entries as <code>root</code> without password. Since <code>journalctl</code> use <code>less</code> as a pager it was possible to break out from <code>less</code> running as <code>root</code> by spawning an interactive system shell.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/traverxec/">Read more →</a></div>
+      
+    </div>
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/registry/">Registry - HackTheBox</a></h1>
       <div class="post-meta">
         
           <span class="post-date">
@@ -300,7 +364,7 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
 
       
         
-          <img src="/img/bitlab-hackthebox.png" class="post-cover" />
+          <img src="/img/book-hackthebox.png" class="post-cover" />
         
       
 
@@ -369,64 +433,6 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
       </div>
       
         <div><a class="read-more button" href="/posts/craft/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/wall/">Wall - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-12-07
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 9 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/wall/">wall</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/wfuzz/">wfuzz</a>&nbsp;
-          
-            #<a href="/tags/centreon/">centreon</a>&nbsp;
-          
-            #<a href="/tags/cve-2019-13024/">cve-2019-13024</a>&nbsp;
-          
-            #<a href="/tags/waf/">waf</a>&nbsp;
-          
-            #<a href="/tags/filter/">filter</a>&nbsp;
-          
-            #<a href="/tags/screen/">screen</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/wall-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Wall was an interresting box, exploit oriented. The initial foothold was not straight forward to find and took a bit of time to finally figure out.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/wall/">Read more →</a></div>
       
     </div>
     

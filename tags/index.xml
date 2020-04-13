@@ -6,7 +6,7 @@
     <description>Recent content in Tags on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 11 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,99 @@
     <item>
       <title>ctf</title>
       <link>/tags/ctf/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CVE-2019-16278</title>
+      <link>/tags/cve-2019-16278/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cve-2019-16278/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Directory Transversal</title>
+      <link>/tags/directory-transversal/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/directory-transversal/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gtfobins</title>
+      <link>/tags/gtfobins/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gtfobins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hackthebox</title>
+      <link>/tags/hackthebox/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/hackthebox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>john</title>
+      <link>/tags/john/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/john/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>journalctl</title>
+      <link>/tags/journalctl/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/journalctl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>less</title>
+      <link>/tags/less/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/less/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nhttpd</title>
+      <link>/tags/nhttpd/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/nhttpd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nostromo</title>
+      <link>/tags/nostromo/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/nostromo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>traverxec</title>
+      <link>/tags/traverxec/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/traverxec/</guid>
       <description></description>
     </item>
     
@@ -44,15 +134,6 @@
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/enumeration/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>hackthebox</title>
-      <link>/tags/hackthebox/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/hackthebox/</guid>
       <description></description>
     </item>
     
@@ -170,15 +251,6 @@
       <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/gobuster/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>john</title>
-      <link>/tags/john/</link>
-      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/john/</guid>
       <description></description>
     </item>
     
@@ -440,15 +512,6 @@
       <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/cve-2018-12613/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gtfobins</title>
-      <link>/tags/gtfobins/</link>
-      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/gtfobins/</guid>
       <description></description>
     </item>
     

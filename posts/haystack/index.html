@@ -346,7 +346,6 @@ cat: /etc/logstash/conf.d/filter.conf: Permiso denegado
         <span style="color:#f92672">&#34;number&#34;</span>: <span style="color:#e6db74">&#34;6.4.2&#34;</span>
     }
 }
-
 </code></pre></div><p>Elasticsearch is in version 6.4.2 for a build date of September 2018. That&rsquo;s quite old.</p>
 <p>And indeed after a bit of GoogleFu we stumbled upon CVE-2018-17246 :</p>
 <blockquote>
@@ -416,24 +415,24 @@ The <code>conf.d</code> folder contains three files. According to its contents, 
 <p>Let&rsquo;s look first at <code>input.conf</code> and <code>output.conf</code> :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat input.conf
 input <span style="color:#f92672">{</span>
-	file <span style="color:#f92672">{</span>
-		path <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/opt/kibana/logstash_*&#34;</span>
-		start_position <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;beginning&#34;</span>
-		sincedb_path <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/dev/null&#34;</span>
-		stat_interval <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;10 second&#34;</span>
-		type <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;execute&#34;</span>
-		mode <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;read&#34;</span>
-	<span style="color:#f92672">}</span>
+    file <span style="color:#f92672">{</span>
+        path <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/opt/kibana/logstash_*&#34;</span>
+        start_position <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;beginning&#34;</span>
+        sincedb_path <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/dev/null&#34;</span>
+        stat_interval <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;10 second&#34;</span>
+        type <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;execute&#34;</span>
+        mode <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;read&#34;</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 
 $ cat output.conf
 output <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
-		stdout <span style="color:#f92672">{</span> codec <span style="color:#f92672">=</span>&gt; json <span style="color:#f92672">}</span>
-		exec <span style="color:#f92672">{</span>
-			command <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;%{comando} &amp;&#34;</span>
-		<span style="color:#f92672">}</span>
-	<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
+        stdout <span style="color:#f92672">{</span> codec <span style="color:#f92672">=</span>&gt; json <span style="color:#f92672">}</span>
+        exec <span style="color:#f92672">{</span>
+            command <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;%{comando} &amp;&#34;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>According to this config Logstash will, every 10 seconds :</p>
 <ol>
@@ -459,11 +458,11 @@ But first we have to make sure the command match the filter to be parsed correct
 <p>Let&rsquo;s understand that filter :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat filter.conf
 filter <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
-		grok <span style="color:#f92672">{</span>
-			match <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;message&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;Ejecutar\s*comando\s*:\s+%{GREEDYDATA:comando}&#34;</span> <span style="color:#f92672">}</span>
-		<span style="color:#f92672">}</span>
-	<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>type<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;execute&#34;</span> <span style="color:#f92672">{</span>
+        grok <span style="color:#f92672">{</span>
+            match <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;message&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;Ejecutar\s*comando\s*:\s+%{GREEDYDATA:comando}&#34;</span> <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>That&rsquo;s a complicated syntax at first look. Logstash documentation present <code>grok</code> as :</p>
 <blockquote>
