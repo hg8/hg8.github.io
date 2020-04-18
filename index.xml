@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Mango - HackTheBox</title>
+      <link>/posts/manguo/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/manguo/</guid>
+      <description>Table of contents    User Flag  Recon NoSQL Injection Blind NoSQL data extract Pivot mango -&amp;gt; admin   Root Flag  Recon jjs setuid exploitation       Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</description>
+    </item>
+    
+    <item>
       <title>Traverxec - HackTheBox</title>
       <link>/posts/traverxec/</link>
       <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
@@ -37,10 +46,7 @@ Tl;Dr: The user flag consisted in finding an INSTALL archive containing install 
       <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/arch-linux-huawei-matebook-x-pro-2019/</guid>
-      <description>A few people asked me what was I using as my daily driver.
-I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
-Super satisfied about it, I have no complaints and it&amp;rsquo;s perfect for my daily workflow.
-Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;rsquo;t work out of the box.</description>
+      <description>Table of contents    Installation  Update BIOS if possible Create an Arch Boot USB Key Boot from USB Make Fonts Readable Connect to internet Partition and Format Setup Disk Encryption Basic Configuration Make the system bootable   Post Install Configuration  Connect to internet Create a regular user   Setup power saving  Get X11 Working Other useful app Setup my dot files Install a AUR Helper Automatic startx at user login Make Pacman faster   Various configurations  Setup the Linux Console font for HiDPi Setup user dirs Configure the Trackpad Hibernate on Low Battery Time Sync   Fixes  4.</description>
     </item>
     
     <item>
@@ -59,10 +65,9 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/bitlab/</guid>
-      <description>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was my first time Reverse Engineering. dflsd
-First we add the box ip to our hosts file and let&amp;rsquo;s start!
-[hg8@archbook ~]$ echo &amp;#34;10.10.10.114 bitlab.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts User flag. Let&amp;rsquo;s start with the classic nmap scan:
-nmap -sV -sT -sC bitlab.htb Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+      <description>Table of contents    User flag.  Recon Pivot www-data -&amp;gt; clave user   Root Flag  Recon       Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.
+Tl;Dr: The user was accesible
+First we add the box ip to our host file and let&amp;rsquo;s start!</description>
     </item>
     
     <item>
@@ -82,11 +87,8 @@ I&amp;rsquo;m writing all of this down for mainly three purposes:
       <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/craft/</guid>
-      <description>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-[hg8@archbook ~]$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
-User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-[hg8@archbook ~]$ nmap -sV -sT -sC craft.</description>
+      <description>Table of contents    Recon Remote code execution on API Pivot from docker container to user   Recon Exploiting Vault for SSH root password     Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:</description>
     </item>
     
     <item>

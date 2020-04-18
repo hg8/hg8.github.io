@@ -143,6 +143,62 @@
   <div class="posts">
     
     <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/manguo/">Mango - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-04-18
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 11 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/mango/">mango</a>&nbsp;
+          
+            #<a href="/tags/mongodb/">mongodb</a>&nbsp;
+          
+            #<a href="/tags/nosql-injection/">nosql injection</a>&nbsp;
+          
+            #<a href="/tags/setuid/">setuid</a>&nbsp;
+          
+            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/mango-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</p>
+<p><strong>Tl;Dr:</strong> User flag was accessible after exploiting an NoSQL injection flaw to extract usernames and passwords of accounts present on the box. Those credentials can be used to SSH login to the box as <code>mango</code> then pivoting to the <code>admin</code> user holding the flag by <code>su</code> to it using the password extracted previously.<br>
+The root flag was accessible by exploiting the <code>jjs</code> binary that have setuid bit set allowing to read and write files on the box as <code>root</code> user.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/manguo/">Read more →</a></div>
+      
+    </div>
+    
+    <div class="post on-list">
       <h1 class="post-title"><a href="/posts/traverxec/">Traverxec - HackTheBox</a></h1>
       <div class="post-meta">
         
@@ -378,58 +434,6 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
       </div>
       
         <div><a class="read-more button" href="/posts/postman/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/bitlab/">Bitlab - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-01-11
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 6 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/bitlab/">bitlab</a>&nbsp;
-          
-            #<a href="/tags/obfuscation/">obfuscation</a>&nbsp;
-          
-            #<a href="/tags/webshell/">webshell</a>&nbsp;
-          
-            #<a href="/tags/git/">git</a>&nbsp;
-          
-            #<a href="/tags/gitlab/">gitlab</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/bitlab-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Bitlab box was an insteresting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was a good Reverse Engineering challenge.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/bitlab/">Read more →</a></div>
       
     </div>
     

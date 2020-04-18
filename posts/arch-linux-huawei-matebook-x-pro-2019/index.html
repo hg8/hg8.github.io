@@ -6,10 +6,7 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="A few people asked me what was I using as my daily driver.
-I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.
-Super satisfied about it, I have no complaints and it&amp;rsquo;s perfect for my daily workflow.
-Here is a guide I wrote on how to install Arch Linux and fix the little things that don&amp;rsquo;t work out of the box."/>
+<meta name="description" content="Table of contents    Installation  Update BIOS if possible Create an Arch Boot USB Key Boot from USB Make Fonts Readable Connect to internet Partition and Format Setup Disk Encryption Basic Configuration Make the system bootable   Post Install Configuration  Connect to internet Create a regular user   Setup power saving  Get X11 Working Other useful app Setup my dot files Install a AUR Helper Automatic startx at user login Make Pacman faster   Various configurations  Setup the Linux Console font for HiDPi Setup user dirs Configure the Trackpad Hibernate on Low Battery Time Sync   Fixes  4."/>
 <meta name="keywords" content="arch linux, linux, huawei, matebook x pro, guide"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/arch-linux-huawei-matebook-x-pro-2019/" />
@@ -190,7 +187,70 @@ This guide describe how to make a full installation of Arch Linux on the Huawei 
     
 
     <div class="post-content">
-      <p>A few people asked me what was I using as my daily driver.<br>
+      <hr>
+<details open class="entry-toc">
+  <summary>
+    <span>
+        <b>Table of contents</b>
+    </span>
+  </summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#installation">Installation</a>
+      <ul>
+        <li><a href="#update-bios-if-possible">Update BIOS if possible</a></li>
+        <li><a href="#create-an-arch-boot-usb-key">Create an Arch Boot USB Key</a></li>
+        <li><a href="#boot-from-usb">Boot from USB</a></li>
+        <li><a href="#make-fonts-readable">Make Fonts Readable</a></li>
+        <li><a href="#connect-to-internet">Connect to internet</a></li>
+        <li><a href="#partition-and-format">Partition and Format</a></li>
+        <li><a href="#setup-disk-encryption">Setup Disk Encryption</a></li>
+        <li><a href="#basic-configuration">Basic Configuration</a></li>
+        <li><a href="#make-the-system-bootable">Make the system bootable</a></li>
+      </ul>
+    </li>
+    <li><a href="#post-install-configuration">Post Install Configuration</a>
+      <ul>
+        <li><a href="#connect-to-internet-1">Connect to internet</a></li>
+        <li><a href="#create-a-regular-user">Create a regular user</a></li>
+      </ul>
+    </li>
+    <li><a href="#setup-power-saving">Setup power saving</a>
+      <ul>
+        <li><a href="#get-x11-working">Get X11 Working</a></li>
+        <li><a href="#other-useful-app">Other useful app</a></li>
+        <li><a href="#setup-my-dot-files">Setup my dot files</a></li>
+        <li><a href="#install-a-aur-helper">Install a AUR Helper</a></li>
+        <li><a href="#automatic-startx-at-user-login">Automatic startx at user login</a></li>
+        <li><a href="#make-pacman-faster">Make Pacman faster</a></li>
+      </ul>
+    </li>
+    <li><a href="#various-configurations">Various configurations</a>
+      <ul>
+        <li><a href="#setup-the-linux-console-font-for-hidpi">Setup the Linux Console font for HiDPi</a></li>
+        <li><a href="#setup-user-dirs">Setup user dirs</a></li>
+        <li><a href="#configure-the-trackpad">Configure the Trackpad</a></li>
+        <li><a href="#hibernate-on-low-battery">Hibernate on Low Battery</a></li>
+        <li><a href="#time-sync">Time Sync</a></li>
+      </ul>
+    </li>
+    <li><a href="#fixes">Fixes</a>
+      <ul>
+        <li><a href="#40-surround-speakers">4.0 Surround Speakers</a></li>
+        <li><a href="#volume-and-screen-brightness-buttons-work">Volume and Screen Brightness Buttons Work</a></li>
+      </ul>
+    </li>
+    <li><a href="#maintenance">Maintenance</a>
+      <ul>
+        <li><a href="#bios-updates">BIOS Updates</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</details>
+
+<hr>
+<p>A few people asked me what was I using as my daily driver.<br>
 I have been using a Matebook X Pro 2019 since almost one year now, with Arch Linux as main distro.</p>
 <p>Super satisfied about it, I have no complaints and it&rsquo;s perfect for my daily workflow.<br>
 Here is a guide I wrote on how to install Arch Linux and fix the little things that don&rsquo;t work out of the box.</p>

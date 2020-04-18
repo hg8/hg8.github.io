@@ -80,3 +80,10 @@
 .menu {
     padding-right: 0px;
 }
+
+.entry-toc nav > ul {
+    margin: 0;
+}
+.entry-toc ul {
+    list-style: none;
+}

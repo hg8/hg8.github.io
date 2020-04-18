@@ -6,10 +6,19 @@
     <description>Recent content in gtfobins on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/gtfobins/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mango - HackTheBox</title>
+      <link>/posts/manguo/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/manguo/</guid>
+      <description>Table of contents    User Flag  Recon NoSQL Injection Blind NoSQL data extract Pivot mango -&amp;gt; admin   Root Flag  Recon jjs setuid exploitation       Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</description>
+    </item>
     
     <item>
       <title>Traverxec - HackTheBox</title>

@@ -6,11 +6,8 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-First thing first, let&amp;rsquo;s add the box IP to the hosts file:
-[hg8@archbook ~]$ echo &amp;#34;10.10.10.110 craft.htb&amp;#34; &amp;gt;&amp;gt; /etc/hosts and let&amp;rsquo;s start!
-User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
-[hg8@archbook ~]$ nmap -sV -sT -sC craft."/>
+<meta name="description" content="Table of contents    Recon Remote code execution on API Pivot from docker container to user   Recon Exploiting Vault for SSH root password     Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
+First thing first, let&amp;rsquo;s add the box IP to the hosts file:"/>
 <meta name="keywords" content="hackthebox, ctf, craft"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/craft/" />
@@ -189,7 +186,29 @@ User Flag Recon Let&amp;rsquo;s start with the classic nmap scan:
     
 
     <div class="post-content">
-      <p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
+      <hr>
+<details open class="entry-toc">
+  <summary>
+    <span>
+        <b>Table of contents</b>
+    </span>
+  </summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#recon">Recon</a></li>
+    <li><a href="#remote-code-execution-on-api">Remote code execution on API</a></li>
+    <li><a href="#pivot-from-docker-container-to-user">Pivot from docker container to user</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#recon-1">Recon</a></li>
+    <li><a href="#exploiting-vault-for-ssh-root-password">Exploiting Vault for SSH root password</a></li>
+  </ul>
+</nav>
+</details>
+
+<hr>
+<p>Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.</p>
 <p>First thing first, let&rsquo;s add the box IP to the hosts file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.110 craft.htb&#34;</span> &gt;&gt; /etc/hosts
 </code></pre></div><p>and let&rsquo;s start!</p>
