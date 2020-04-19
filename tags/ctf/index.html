@@ -394,7 +394,7 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
         
         <span class="post-author">— Written by hg8</span>
         
-          <span class="post-read-time">— 6 min read</span>
+          <span class="post-read-time">— 7 min read</span>
         
       </div>
 
@@ -426,7 +426,11 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
 
       <div class="post-content">
         
-          Bitlab box was an insteresting box, user part was typical real-life scenario (actually meet this scenario during a pentest) while the root part was a good Reverse Engineering challenge.
+          <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.</p>
+<p><strong>Tl;Dr:</strong> The user part needed you access a Gitlab instance by using credentials leaked by one of the developer. From here you could merge a web-shell that is automatically pulled on the server by a <code>merge_request</code> webhook. Still from the Gitlab instance you find a piece of code with database credentials. With the web-shell as <code>www-data</code> you can pivot to <code>clave</code> user using his password found in the database and get the flag.
+The root part was reverse engineering of an Windows binary to extract the <code>root</code> account password needed to grab the flag.</p>
+<p>Alright! Let's get into the details now!</p>
+
         
       </div>
       

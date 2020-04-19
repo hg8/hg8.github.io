@@ -87,3 +87,38 @@
 .entry-toc ul {
     list-style: none;
 }
+
+#bg-text {
+	font-family: monospace;
+	position: fixed;
+	top: 0;
+	left: 0;
+	opacity: 0.15;
+	height: 100vh;
+	width: 100vw;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	pointer-events: none;
+	line-height: 1;
+	font-size: 2rem;
+}
+
+.bg-line:before {
+	content: attr(data-content);
+	overflow-x: hidden;
+	overflow-y: hidden;
+	white-space: nowrap;
+	speak: none;
+}
+
+body > div.container > div#bg-text-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	background-color: var(--bg-light);
+	opacity: 0.80;
+	pointer-events: none;
+}
+

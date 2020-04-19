@@ -17,9 +17,8 @@
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/bitlab/</guid>
-      <description>Table of contents    User flag.  Recon Pivot www-data -&amp;gt; clave user   Root Flag  Recon       Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.
-Tl;Dr: The user was accesible
-First we add the box ip to our host file and let&amp;rsquo;s start!</description>
+      <description>Table of contents    User flag.  Recon Web-shell as www-data Pivot www-data -&amp;gt; clave user   Root Flag  Recon Reverse engineering of RemoteConnection.exe       Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.
+Tl;Dr: The user part needed you access a Gitlab instance by using credentials leaked by one of the developer.</description>
     </item>
     
     <item>
@@ -28,8 +27,7 @@ First we add the box ip to our host file and let&amp;rsquo;s start!</description
       <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/craft/</guid>
-      <description>Table of contents    Recon Remote code execution on API Pivot from docker container to user   Recon Exploiting Vault for SSH root password     Craft was a not so straight forward box, mainly based on little configuration mistakes rather than exploits. Which makes it more interesting in my opinion. I learned a few tricks on this one.
-First thing first, let&amp;rsquo;s add the box IP to the hosts file:</description>
+      <description>Table of contents    User Flag  Recon Remote code execution on API Pivot from docker container to user   Root Flag  Recon Exploiting Vault for SSH root password       Craft was very interesting and well designed box. It was a not so straight forward to solve and mainly based on configuration mistakes rather than exploits. That makes it more interesting in my opinion since we get closer to real life scenarios.</description>
     </item>
     
   </channel>
