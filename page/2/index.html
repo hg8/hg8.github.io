@@ -248,9 +248,11 @@ The root part was reverse engineering of an Windows binary to extract the <code>
 
       <div class="post-content">
         
-          
-            Table of contents    User Flag  Recon Remote code execution on API Pivot from docker container to user   Root Flag  Recon Exploiting Vault for SSH root password       Craft was very interesting and well designed box. It was a not so straight forward to solve and mainly based on configuration mistakes rather than exploits. That makes it more interesting in my opinion since we get closer to real life scenarios.
-          
+          <p>Craft was very interesting and well designed box. It was a not so straight forward to solve and mainly based on configuration mistakes rather than exploits. That makes it more interesting in my opinion since we get closer to real life scenarios. I also learned a few tricks on this one.</p>
+<p><strong>Tl;Dr:</strong> The user flag was accessible after finding the main API credentials in the Git history of the project. With access to the code source and the API itself, we find a vulnerability allowing Remote Code Execution. This RCE leads to a shell inside of a Docker. From this shell we access the API config files containing database connection settings allowing us to extract users credentials stored there. The credentials let us access to <code>gilfoyle</code> repositories where one contains his SSH key backup. Using this SSH key we connect to his account and grab the user flag.<br>
+The root flag was accessible after using Vault instance configured on the box to generate a One Time Password for the SSH <code>root</code> account. We connect through SSH using this password and get the flag.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+
         
       </div>
       
