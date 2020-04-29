@@ -302,6 +302,7 @@ Creates a new brew entry.
 &#34;&#34;&#34;
 
 # make sure the ABV value is sane.
+
 if eval(&#39;%s &gt; 1&#39; % request.json[&#39;abv&#39;]):
     return &#34;ABV must be a decimal value less than 1.0&#34;, 400
 else:
@@ -358,9 +359,10 @@ while True:
     brew_dict[&#39;name&#39;] = &#39;bullshit&#39;
     brew_dict[&#39;brewer&#39;] = &#39;bullshit&#39;
     brew_dict[&#39;style&#39;] = &#39;bullshit&#39;
-
+    
     json_data = json.dumps(brew_dict)
     response = requests.post(&#39;https://api.craft.htb/api/brew/&#39;, headers=headers, data=json_data, verify=False)
+
 </code></pre>
   
 
