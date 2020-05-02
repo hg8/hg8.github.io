@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>exploit on hg8&#39;s Notes</title>
-    <link>/tags/exploit/</link>
-    <description>Recent content in exploit on hg8&#39;s Notes</description>
+    <title>openadmin on hg8&#39;s Notes</title>
+    <link>/tags/openadmin/</link>
+    <description>Recent content in openadmin on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 24 Jan 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/exploit/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/openadmin/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,17 +18,6 @@
       
       <guid>/posts/openadmin/</guid>
       <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
-    </item>
-    
-    <item>
-      <title>Writeup - HackTheBox</title>
-      <link>/posts/writeup/</link>
-      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/writeup/</guid>
-      <description>Writeup was my first machine I solved to start my CTF journey. It&amp;rsquo;s an easy rated box but still interesting and perfect to jump into the CTF bath!
-User Flag Recon Let&amp;rsquo;s start with the classic nmap:
-[hg8@archbook ~]$ nmap -sV -sT -sC writeup.htb Starting Nmap 7.70 ( https://nmap.org ) at 2019-09-01 10:39 CEST Nmap scan report for writeup.htb (10.10.10.138) PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u6 (protocol 2.</description>
     </item>
     
   </channel>

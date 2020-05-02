@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.68.3" />
+	<meta name="generator" content="Hugo 0.69.2" />
     
       <title>hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
     
@@ -141,6 +141,72 @@
   
 
   <div class="posts">
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-01-24
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 9 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/openadmin/">openadmin</a>&nbsp;
+          
+            #<a href="/tags/opennetadmin/">opennetadmin</a>&nbsp;
+          
+            #<a href="/tags/exploit/">exploit</a>&nbsp;
+          
+            #<a href="/tags/php/">php</a>&nbsp;
+          
+            #<a href="/tags/shell_exec/">shell_exec</a>&nbsp;
+          
+            #<a href="/tags/apache/">apache</a>&nbsp;
+          
+            #<a href="/tags/ssh/">ssh</a>&nbsp;
+          
+            #<a href="/tags/john/">john</a>&nbsp;
+          
+            #<a href="/tags/sudo/">sudo</a>&nbsp;
+          
+            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/openadmin-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&rsquo;t recommend it for beginners since it require a lot a recon, it&rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</p>
+<p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>
+The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code> that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
+<p>Alright, let&rsquo;s get into it!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/openadmin/">Read more →</a></div>
+      
+    </div>
     
     <div class="post on-list">
       <h1 class="post-title"><a href="/posts/bitlab/">Bitlab - HackTheBox</a></h1>
@@ -379,72 +445,6 @@ The root flag was accessible after using Vault instance configured on the box to
       </div>
       
         <div><a class="read-more button" href="/posts/networked/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/jarvis/">Jarvis - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-11-09
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 10 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/jarvis/">jarvis</a>&nbsp;
-          
-            #<a href="/tags/waf/">waf</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/sql-injection/">sql-injection</a>&nbsp;
-          
-            #<a href="/tags/sqlmap/">sqlmap</a>&nbsp;
-          
-            #<a href="/tags/phpmyadmin/">phpmyadmin</a>&nbsp;
-          
-            #<a href="/tags/cve-2018-12613/">cve-2018-12613</a>&nbsp;
-          
-            #<a href="/tags/python/">python</a>&nbsp;
-          
-            #<a href="/tags/systemctl/">systemctl</a>&nbsp;
-          
-            #<a href="/tags/service/">service</a>&nbsp;
-          
-            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
-          
-            #<a href="/tags/command-injection/">command-injection</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/jarvis-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Jarvis was a pretty straight forward box and &ldquo;textbook case&rdquo; style. While it&rsquo;s rated as Medium difficulty I would advise beginners to start with this one. It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/jarvis/">Read more →</a></div>
       
     </div>
     

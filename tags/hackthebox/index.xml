@@ -51,6 +51,15 @@ Tl;Dr: The user flag consisted in exploiting a redis instance accessible without
     </item>
     
     <item>
+      <title>OpenAdmin - HackTheBox</title>
+      <link>/posts/openadmin/</link>
+      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/openadmin/</guid>
+      <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
+    </item>
+    
+    <item>
       <title>Bitlab - HackTheBox</title>
       <link>/posts/bitlab/</link>
       <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
