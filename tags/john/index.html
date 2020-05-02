@@ -39,7 +39,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="/tags/john/" />
-<meta property="og:updated_time" content="2020-04-11T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+<meta property="og:updated_time" content="2020-05-02T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
@@ -138,6 +138,72 @@
   
 
   <div class="posts">
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-05-02
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 9 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/openadmin/">openadmin</a>&nbsp;
+          
+            #<a href="/tags/opennetadmin/">opennetadmin</a>&nbsp;
+          
+            #<a href="/tags/exploit/">exploit</a>&nbsp;
+          
+            #<a href="/tags/php/">php</a>&nbsp;
+          
+            #<a href="/tags/shell_exec/">shell_exec</a>&nbsp;
+          
+            #<a href="/tags/apache/">apache</a>&nbsp;
+          
+            #<a href="/tags/ssh/">ssh</a>&nbsp;
+          
+            #<a href="/tags/john/">john</a>&nbsp;
+          
+            #<a href="/tags/sudo/">sudo</a>&nbsp;
+          
+            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/openadmin-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&rsquo;t recommend it for beginners since it require a lot a recon, it&rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</p>
+<p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>
+The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code> that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
+<p>Alright, let&rsquo;s get into it!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/openadmin/">Read more →</a></div>
+      
+    </div>
     
     <div class="post on-list">
       <h1 class="post-title"><a href="/posts/traverxec/">Traverxec - HackTheBox</a></h1>
@@ -260,72 +326,6 @@ Using the same password we could login to a Webmin panel and use an exploit (CVE
       </div>
       
         <div><a class="read-more button" href="/posts/postman/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-01-24
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 9 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/openadmin/">openadmin</a>&nbsp;
-          
-            #<a href="/tags/opennetadmin/">opennetadmin</a>&nbsp;
-          
-            #<a href="/tags/exploit/">exploit</a>&nbsp;
-          
-            #<a href="/tags/php/">php</a>&nbsp;
-          
-            #<a href="/tags/shell_exec/">shell_exec</a>&nbsp;
-          
-            #<a href="/tags/apache/">apache</a>&nbsp;
-          
-            #<a href="/tags/ssh/">ssh</a>&nbsp;
-          
-            #<a href="/tags/john/">john</a>&nbsp;
-          
-            #<a href="/tags/sudo/">sudo</a>&nbsp;
-          
-            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/openadmin-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          <p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&rsquo;t recommend it for beginners since it require a lot a recon, it&rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</p>
-<p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>
-The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code> that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
-<p>Alright, let&rsquo;s get into it!</p>
-
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/openadmin/">Read more →</a></div>
       
     </div>
     

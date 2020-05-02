@@ -6,24 +6,42 @@
     <description>Recent content in Tags on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>apache</title>
+      <link>/tags/apache/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/apache/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>ctf</title>
       <link>/tags/ctf/</link>
-      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>exploit</title>
+      <link>/tags/exploit/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/exploit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>gtfobins</title>
       <link>/tags/gtfobins/</link>
-      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/gtfobins/</guid>
       <description></description>
@@ -32,9 +50,72 @@
     <item>
       <title>hackthebox</title>
       <link>/tags/hackthebox/</link>
-      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/hackthebox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>john</title>
+      <link>/tags/john/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/john/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>openadmin</title>
+      <link>/tags/openadmin/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/openadmin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>opennetadmin</title>
+      <link>/tags/opennetadmin/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/opennetadmin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>php</title>
+      <link>/tags/php/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shell_exec</title>
+      <link>/tags/shell_exec/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/shell_exec/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ssh</title>
+      <link>/tags/ssh/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ssh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sudo</title>
+      <link>/tags/sudo/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sudo/</guid>
       <description></description>
     </item>
     
@@ -89,15 +170,6 @@
       <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/directory-transversal/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>john</title>
-      <link>/tags/john/</link>
-      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/john/</guid>
       <description></description>
     </item>
     
@@ -174,15 +246,6 @@
     </item>
     
     <item>
-      <title>php</title>
-      <link>/tags/php/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/php/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>registry</title>
       <link>/tags/registry/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
@@ -197,24 +260,6 @@
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/restic/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>shell_exec</title>
-      <link>/tags/shell_exec/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/shell_exec/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sudo</title>
-      <link>/tags/sudo/</link>
-      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/sudo/</guid>
       <description></description>
     </item>
     
@@ -309,56 +354,11 @@
     </item>
     
     <item>
-      <title>ssh</title>
-      <link>/tags/ssh/</link>
-      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ssh/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>webmin</title>
       <link>/tags/webmin/</link>
       <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/webmin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>apache</title>
-      <link>/tags/apache/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/apache/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>exploit</title>
-      <link>/tags/exploit/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/exploit/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>openadmin</title>
-      <link>/tags/openadmin/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/openadmin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>opennetadmin</title>
-      <link>/tags/opennetadmin/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/opennetadmin/</guid>
       <description></description>
     </item>
     

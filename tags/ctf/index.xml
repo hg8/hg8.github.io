@@ -6,10 +6,19 @@
     <description>Recent content in ctf on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>OpenAdmin - HackTheBox</title>
+      <link>/posts/openadmin/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/openadmin/</guid>
+      <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
+    </item>
     
     <item>
       <title>Mango - HackTheBox</title>
@@ -48,15 +57,6 @@ Tl;Dr: The user flag consisted in finding an INSTALL archive containing install 
       <guid>/posts/postman/</guid>
       <description>Postman was an &amp;ldquo;easy&amp;rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.
 Tl;Dr: The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from redis user to Matt user.</description>
-    </item>
-    
-    <item>
-      <title>OpenAdmin - HackTheBox</title>
-      <link>/posts/openadmin/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/openadmin/</guid>
-      <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
     </item>
     
     <item>

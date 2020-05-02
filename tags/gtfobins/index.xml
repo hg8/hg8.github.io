@@ -6,10 +6,19 @@
     <description>Recent content in gtfobins on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/gtfobins/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>OpenAdmin - HackTheBox</title>
+      <link>/posts/openadmin/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/openadmin/</guid>
+      <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
+    </item>
     
     <item>
       <title>Mango - HackTheBox</title>
@@ -28,15 +37,6 @@
       <guid>/posts/traverxec/</guid>
       <description>Traverxec was in my opinion a particular and interesting box. While being rated easy it still teach me a little trick and got me very frustrated at some point because it was super easy to overlook and overthink easy things. Still it was worth cogitate on it!
 Tl;Dr: The user flag was accessible after using a Remote Code Execution exploit on the nhttpd web server running, giving us access to the www-data user.</description>
-    </item>
-    
-    <item>
-      <title>OpenAdmin - HackTheBox</title>
-      <link>/posts/openadmin/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/openadmin/</guid>
-      <description>Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</description>
     </item>
     
     <item>
