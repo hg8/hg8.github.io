@@ -6,7 +6,7 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID      OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it."/>
+<meta name="description" content="Table of contents    User Flag  Recon Pivot www-data -&amp;gt; jimmy Pivot jimmy -&amp;gt; joanna   Root Flag  Recon Exploit nano SUID       OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&amp;rsquo;t recommend it for beginners since it require a lot a recon, it&amp;rsquo;s easy to miss important information and can be very frustrating if you are not used to it."/>
 <meta name="keywords" content="hackthebox, ctf, openadmin, opennetadmin, exploit, php, shell_exec, apache, ssh, john, sudo, gtfobins"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="/posts/openadmin/" />
@@ -227,6 +227,7 @@ Alright, let&#39;s get into it!
 </nav>
 </details>
 
+<hr>
 <p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn&rsquo;t recommend it for beginners since it require a lot a recon, it&rsquo;s easy to miss important information and can be very frustrating if you are not used to it.</p>
 <p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>
 The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code>  that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
