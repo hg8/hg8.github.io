@@ -39,7 +39,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="/tags/ctf/" />
-<meta property="og:updated_time" content="2020-05-02T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+<meta property="og:updated_time" content="2020-05-03T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
@@ -138,6 +138,58 @@
   
 
   <div class="posts">
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/pwnable/fd/">FD - Pwnable.kr</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-05-03
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 6 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/pwnable/">pwnable</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/fd/">fd</a>&nbsp;
+          
+            #<a href="/tags/re/">re</a>&nbsp;
+          
+            #<a href="/tags/file-descriptor/">file descriptor</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/fd.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend <a href="http://pwnable.kr">http://pwnable.kr</a> which appear to have a reasonable curve of difficulty making it ideal for learning.</p>
+<p>If you have other recommandations for good ressources to learn and practices Reverse Engineering feels free to let me know below in a comment or <a href="https://hg8.sh/about/">contact me</a> ;)</p>
+<p>That being said, here is my write-up for the first challenge of pwnable.kr: FD.</p>
+<p>Let&rsquo;s go!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/pwnable/fd/">Read more →</a></div>
+      
+    </div>
     
     <div class="post on-list">
       <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
@@ -385,66 +437,6 @@ The root flag required to access a CMS after brute-forcing the admin password fo
       </div>
       
         <div><a class="read-more button" href="/posts/registry/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/postman/">Postman - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2020-03-14
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 11 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/postman/">postman</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/webmin/">webmin</a>&nbsp;
-          
-            #<a href="/tags/redis/">redis</a>&nbsp;
-          
-            #<a href="/tags/cve-2019-12840/">cve-2019-12840</a>&nbsp;
-          
-            #<a href="/tags/ssh/">ssh</a>&nbsp;
-          
-            #<a href="/tags/john/">john</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/postman-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          <p>Postman was an &ldquo;easy&rdquo; rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.</p>
-<p><strong>Tl;Dr:</strong> The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from <code>redis</code> user to <code>Matt</code> user.<br>
-Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.</p>
-<p>Alright, let&rsquo;s get into it!</p>
-
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/postman/">Read more →</a></div>
       
     </div>
     

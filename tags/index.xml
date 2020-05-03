@@ -6,10 +6,55 @@
     <description>Recent content in Tags on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 03 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ctf</title>
+      <link>/tags/ctf/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fd</title>
+      <link>/tags/fd/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/fd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>file descriptor</title>
+      <link>/tags/file-descriptor/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/file-descriptor/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pwnable</title>
+      <link>/tags/pwnable/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pwnable/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>re</title>
+      <link>/tags/re/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/re/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>apache</title>
@@ -17,15 +62,6 @@
       <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/apache/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ctf</title>
-      <link>/tags/ctf/</link>
-      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     

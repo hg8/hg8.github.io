@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     
-      <title>ctf :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+      <title>fd :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="description" content=""/>
 <meta name="keywords" content="ctf, hackthebox, htb, security"/>
 <meta name="robots" content="noodp"/>
-<link rel="canonical" href="/tags/ctf/" />
+<link rel="canonical" href="/tags/fd/" />
 
 
 
@@ -30,20 +30,20 @@
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ctf"/>
+<meta name="twitter:title" content="fd"/>
 <meta name="twitter:description" content=""/>
 
 
 
-<meta property="og:title" content="ctf" />
+<meta property="og:title" content="fd" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="/tags/ctf/" />
+<meta property="og:url" content="/tags/fd/" />
 <meta property="og:updated_time" content="2020-05-03T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
-<link rel="alternate" type="application/rss+xml" href="/tags/ctf/index.xml" title="hg8's Notes" />
+<link rel="alternate" type="application/rss+xml" href="/tags/fd/index.xml" title="hg8's Notes" />
 
 
 
@@ -140,192 +140,59 @@
   <div class="posts">
     
     <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/jarvis/">Jarvis - HackTheBox</a></h1>
+      <h1 class="post-title"><a href="/posts/pwnable/fd/">FD - Pwnable.kr</a></h1>
       <div class="post-meta">
         
           <span class="post-date">
-            2019-11-09
+            2020-05-03
           </span>
 
           
         
         <span class="post-author">— Written by hg8</span>
         
-          <span class="post-read-time">— 10 min read</span>
+          <span class="post-read-time">— 6 min read</span>
         
       </div>
 
       
         <span class="post-tags">
           
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+            #<a href="/tags/pwnable/">pwnable</a>&nbsp;
           
             #<a href="/tags/ctf/">ctf</a>&nbsp;
           
-            #<a href="/tags/jarvis/">jarvis</a>&nbsp;
+            #<a href="/tags/fd/">fd</a>&nbsp;
           
-            #<a href="/tags/waf/">waf</a>&nbsp;
+            #<a href="/tags/re/">re</a>&nbsp;
           
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/sql-injection/">sql-injection</a>&nbsp;
-          
-            #<a href="/tags/sqlmap/">sqlmap</a>&nbsp;
-          
-            #<a href="/tags/phpmyadmin/">phpmyadmin</a>&nbsp;
-          
-            #<a href="/tags/cve-2018-12613/">cve-2018-12613</a>&nbsp;
-          
-            #<a href="/tags/python/">python</a>&nbsp;
-          
-            #<a href="/tags/systemctl/">systemctl</a>&nbsp;
-          
-            #<a href="/tags/service/">service</a>&nbsp;
-          
-            #<a href="/tags/gtfobins/">gtfobins</a>&nbsp;
-          
-            #<a href="/tags/command-injection/">command-injection</a>&nbsp;
+            #<a href="/tags/file-descriptor/">file descriptor</a>&nbsp;
           
         </span>
       
 
       
         
-          <img src="/img/jarvis-hackthebox.png" class="post-cover" />
+          <img src="/img/fd.png" class="post-cover" />
         
       
 
       <div class="post-content">
         
-          Jarvis was a pretty straight forward box and &ldquo;textbook case&rdquo; style. While it&rsquo;s rated as Medium difficulty I would advise beginners to start with this one. It rely on bad configurations practices rather than already made exploits which makes it more interesting in my opinion.
+          <p>One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend <a href="http://pwnable.kr">http://pwnable.kr</a> which appear to have a reasonable curve of difficulty making it ideal for learning.</p>
+<p>If you have other recommandations for good ressources to learn and practices Reverse Engineering feels free to let me know below in a comment or <a href="https://hg8.sh/about/">contact me</a> ;)</p>
+<p>That being said, here is my write-up for the first challenge of pwnable.kr: FD.</p>
+<p>Let&rsquo;s go!</p>
+
         
       </div>
       
-        <div><a class="read-more button" href="/posts/jarvis/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/haystack/">Haystack - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-11-02
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 8 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/haystack/">haystack</a>&nbsp;
-          
-            #<a href="/tags/gobuster/">gobuster</a>&nbsp;
-          
-            #<a href="/tags/steganography/">steganography</a>&nbsp;
-          
-            #<a href="/tags/elasticsearch/">elasticsearch</a>&nbsp;
-          
-            #<a href="/tags/logstash/">logstash</a>&nbsp;
-          
-            #<a href="/tags/kibana/">kibana</a>&nbsp;
-          
-            #<a href="/tags/elk/">elk</a>&nbsp;
-          
-            #<a href="/tags/cve-2018-17246/">cve-2018-17246</a>&nbsp;
-          
-            #<a href="/tags/lfi/">lfi</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/haystack-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Haystack is a very interesting box to learn more about the ELK (Elasticsearch, Logstash, Kibana) stack which is becoming very popular. The user part is very CTF type while the root part is more realistic scenario
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/haystack/">Read more →</a></div>
-      
-    </div>
-    
-    <div class="post on-list">
-      <h1 class="post-title"><a href="/posts/writeup/">Writeup - HackTheBox</a></h1>
-      <div class="post-meta">
-        
-          <span class="post-date">
-            2019-10-12
-          </span>
-
-          
-        
-        <span class="post-author">— Written by hg8</span>
-        
-          <span class="post-read-time">— 5 min read</span>
-        
-      </div>
-
-      
-        <span class="post-tags">
-          
-            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
-          
-            #<a href="/tags/ctf/">ctf</a>&nbsp;
-          
-            #<a href="/tags/cmsms/">cmsms</a>&nbsp;
-          
-            #<a href="/tags/sqli/">sqli</a>&nbsp;
-          
-            #<a href="/tags/run-parts/">run-parts</a>&nbsp;
-          
-            #<a href="/tags/exploit/">exploit</a>&nbsp;
-          
-            #<a href="/tags/injection/">injection</a>&nbsp;
-          
-        </span>
-      
-
-      
-        
-          <img src="/img/writeup-hackthebox.png" class="post-cover" />
-        
-      
-
-      <div class="post-content">
-        
-          Writeup was my first machine I solved to start my CTF journey. It&rsquo;s an easy rated box but still interesting and perfect to jump into the CTF bath!
-        
-      </div>
-      
-        <div><a class="read-more button" href="/posts/writeup/">Read more →</a></div>
+        <div><a class="read-more button" href="/posts/pwnable/fd/">Read more →</a></div>
       
     </div>
     
     <div class="pagination">
   <div class="pagination__buttons">
-    
-      <span class="button previous">
-        <a href="/tags/ctf/page/2/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Newer posts</span>
-        </a>
-      </span>
     
     
   </div>
