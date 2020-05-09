@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>re on hg8&#39;s Notes</title>
-    <link>/tags/re/</link>
-    <description>Recent content in re on hg8&#39;s Notes</description>
+    <title>obscurity on hg8&#39;s Notes</title>
+    <link>/tags/obscurity/</link>
+    <description>Recent content in obscurity on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 09 May 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/re/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/obscurity/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>/posts/obscurity/</guid>
       <description>Table of contents    User Flag Recon  Remote Code Execution -&amp;gt; www-data shell Pivot www-data -&amp;gt; Robert Recovering the secret key   Root Flag  Recon Cracking Root password hash       Just finished the newly released Obscurity box on Hackthbox. I have to say it was a really cool box that required a lot of custom exploitation and cover various topics such as command injection, a little crypto and misconfigurations.</description>
-    </item>
-    
-    <item>
-      <title>FD - Pwnable.kr</title>
-      <link>/posts/pwnable/fd/</link>
-      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/pwnable/fd/</guid>
-      <description>Table of contents    Challenge Description File Descriptor Source Code Analysis Exploitation  Method 1 Method 2 (Recommended)   Exploitation with pwntools     One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend http://pwnable.kr which appear to have a reasonable curve of difficulty making it ideal for learning.</description>
     </item>
     
   </channel>

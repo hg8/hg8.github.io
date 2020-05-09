@@ -6,10 +6,19 @@
     <description>Recent content in john on hg8&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/john/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Obscurity - HackTheBox</title>
+      <link>/posts/obscurity/</link>
+      <pubDate>Sat, 09 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/obscurity/</guid>
+      <description>Table of contents    User Flag Recon  Remote Code Execution -&amp;gt; www-data shell Pivot www-data -&amp;gt; Robert Recovering the secret key   Root Flag  Recon Cracking Root password hash       Just finished the newly released Obscurity box on Hackthbox. I have to say it was a really cool box that required a lot of custom exploitation and cover various topics such as command injection, a little crypto and misconfigurations.</description>
+    </item>
     
     <item>
       <title>OpenAdmin - HackTheBox</title>

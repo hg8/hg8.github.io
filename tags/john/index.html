@@ -39,7 +39,7 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="/tags/john/" />
-<meta property="og:updated_time" content="2020-05-02T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
+<meta property="og:updated_time" content="2020-05-09T00:00:00+00:00" /><meta property="og:site_name" content="hg8&#39;s Notes" />
 
 
 
@@ -138,6 +138,64 @@
   
 
   <div class="posts">
+    
+    <div class="post on-list">
+      <h1 class="post-title"><a href="/posts/obscurity/">Obscurity - HackTheBox</a></h1>
+      <div class="post-meta">
+        
+          <span class="post-date">
+            2020-05-09
+          </span>
+
+          
+        
+        <span class="post-author">— Written by hg8</span>
+        
+          <span class="post-read-time">— 19 min read</span>
+        
+      </div>
+
+      
+        <span class="post-tags">
+          
+            #<a href="/tags/hackthebox/">hackthebox</a>&nbsp;
+          
+            #<a href="/tags/ctf/">ctf</a>&nbsp;
+          
+            #<a href="/tags/obscurity/">obscurity</a>&nbsp;
+          
+            #<a href="/tags/python/">python</a>&nbsp;
+          
+            #<a href="/tags/custom-exploitation/">custom-exploitation</a>&nbsp;
+          
+            #<a href="/tags/encryption/">encryption</a>&nbsp;
+          
+            #<a href="/tags/re/">re</a>&nbsp;
+          
+            #<a href="/tags/john/">john</a>&nbsp;
+          
+        </span>
+      
+
+      
+        
+          <img src="/img/obscurity-hackthebox.png" class="post-cover" />
+        
+      
+
+      <div class="post-content">
+        
+          <p>Just finished the newly released Obscurity box on Hackthbox. I have to say it was a really cool box that required a lot of custom exploitation and cover various topics such as command injection, a little crypto and misconfigurations. I wouldn&rsquo;t say it&rsquo;s an easy one but it&rsquo;s a pretty good one for developers comfortable with Python and want to level up in CTF.</p>
+<p><strong>Tl;Dr:</strong> The user flag consisted in grabbing the source code of the server running port 80, &ldquo;reverse engineer&rdquo; it to find a command injection flaw in its workflow. From there you achieve remote code execution as <code>www-data</code>. As <code>www-data</code> you can access <code>Robert</code> user <code>/home/</code> directory filed with a encrypted password reminder file and a &ldquo;homemade&rdquo; python encryption script. Reversing this script you can recover the password used to encrypt the password reminder file. Once decrypted you use this password in the file to pivot to <code>Robert</code> user and grab the flag.<br>
+The root flag was accessible by abusing another homemade python script used to get a shell as root, when reverse engineer it you discover the script temporary store all users password hashes to the <code>/tmp</code> folder when running but immediately deletes them. You can write a script to grab the hashes fast enough before they get deleted, crack the hash of root and connect with the <code>root</code> account to grab the flag.</p>
+<p>Alright! Let&rsquo;s get into the details now!</p>
+
+        
+      </div>
+      
+        <div><a class="read-more button" href="/posts/obscurity/">Read more →</a></div>
+      
+    </div>
     
     <div class="post on-list">
       <h1 class="post-title"><a href="/posts/openadmin/">OpenAdmin - HackTheBox</a></h1>
