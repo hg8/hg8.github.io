@@ -1,0 +1,84 @@
+@font-face {
+    font-family: 'Meslo LG S';
+    src: url('MesloLGS-Italic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG M';
+    src: url('MesloLGM-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG L';
+    src: url('MesloLGL-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG S';
+    src: url('MesloLGS-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Meslo LG S';
+    src: url('MesloLGS-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Meslo LG M';
+    src: url('MesloLGM-Italic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG M';
+    src: url('MesloLGM-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Meslo LG M';
+    src: url('MesloLGM-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Meslo LG S';
+    src: url('MesloLGS-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG L';
+    src: url('MesloLGL-Italic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Meslo LG L';
+    src: url('MesloLGL-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Meslo LG L';
+    src: url('MesloLGL-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
