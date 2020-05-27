@@ -20,7 +20,7 @@ $(document).ready(function() {
     /**
      * Display the menu on hi-res laptops and desktops.
      */
-    if ($(document).width() >= 1440) {
+    if ($(document).width() >= 1280) {
       menu.css("visibility", "visible");
       menuIcon.addClass("active");
     }

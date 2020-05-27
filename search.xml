@@ -30,13 +30,13 @@
             
             <tag> python </tag>
             
-            <tag> john </tag>
-            
             <tag> obscurity </tag>
             
             <tag> custom-exploitation </tag>
             
             <tag> encryption </tag>
+            
+            <tag> john </tag>
             
         </tags>
       
@@ -106,19 +106,19 @@
             
             <tag> gtfobins </tag>
             
+            <tag> php </tag>
+            
+            <tag> john </tag>
+            
             <tag> openadmin </tag>
             
             <tag> opennetadmin </tag>
-            
-            <tag> php </tag>
             
             <tag> shell_exec </tag>
             
             <tag> apache </tag>
             
             <tag> ssh </tag>
-            
-            <tag> john </tag>
             
         </tags>
       
@@ -149,6 +149,8 @@
             
             <tag> linux </tag>
             
+            <tag> gtfobins </tag>
+            
             <tag> mango </tag>
             
             <tag> mongodb </tag>
@@ -156,8 +158,6 @@
             <tag> nosql injection </tag>
             
             <tag> setuid </tag>
-            
-            <tag> gtfobins </tag>
             
         </tags>
       
@@ -284,9 +284,9 @@
             
             <tag> gobuster </tag>
             
-            <tag> ssh </tag>
-            
             <tag> john </tag>
+            
+            <tag> ssh </tag>
             
             <tag> postman </tag>
             
@@ -368,8 +368,6 @@
             
             <tag> git </tag>
             
-            <tag> python </tag>
-            
             <tag> craft </tag>
             
             <tag> gogs </tag>
@@ -377,6 +375,8 @@
             <tag> api </tag>
             
             <tag> flask </tag>
+            
+            <tag> python </tag>
             
             <tag> eval </tag>
             
@@ -466,9 +466,9 @@
             
             <tag> command-injection </tag>
             
-            <tag> php </tag>
-            
             <tag> networked </tag>
+            
+            <tag> php </tag>
             
             <tag> weevely </tag>
             
@@ -505,9 +505,9 @@
             
             <tag> linux </tag>
             
-            <tag> gobuster </tag>
+            <tag> python </tag>
             
-            <tag> gtfobins </tag>
+            <tag> gobuster </tag>
             
             <tag> jarvis </tag>
             
@@ -521,11 +521,11 @@
             
             <tag> cve-2018-12613 </tag>
             
-            <tag> python </tag>
-            
             <tag> systemctl </tag>
             
             <tag> service </tag>
+            
+            <tag> gtfobins </tag>
             
             <tag> command-injection </tag>
             

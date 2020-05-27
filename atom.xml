@@ -49,13 +49,13 @@
     
       <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
-      <category term="john" scheme="https://hg8.sh/tags/john/"/>
-    
       <category term="obscurity" scheme="https://hg8.sh/tags/obscurity/"/>
     
       <category term="custom-exploitation" scheme="https://hg8.sh/tags/custom-exploitation/"/>
     
       <category term="encryption" scheme="https://hg8.sh/tags/encryption/"/>
+    
+      <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
   </entry>
   
@@ -130,19 +130,19 @@
     
       <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
+      <category term="php" scheme="https://hg8.sh/tags/php/"/>
+    
+      <category term="john" scheme="https://hg8.sh/tags/john/"/>
+    
       <category term="openadmin" scheme="https://hg8.sh/tags/openadmin/"/>
     
       <category term="opennetadmin" scheme="https://hg8.sh/tags/opennetadmin/"/>
-    
-      <category term="php" scheme="https://hg8.sh/tags/php/"/>
     
       <category term="shell_exec" scheme="https://hg8.sh/tags/shell-exec/"/>
     
       <category term="apache" scheme="https://hg8.sh/tags/apache/"/>
     
       <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
-    
-      <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
   </entry>
   
@@ -175,6 +175,8 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+    
       <category term="mango" scheme="https://hg8.sh/tags/mango/"/>
     
       <category term="mongodb" scheme="https://hg8.sh/tags/mongodb/"/>
@@ -182,8 +184,6 @@
       <category term="nosql injection" scheme="https://hg8.sh/tags/nosql-injection/"/>
     
       <category term="setuid" scheme="https://hg8.sh/tags/setuid/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
   </entry>
   
@@ -316,9 +316,9 @@
     
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
-      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
-    
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
+    
+      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
       <category term="postman" scheme="https://hg8.sh/tags/postman/"/>
     
@@ -404,8 +404,6 @@
     
       <category term="git" scheme="https://hg8.sh/tags/git/"/>
     
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
       <category term="craft" scheme="https://hg8.sh/tags/craft/"/>
     
       <category term="gogs" scheme="https://hg8.sh/tags/gogs/"/>
@@ -413,6 +411,8 @@
       <category term="api" scheme="https://hg8.sh/tags/api/"/>
     
       <category term="flask" scheme="https://hg8.sh/tags/flask/"/>
+    
+      <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
       <category term="eval" scheme="https://hg8.sh/tags/eval/"/>
     
@@ -506,9 +506,9 @@
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
-      <category term="php" scheme="https://hg8.sh/tags/php/"/>
-    
       <category term="networked" scheme="https://hg8.sh/tags/networked/"/>
+    
+      <category term="php" scheme="https://hg8.sh/tags/php/"/>
     
       <category term="weevely" scheme="https://hg8.sh/tags/weevely/"/>
     
@@ -547,9 +547,9 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+      <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="jarvis" scheme="https://hg8.sh/tags/jarvis/"/>
     
@@ -563,11 +563,11 @@
     
       <category term="cve-2018-12613" scheme="https://hg8.sh/tags/cve-2018-12613/"/>
     
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
       <category term="systemctl" scheme="https://hg8.sh/tags/systemctl/"/>
     
       <category term="service" scheme="https://hg8.sh/tags/service/"/>
+    
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
