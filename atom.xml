@@ -49,13 +49,13 @@
     
       <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
+      <category term="john" scheme="https://hg8.sh/tags/john/"/>
+    
       <category term="obscurity" scheme="https://hg8.sh/tags/obscurity/"/>
     
       <category term="custom-exploitation" scheme="https://hg8.sh/tags/custom-exploitation/"/>
     
       <category term="encryption" scheme="https://hg8.sh/tags/encryption/"/>
-    
-      <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
   </entry>
   
@@ -130,19 +130,19 @@
     
       <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
-      <category term="john" scheme="https://hg8.sh/tags/john/"/>
-    
-      <category term="php" scheme="https://hg8.sh/tags/php/"/>
-    
-      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
-    
       <category term="openadmin" scheme="https://hg8.sh/tags/openadmin/"/>
     
       <category term="opennetadmin" scheme="https://hg8.sh/tags/opennetadmin/"/>
     
+      <category term="php" scheme="https://hg8.sh/tags/php/"/>
+    
       <category term="shell_exec" scheme="https://hg8.sh/tags/shell-exec/"/>
     
       <category term="apache" scheme="https://hg8.sh/tags/apache/"/>
+    
+      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
+    
+      <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
   </entry>
   
@@ -316,6 +316,8 @@
     
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
+      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
+    
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
       <category term="postman" scheme="https://hg8.sh/tags/postman/"/>
@@ -325,8 +327,6 @@
       <category term="redis" scheme="https://hg8.sh/tags/redis/"/>
     
       <category term="cve-2019-12840" scheme="https://hg8.sh/tags/cve-2019-12840/"/>
-    
-      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
   </entry>
   
@@ -402,9 +402,9 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
       <category term="git" scheme="https://hg8.sh/tags/git/"/>
+    
+      <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
       <category term="craft" scheme="https://hg8.sh/tags/craft/"/>
     
@@ -449,9 +449,9 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
-    
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+    
+      <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
     
       <category term="wall" scheme="https://hg8.sh/tags/wall/"/>
     
@@ -506,9 +506,9 @@
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
-      <category term="networked" scheme="https://hg8.sh/tags/networked/"/>
-    
       <category term="php" scheme="https://hg8.sh/tags/php/"/>
+    
+      <category term="networked" scheme="https://hg8.sh/tags/networked/"/>
     
       <category term="weevely" scheme="https://hg8.sh/tags/weevely/"/>
     
@@ -547,11 +547,11 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
+      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+    
       <category term="jarvis" scheme="https://hg8.sh/tags/jarvis/"/>
     
       <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
-    
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="sql-injection" scheme="https://hg8.sh/tags/sql-injection/"/>
     
@@ -602,9 +602,9 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
-    
       <category term="haystack" scheme="https://hg8.sh/tags/haystack/"/>
+    
+      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="steganography" scheme="https://hg8.sh/tags/steganography/"/>
     

@@ -30,13 +30,13 @@
             
             <tag> python </tag>
             
+            <tag> john </tag>
+            
             <tag> obscurity </tag>
             
             <tag> custom-exploitation </tag>
             
             <tag> encryption </tag>
-            
-            <tag> john </tag>
             
         </tags>
       
@@ -106,19 +106,19 @@
             
             <tag> gtfobins </tag>
             
-            <tag> john </tag>
-            
-            <tag> php </tag>
-            
-            <tag> ssh </tag>
-            
             <tag> openadmin </tag>
             
             <tag> opennetadmin </tag>
             
+            <tag> php </tag>
+            
             <tag> shell_exec </tag>
             
             <tag> apache </tag>
+            
+            <tag> ssh </tag>
+            
+            <tag> john </tag>
             
         </tags>
       
@@ -284,6 +284,8 @@
             
             <tag> gobuster </tag>
             
+            <tag> ssh </tag>
+            
             <tag> john </tag>
             
             <tag> postman </tag>
@@ -293,8 +295,6 @@
             <tag> redis </tag>
             
             <tag> cve-2019-12840 </tag>
-            
-            <tag> ssh </tag>
             
         </tags>
       
@@ -366,9 +366,9 @@
             
             <tag> linux </tag>
             
-            <tag> python </tag>
-            
             <tag> git </tag>
+            
+            <tag> python </tag>
             
             <tag> craft </tag>
             
@@ -411,9 +411,9 @@
             
             <tag> linux </tag>
             
-            <tag> waf </tag>
-            
             <tag> gobuster </tag>
+            
+            <tag> waf </tag>
             
             <tag> wall </tag>
             
@@ -466,9 +466,9 @@
             
             <tag> command-injection </tag>
             
-            <tag> networked </tag>
-            
             <tag> php </tag>
+            
+            <tag> networked </tag>
             
             <tag> weevely </tag>
             
@@ -505,11 +505,11 @@
             
             <tag> linux </tag>
             
+            <tag> gobuster </tag>
+            
             <tag> jarvis </tag>
             
             <tag> waf </tag>
-            
-            <tag> gobuster </tag>
             
             <tag> sql-injection </tag>
             
@@ -558,9 +558,9 @@
             
             <tag> linux </tag>
             
-            <tag> gobuster </tag>
-            
             <tag> haystack </tag>
+            
+            <tag> gobuster </tag>
             
             <tag> steganography </tag>
             
