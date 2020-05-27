@@ -175,8 +175,6 @@
     
       <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
-    
       <category term="mango" scheme="https://hg8.sh/tags/mango/"/>
     
       <category term="mongodb" scheme="https://hg8.sh/tags/mongodb/"/>
@@ -184,6 +182,8 @@
       <category term="nosql injection" scheme="https://hg8.sh/tags/nosql-injection/"/>
     
       <category term="setuid" scheme="https://hg8.sh/tags/setuid/"/>
+    
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
   </entry>
   
@@ -549,6 +549,8 @@
     
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+    
       <category term="jarvis" scheme="https://hg8.sh/tags/jarvis/"/>
     
       <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
@@ -566,8 +568,6 @@
       <category term="systemctl" scheme="https://hg8.sh/tags/systemctl/"/>
     
       <category term="service" scheme="https://hg8.sh/tags/service/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     

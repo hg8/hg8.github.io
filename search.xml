@@ -149,8 +149,6 @@
             
             <tag> linux </tag>
             
-            <tag> gtfobins </tag>
-            
             <tag> mango </tag>
             
             <tag> mongodb </tag>
@@ -158,6 +156,8 @@
             <tag> nosql injection </tag>
             
             <tag> setuid </tag>
+            
+            <tag> gtfobins </tag>
             
         </tags>
       
@@ -507,6 +507,8 @@
             
             <tag> gobuster </tag>
             
+            <tag> gtfobins </tag>
+            
             <tag> jarvis </tag>
             
             <tag> waf </tag>
@@ -524,8 +526,6 @@
             <tag> systemctl </tag>
             
             <tag> service </tag>
-            
-            <tag> gtfobins </tag>
             
             <tag> command-injection </tag>
             
