@@ -36,6 +36,8 @@
             
             <tag> john </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -116,6 +118,8 @@
             
             <tag> ssh </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -152,6 +156,8 @@
             <tag> setuid </tag>
             
             <tag> gtfobins </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       
@@ -198,6 +204,8 @@
             
             <tag> GTFOBins </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -243,6 +251,8 @@
             
             <tag> restic </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -284,6 +294,8 @@
             
             <tag> cve-2019-12840 </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -322,6 +334,8 @@
             <tag> gitlab </tag>
             
             <tag> git hook </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       
@@ -366,6 +380,8 @@
             
             <tag> vault </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -408,6 +424,8 @@
             <tag> filter </tag>
             
             <tag> screen </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       
@@ -455,6 +473,8 @@
             <tag> sudo </tag>
             
             <tag> ifcfg </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       
@@ -507,6 +527,8 @@
             
             <tag> command-injection </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -552,6 +574,8 @@
             
             <tag> lfi </tag>
             
+            <tag> linux </tag>
+            
         </tags>
       
     </entry>
@@ -590,6 +614,8 @@
             <tag> run-parts </tag>
             
             <tag> injection </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       

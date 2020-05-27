@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-05-20T18:51:38.482Z</updated>
+  <updated>2020-05-27T11:38:32.869Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://hg8.sh/posts/obscurity/"/>
     <id>https://hg8.sh/posts/obscurity/</id>
     <published>2020-05-08T22:00:00.000Z</published>
-    <updated>2020-05-20T18:51:38.482Z</updated>
+    <updated>2020-05-27T11:38:32.869Z</updated>
     
     <summary type="html">
     
@@ -54,6 +54,8 @@
       <category term="re" scheme="https://hg8.sh/tags/re/"/>
     
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -98,7 +100,7 @@
     <link href="https://hg8.sh/posts/openadmin/"/>
     <id>https://hg8.sh/posts/openadmin/</id>
     <published>2020-05-01T22:00:00.000Z</published>
-    <updated>2020-05-18T13:17:45.523Z</updated>
+    <updated>2020-05-27T11:38:36.382Z</updated>
     
     <summary type="html">
     
@@ -140,6 +142,8 @@
     
       <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -147,7 +151,7 @@
     <link href="https://hg8.sh/posts/mango/"/>
     <id>https://hg8.sh/posts/mango/</id>
     <published>2020-04-17T22:00:00.000Z</published>
-    <updated>2020-05-18T13:17:13.634Z</updated>
+    <updated>2020-05-27T11:38:26.433Z</updated>
     
     <summary type="html">
     
@@ -179,6 +183,8 @@
     
       <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -186,7 +192,7 @@
     <link href="https://hg8.sh/posts/traverxec/"/>
     <id>https://hg8.sh/posts/traverxec/</id>
     <published>2020-04-10T22:00:00.000Z</published>
-    <updated>2020-05-20T18:50:35.846Z</updated>
+    <updated>2020-05-27T11:38:47.389Z</updated>
     
     <summary type="html">
     
@@ -226,6 +232,8 @@
     
       <category term="GTFOBins" scheme="https://hg8.sh/tags/GTFOBins/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -233,7 +241,7 @@
     <link href="https://hg8.sh/posts/registry/"/>
     <id>https://hg8.sh/posts/registry/</id>
     <published>2020-04-03T22:00:00.000Z</published>
-    <updated>2020-05-18T13:18:03.671Z</updated>
+    <updated>2020-05-27T11:38:43.795Z</updated>
     
     <summary type="html">
     
@@ -273,6 +281,8 @@
     
       <category term="restic" scheme="https://hg8.sh/tags/restic/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -280,7 +290,7 @@
     <link href="https://hg8.sh/posts/postman/"/>
     <id>https://hg8.sh/posts/postman/</id>
     <published>2020-03-13T23:00:00.000Z</published>
-    <updated>2020-05-18T13:17:58.337Z</updated>
+    <updated>2020-05-27T11:38:40.381Z</updated>
     
     <summary type="html">
     
@@ -316,6 +326,8 @@
     
       <category term="cve-2019-12840" scheme="https://hg8.sh/tags/cve-2019-12840/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -323,7 +335,7 @@
     <link href="https://hg8.sh/posts/bitlab/"/>
     <id>https://hg8.sh/posts/bitlab/</id>
     <published>2020-01-10T23:00:00.000Z</published>
-    <updated>2020-05-18T13:16:41.749Z</updated>
+    <updated>2020-05-27T11:38:11.713Z</updated>
     
     <summary type="html">
     
@@ -357,6 +369,8 @@
     
       <category term="git hook" scheme="https://hg8.sh/tags/git-hook/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -364,7 +378,7 @@
     <link href="https://hg8.sh/posts/craft/"/>
     <id>https://hg8.sh/posts/craft/</id>
     <published>2020-01-03T23:00:00.000Z</published>
-    <updated>2020-05-18T13:16:53.645Z</updated>
+    <updated>2020-05-27T11:38:15.548Z</updated>
     
     <summary type="html">
     
@@ -402,6 +416,8 @@
     
       <category term="vault" scheme="https://hg8.sh/tags/vault/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -409,7 +425,7 @@
     <link href="https://hg8.sh/posts/wall/"/>
     <id>https://hg8.sh/posts/wall/</id>
     <published>2019-12-06T23:00:00.000Z</published>
-    <updated>2020-05-18T13:18:16.063Z</updated>
+    <updated>2020-05-27T11:38:50.458Z</updated>
     
     <summary type="html">
     
@@ -447,6 +463,8 @@
     
       <category term="screen" scheme="https://hg8.sh/tags/screen/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -454,7 +472,7 @@
     <link href="https://hg8.sh/posts/networked/"/>
     <id>https://hg8.sh/posts/networked/</id>
     <published>2019-11-15T23:00:00.000Z</published>
-    <updated>2020-05-18T13:17:20.193Z</updated>
+    <updated>2020-05-27T11:38:29.384Z</updated>
     
     <summary type="html">
     
@@ -496,6 +514,8 @@
     
       <category term="ifcfg" scheme="https://hg8.sh/tags/ifcfg/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -503,7 +523,7 @@
     <link href="https://hg8.sh/posts/jarvis/"/>
     <id>https://hg8.sh/posts/jarvis/</id>
     <published>2019-11-08T23:00:00.000Z</published>
-    <updated>2020-05-18T13:17:08.337Z</updated>
+    <updated>2020-05-27T11:38:22.926Z</updated>
     
     <summary type="html">
     
@@ -549,6 +569,8 @@
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -556,7 +578,7 @@
     <link href="https://hg8.sh/posts/haystack/"/>
     <id>https://hg8.sh/posts/haystack/</id>
     <published>2019-11-01T23:00:00.000Z</published>
-    <updated>2020-05-18T13:17:00.420Z</updated>
+    <updated>2020-05-27T11:38:19.679Z</updated>
     
     <summary type="html">
     
@@ -596,6 +618,8 @@
     
       <category term="lfi" scheme="https://hg8.sh/tags/lfi/"/>
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
   </entry>
   
   <entry>
@@ -603,7 +627,7 @@
     <link href="https://hg8.sh/posts/writeup/"/>
     <id>https://hg8.sh/posts/writeup/</id>
     <published>2019-10-11T22:00:00.000Z</published>
-    <updated>2020-05-18T13:18:22.150Z</updated>
+    <updated>2020-05-27T11:38:53.574Z</updated>
     
     <summary type="html">
     
@@ -636,6 +660,8 @@
       <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
     
       <category term="injection" scheme="https://hg8.sh/tags/injection/"/>
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
