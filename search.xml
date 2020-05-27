@@ -24,6 +24,10 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> re </tag>
+            
             <tag> python </tag>
             
             <tag> obscurity </tag>
@@ -32,11 +36,7 @@
             
             <tag> encryption </tag>
             
-            <tag> re </tag>
-            
             <tag> john </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -98,27 +98,27 @@
       
         <tags>
             
-            <tag> gtfobins </tag>
+            <tag> linux </tag>
             
-            <tag> php </tag>
+            <tag> exploit </tag>
             
             <tag> sudo </tag>
             
+            <tag> gtfobins </tag>
+            
             <tag> john </tag>
+            
+            <tag> php </tag>
+            
+            <tag> ssh </tag>
             
             <tag> openadmin </tag>
             
             <tag> opennetadmin </tag>
             
-            <tag> exploit </tag>
-            
             <tag> shell_exec </tag>
             
             <tag> apache </tag>
-            
-            <tag> ssh </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -147,6 +147,10 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> gtfobins </tag>
+            
             <tag> mango </tag>
             
             <tag> mongodb </tag>
@@ -154,10 +158,6 @@
             <tag> nosql injection </tag>
             
             <tag> setuid </tag>
-            
-            <tag> gtfobins </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -186,6 +186,8 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
             <tag> john </tag>
             
             <tag> traverxec </tag>
@@ -203,8 +205,6 @@
             <tag> less </tag>
             
             <tag> GTFOBins </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -233,25 +233,25 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> enumeration </tag>
+            
+            <tag> docker </tag>
+            
             <tag> webshell </tag>
             
-            <tag> php </tag>
-            
             <tag> sudo </tag>
+            
+            <tag> php </tag>
             
             <tag> shell_exec </tag>
             
             <tag> registry </tag>
             
-            <tag> docker </tag>
-            
             <tag> docker-registry </tag>
             
-            <tag> enumeration </tag>
-            
             <tag> restic </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -280,11 +280,11 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
             <tag> gobuster </tag>
             
             <tag> john </tag>
-            
-            <tag> ssh </tag>
             
             <tag> postman </tag>
             
@@ -294,7 +294,7 @@
             
             <tag> cve-2019-12840 </tag>
             
-            <tag> linux </tag>
+            <tag> ssh </tag>
             
         </tags>
       
@@ -323,19 +323,19 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> webshell </tag>
+            
             <tag> bitlab </tag>
             
             <tag> obfuscation </tag>
-            
-            <tag> webshell </tag>
             
             <tag> git </tag>
             
             <tag> gitlab </tag>
             
             <tag> git hook </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -364,6 +364,10 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> python </tag>
+            
             <tag> git </tag>
             
             <tag> craft </tag>
@@ -374,13 +378,9 @@
             
             <tag> flask </tag>
             
-            <tag> python </tag>
-            
             <tag> eval </tag>
             
             <tag> vault </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -409,9 +409,11 @@
       
         <tags>
             
-            <tag> gobuster </tag>
+            <tag> linux </tag>
             
             <tag> waf </tag>
+            
+            <tag> gobuster </tag>
             
             <tag> wall </tag>
             
@@ -424,8 +426,6 @@
             <tag> filter </tag>
             
             <tag> screen </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -454,7 +454,13 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> upload </tag>
+            
             <tag> webshell </tag>
+            
+            <tag> sudo </tag>
             
             <tag> gobuster </tag>
             
@@ -464,17 +470,11 @@
             
             <tag> php </tag>
             
-            <tag> upload </tag>
-            
             <tag> weevely </tag>
             
             <tag> filtering </tag>
             
-            <tag> sudo </tag>
-            
             <tag> ifcfg </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -503,15 +503,13 @@
       
         <tags>
             
-            <tag> python </tag>
-            
-            <tag> gtfobins </tag>
-            
-            <tag> gobuster </tag>
+            <tag> linux </tag>
             
             <tag> jarvis </tag>
             
             <tag> waf </tag>
+            
+            <tag> gobuster </tag>
             
             <tag> sql-injection </tag>
             
@@ -521,13 +519,15 @@
             
             <tag> cve-2018-12613 </tag>
             
+            <tag> python </tag>
+            
             <tag> systemctl </tag>
             
             <tag> service </tag>
             
-            <tag> command-injection </tag>
+            <tag> gtfobins </tag>
             
-            <tag> linux </tag>
+            <tag> command-injection </tag>
             
         </tags>
       
@@ -556,9 +556,11 @@
       
         <tags>
             
-            <tag> haystack </tag>
+            <tag> linux </tag>
             
             <tag> gobuster </tag>
+            
+            <tag> haystack </tag>
             
             <tag> steganography </tag>
             
@@ -573,8 +575,6 @@
             <tag> cve-2018-17246 </tag>
             
             <tag> lfi </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -603,19 +603,19 @@
       
         <tags>
             
+            <tag> linux </tag>
+            
+            <tag> sqli </tag>
+            
             <tag> exploit </tag>
+            
+            <tag> run-parts </tag>
             
             <tag> writeup </tag>
             
             <tag> cmsms </tag>
             
-            <tag> sqli </tag>
-            
-            <tag> run-parts </tag>
-            
             <tag> injection </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       

@@ -43,6 +43,10 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="re" scheme="https://hg8.sh/tags/re/"/>
+    
       <category term="python" scheme="https://hg8.sh/tags/python/"/>
     
       <category term="obscurity" scheme="https://hg8.sh/tags/obscurity/"/>
@@ -51,11 +55,7 @@
     
       <category term="encryption" scheme="https://hg8.sh/tags/encryption/"/>
     
-      <category term="re" scheme="https://hg8.sh/tags/re/"/>
-    
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -122,27 +122,27 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-      <category term="php" scheme="https://hg8.sh/tags/php/"/>
+      <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
     
       <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
     
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+    
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
+    
+      <category term="php" scheme="https://hg8.sh/tags/php/"/>
+    
+      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
       <category term="openadmin" scheme="https://hg8.sh/tags/openadmin/"/>
     
       <category term="opennetadmin" scheme="https://hg8.sh/tags/opennetadmin/"/>
     
-      <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
-    
       <category term="shell_exec" scheme="https://hg8.sh/tags/shell-exec/"/>
     
       <category term="apache" scheme="https://hg8.sh/tags/apache/"/>
-    
-      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -173,6 +173,10 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+    
       <category term="mango" scheme="https://hg8.sh/tags/mango/"/>
     
       <category term="mongodb" scheme="https://hg8.sh/tags/mongodb/"/>
@@ -180,10 +184,6 @@
       <category term="nosql injection" scheme="https://hg8.sh/tags/nosql-injection/"/>
     
       <category term="setuid" scheme="https://hg8.sh/tags/setuid/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -214,6 +214,8 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
       <category term="traverxec" scheme="https://hg8.sh/tags/traverxec/"/>
@@ -231,8 +233,6 @@
       <category term="less" scheme="https://hg8.sh/tags/less/"/>
     
       <category term="GTFOBins" scheme="https://hg8.sh/tags/GTFOBins/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -263,25 +263,25 @@
       <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="enumeration" scheme="https://hg8.sh/tags/enumeration/"/>
+    
+      <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
+    
       <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
     
-      <category term="php" scheme="https://hg8.sh/tags/php/"/>
-    
       <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
+    
+      <category term="php" scheme="https://hg8.sh/tags/php/"/>
     
       <category term="shell_exec" scheme="https://hg8.sh/tags/shell-exec/"/>
     
       <category term="registry" scheme="https://hg8.sh/tags/registry/"/>
     
-      <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
-    
       <category term="docker-registry" scheme="https://hg8.sh/tags/docker-registry/"/>
     
-      <category term="enumeration" scheme="https://hg8.sh/tags/enumeration/"/>
-    
       <category term="restic" scheme="https://hg8.sh/tags/restic/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -312,11 +312,11 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="john" scheme="https://hg8.sh/tags/john/"/>
-    
-      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
       <category term="postman" scheme="https://hg8.sh/tags/postman/"/>
     
@@ -326,7 +326,7 @@
     
       <category term="cve-2019-12840" scheme="https://hg8.sh/tags/cve-2019-12840/"/>
     
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+      <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
     
   </entry>
   
@@ -357,19 +357,19 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
+    
       <category term="bitlab" scheme="https://hg8.sh/tags/bitlab/"/>
     
       <category term="obfuscation" scheme="https://hg8.sh/tags/obfuscation/"/>
-    
-      <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
     
       <category term="git" scheme="https://hg8.sh/tags/git/"/>
     
       <category term="gitlab" scheme="https://hg8.sh/tags/gitlab/"/>
     
       <category term="git hook" scheme="https://hg8.sh/tags/git-hook/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -400,6 +400,10 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="python" scheme="https://hg8.sh/tags/python/"/>
+    
       <category term="git" scheme="https://hg8.sh/tags/git/"/>
     
       <category term="craft" scheme="https://hg8.sh/tags/craft/"/>
@@ -410,13 +414,9 @@
     
       <category term="flask" scheme="https://hg8.sh/tags/flask/"/>
     
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
       <category term="eval" scheme="https://hg8.sh/tags/eval/"/>
     
       <category term="vault" scheme="https://hg8.sh/tags/vault/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -447,9 +447,11 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
       <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
+    
+      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="wall" scheme="https://hg8.sh/tags/wall/"/>
     
@@ -462,8 +464,6 @@
       <category term="filter" scheme="https://hg8.sh/tags/filter/"/>
     
       <category term="screen" scheme="https://hg8.sh/tags/screen/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -494,7 +494,13 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="upload" scheme="https://hg8.sh/tags/upload/"/>
+    
       <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
+    
+      <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
     
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
@@ -504,17 +510,11 @@
     
       <category term="php" scheme="https://hg8.sh/tags/php/"/>
     
-      <category term="upload" scheme="https://hg8.sh/tags/upload/"/>
-    
       <category term="weevely" scheme="https://hg8.sh/tags/weevely/"/>
     
       <category term="filtering" scheme="https://hg8.sh/tags/filtering/"/>
     
-      <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
-    
       <category term="ifcfg" scheme="https://hg8.sh/tags/ifcfg/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -545,15 +545,13 @@
       <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
     
     
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
-    
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
       <category term="jarvis" scheme="https://hg8.sh/tags/jarvis/"/>
     
       <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
+    
+      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
     
       <category term="sql-injection" scheme="https://hg8.sh/tags/sql-injection/"/>
     
@@ -563,13 +561,15 @@
     
       <category term="cve-2018-12613" scheme="https://hg8.sh/tags/cve-2018-12613/"/>
     
+      <category term="python" scheme="https://hg8.sh/tags/python/"/>
+    
       <category term="systemctl" scheme="https://hg8.sh/tags/systemctl/"/>
     
       <category term="service" scheme="https://hg8.sh/tags/service/"/>
     
-      <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+      <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
   </entry>
   
@@ -600,9 +600,11 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
-      <category term="haystack" scheme="https://hg8.sh/tags/haystack/"/>
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
       <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
+    
+      <category term="haystack" scheme="https://hg8.sh/tags/haystack/"/>
     
       <category term="steganography" scheme="https://hg8.sh/tags/steganography/"/>
     
@@ -617,8 +619,6 @@
       <category term="cve-2018-17246" scheme="https://hg8.sh/tags/cve-2018-17246/"/>
     
       <category term="lfi" scheme="https://hg8.sh/tags/lfi/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
@@ -649,19 +649,19 @@
       <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
     
     
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="sqli" scheme="https://hg8.sh/tags/sqli/"/>
+    
       <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
+    
+      <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
     
       <category term="writeup" scheme="https://hg8.sh/tags/writeup/"/>
     
       <category term="cmsms" scheme="https://hg8.sh/tags/cmsms/"/>
     
-      <category term="sqli" scheme="https://hg8.sh/tags/sqli/"/>
-    
-      <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
-    
       <category term="injection" scheme="https://hg8.sh/tags/injection/"/>
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
   </entry>
   
