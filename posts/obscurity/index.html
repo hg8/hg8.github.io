@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/71549328-fee0f400-29bb-11ea-9df7-81ea1b4d4ae6.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/72752623-f6e33100-3bc2-11ea-92b6-a025983eb467.png">
 <meta property="article:published_time" content="2020-05-08T22:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-27T11:39:45.129Z">
+<meta property="article:modified_time" content="2020-05-28T17:25:44.212Z">
 <meta property="article:author" content="hg8">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="re">
@@ -65,6 +65,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" href="/posts/resolute/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/posts/pwnable/fd/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -157,7 +159,7 @@
 
 <p>and let’s start!</p>
 <h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ nmap -sV -sT -sC obscurity.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-12-26 09:56 CET</span><br><span class="line">Nmap scan report <span class="keyword">for</span> obscurity.htb (10.10.10.168)</span><br><span class="line">Host is up (0.038s latency).</span><br><span class="line">Not shown: 996 filtered ports</span><br><span class="line">PORT     STATE  SERVICE    VERSION</span><br><span class="line">22/tcp   open   ssh        OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp   closed http</span><br><span class="line">8080/tcp open   http-proxy BadHTTPServer</span><br><span class="line">9000/tcp closed cslistener</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 16.09 seconds</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC obscurity.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2019-12-26 09:56 CET</span><br><span class="line">Nmap scan report <span class="keyword">for</span> obscurity.htb (10.10.10.168)</span><br><span class="line">Host is up (0.038s latency).</span><br><span class="line">Not shown: 996 filtered ports</span><br><span class="line">PORT     STATE  SERVICE    VERSION</span><br><span class="line">22/tcp   open   ssh        OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp   closed http</span><br><span class="line">8080/tcp open   http-proxy BadHTTPServer</span><br><span class="line">9000/tcp closed cslistener</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 16.09 seconds</span><br></pre></td></tr></table></figure>
 
 <p>Bit less classic than usual, port 80 is closed, <code>nmap</code> return 9000 port which is closed (no idea what this is so we keep it in mind for later maybe).<br>The ssh port 22 is open and the 8080 one running <code>BadHTTPServer</code>… Intriguing.  </p>
 <p>Let’s dig it on this “bad” server.<br>Opening <code>http://obsurity.htb:8080/</code> display the following website: </p>

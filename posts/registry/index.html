@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read al">
+    <meta name="description" content="Registry just retired on HackTheBox. It was my first hard box and was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HackTheBox - Registry">
 <meta property="og:url" content="https://hg8.sh/posts/registry/index.html">
 <meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
-<meta property="og:description" content="Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read al">
+<meta property="og:description" content="Registry just retired on HackTheBox. It was my first hard box and was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158642-6e7f4f00-9889-11ea-914c-557127a898c6.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73365373-756b5d00-42ac-11ea-8134-e63c52f73b34.png">
@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75481560-8c809600-59a3-11ea-8b0a-7a2c2c7f88ec.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/75481639-aae69180-59a3-11ea-8154-75163f358616.png">
 <meta property="article:published_time" content="2020-04-03T22:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-27T11:38:43.795Z">
+<meta property="article:modified_time" content="2020-05-28T17:27:09.935Z">
 <meta property="article:author" content="hg8">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="enumeration">
@@ -158,7 +158,7 @@
   <div class="content" itemprop="articleBody">
     <img width="586" alt="registry-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158642-6e7f4f00-9889-11ea-914c-557127a898c6.png">
 
-<p>Registry was my first hard box, this box was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read all documentations carefully to not miss anything. I recommend this box for people  who finished few medium difficulty boxes and wants to level-up.</p>
+<p>Registry just retired on HackTheBox. It was my first hard box and was pretty interesting with real-life scenario like I love. This box shows the importance of understanding how things works “behind the scene” and to read all documentations carefully to not miss anything. I recommend this box for people  who finished few medium difficulty boxes and wants to level-up.</p>
 <p><strong>Tl;Dr:</strong> The user flag consisted in finding an <code>INSTALL</code> archive containing install instruction and certificate to deploy an online docker registry, this certificate was used on the docker registry running on the box. Using this cert we could connect to the registry API and pull the docker image available on it. Running the docker image locally and doing recon into it allows to find an SSH key along with its passphrase. This key would allow to connect to the <code>bolt</code> user account and grab the user flag.<br>The root flag required to access a CMS after brute-forcing the admin password found in a sqlite database. From the CMS we pivot from the <code>bolt</code> user to <code>www-data</code> user by exploiting insecure file upload vulnerability. From <code>www-data</code> a backup software - restic - can be run as sudo without password. Using this software we are able to backup the whole <code>/root/</code> folder and restore its content with read privileges for <code>www-data</code> including the <code>root.txt</code> flag and a <code>.ssh/id_rsa</code> key allowing us to get a full shell as root.   </p>
 <p>Alright! Let’s get into the details now!</p>
 <hr>

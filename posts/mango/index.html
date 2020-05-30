@@ -5,19 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I k">
+    <meta name="description" content="Mango just retired on HackTheBox, it was an Medium difficulty Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HackTheBox - Mango">
 <meta property="og:url" content="https://hg8.sh/posts/mango/index.html">
 <meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
-<meta property="og:description" content="Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I k">
+<meta property="og:description" content="Mango just retired on HackTheBox, it was an Medium difficulty Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158122-27dc2580-9886-11ea-89a6-cf00163a1207.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/68053118-74498480-fceb-11e9-90d0-6509fb84711d.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/68054811-7b729180-fcef-11e9-9355-f813b1351cea.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/68114654-dd511800-fef6-11e9-9f7f-4868af23ac2a.png">
 <meta property="article:published_time" content="2020-04-17T22:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-27T11:38:26.433Z">
+<meta property="article:modified_time" content="2020-05-28T17:25:26.331Z">
 <meta property="article:author" content="hg8">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="gtfobins">
@@ -149,7 +149,7 @@
   <div class="content" itemprop="articleBody">
     <img width="572" alt="mango-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158122-27dc2580-9886-11ea-89a6-cf00163a1207.png">
 
-<p>Mango just retired on HackTheBox, it was an Medium rated Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</p>
+<p>Mango just retired on HackTheBox, it was an Medium difficulty Linux box. As usual I really liked the whole exploration process especially the custom exploitation part and learned a bit about Mongodb. I know I say this every-time but this box is my favorite box so far.</p>
 <p><strong>Tl;Dr:</strong> User flag was accessible after exploiting an NoSQL injection flaw to extract usernames and passwords of accounts present on the box. Those credentials can be used to SSH login to the box as <code>mango</code> then pivoting to the <code>admin</code> user holding the flag by <code>su</code> to it using the password extracted previously.<br>The root flag was accessible by exploiting the <code>jjs</code> binary that have setuid bit set allowing to read and write files on the box as <code>root</code> user.</p>
 <p>Alright! Let’s get into the details now!</p>
 <hr>

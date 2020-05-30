@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-05-27T11:39:45.129Z</updated>
+  <updated>2020-05-29T07:45:35.984Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -17,11 +17,70 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>HackTheBox - Resolute</title>
+    <link href="https://hg8.sh/posts/resolute/"/>
+    <id>https://hg8.sh/posts/resolute/</id>
+    <published>2020-05-29T22:00:00.000Z</published>
+    <updated>2020-05-29T07:45:35.984Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;583&quot; alt=&quot;Screenshot 2020-05-28 at 13 49 49&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
+    
+    
+      <category term="windows" scheme="https://hg8.sh/tags/windows/"/>
+    
+      <category term="SMB" scheme="https://hg8.sh/tags/SMB/"/>
+    
+      <category term="RPC" scheme="https://hg8.sh/tags/RPC/"/>
+    
+      <category term="crackmapexec" scheme="https://hg8.sh/tags/crackmapexec/"/>
+    
+      <category term="evil-winrm" scheme="https://hg8.sh/tags/evil-winrm/"/>
+    
+      <category term="ldap" scheme="https://hg8.sh/tags/ldap/"/>
+    
+      <category term="resolute" scheme="https://hg8.sh/tags/resolute/"/>
+    
+      <category term="ldapdomaindump" scheme="https://hg8.sh/tags/ldapdomaindump/"/>
+    
+      <category term="enum4linux" scheme="https://hg8.sh/tags/enum4linux/"/>
+    
+      <category term="winrm" scheme="https://hg8.sh/tags/winrm/"/>
+    
+      <category term="dns" scheme="https://hg8.sh/tags/dns/"/>
+    
+      <category term="dnsadmin" scheme="https://hg8.sh/tags/dnsadmin/"/>
+    
+      <category term="dll" scheme="https://hg8.sh/tags/dll/"/>
+    
+      <category term="dll injection" scheme="https://hg8.sh/tags/dll-injection/"/>
+    
+      <category term="msfvenom" scheme="https://hg8.sh/tags/msfvenom/"/>
+    
+  </entry>
+  
+  <entry>
     <title>HackTheBox - Obscurity</title>
     <link href="https://hg8.sh/posts/obscurity/"/>
     <id>https://hg8.sh/posts/obscurity/</id>
     <published>2020-05-08T22:00:00.000Z</published>
-    <updated>2020-05-27T11:39:45.129Z</updated>
+    <updated>2020-05-28T17:25:44.212Z</updated>
     
     <summary type="html">
     
@@ -100,7 +159,7 @@
     <link href="https://hg8.sh/posts/openadmin/"/>
     <id>https://hg8.sh/posts/openadmin/</id>
     <published>2020-05-01T22:00:00.000Z</published>
-    <updated>2020-05-27T11:38:36.382Z</updated>
+    <updated>2020-05-28T17:26:04.088Z</updated>
     
     <summary type="html">
     
@@ -151,7 +210,7 @@
     <link href="https://hg8.sh/posts/mango/"/>
     <id>https://hg8.sh/posts/mango/</id>
     <published>2020-04-17T22:00:00.000Z</published>
-    <updated>2020-05-27T11:38:26.433Z</updated>
+    <updated>2020-05-28T17:25:26.331Z</updated>
     
     <summary type="html">
     
@@ -241,7 +300,7 @@
     <link href="https://hg8.sh/posts/registry/"/>
     <id>https://hg8.sh/posts/registry/</id>
     <published>2020-04-03T22:00:00.000Z</published>
-    <updated>2020-05-27T11:38:43.795Z</updated>
+    <updated>2020-05-28T17:27:09.935Z</updated>
     
     <summary type="html">
     
@@ -290,7 +349,7 @@
     <link href="https://hg8.sh/posts/postman/"/>
     <id>https://hg8.sh/posts/postman/</id>
     <published>2020-03-13T23:00:00.000Z</published>
-    <updated>2020-05-27T11:38:40.381Z</updated>
+    <updated>2020-05-28T17:26:23.440Z</updated>
     
     <summary type="html">
     

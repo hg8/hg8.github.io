@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn’t recommend it for beginners">
+    <meta name="description" content="OpenAdmin just retired on HackTheBox. It’s an easy difficulty Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HackTheBox - OpenAdmin">
 <meta property="og:url" content="https://hg8.sh/posts/openadmin/index.html">
 <meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
-<meta property="og:description" content="OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn’t recommend it for beginners">
+<meta property="og:description" content="OpenAdmin just retired on HackTheBox. It’s an easy difficulty Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated e">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158541-eef18000-9888-11ea-92ce-95a28fbd9c8d.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73017278-cd731100-3e1f-11ea-9b01-c07b9d816af3.png">
@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73017790-ac5ef000-3e20-11ea-9efa-0c4587673e66.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/9076747/73084568-7b88c480-3ecd-11ea-8092-c4d2e7eb43ed.png">
 <meta property="article:published_time" content="2020-05-01T22:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-27T11:38:36.382Z">
+<meta property="article:modified_time" content="2020-05-28T17:26:04.088Z">
 <meta property="article:author" content="hg8">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="exploit">
@@ -155,7 +155,7 @@
   <div class="content" itemprop="articleBody">
     <img width="585" alt="openadmin-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158541-eef18000-9888-11ea-92ce-95a28fbd9c8d.png">
 
-<p>OpenAdmin is an easy Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn’t recommend it for beginners since it require a lot a recon, it’s easy to miss important information and can be very frustrating if you are not used to it.</p>
+<p>OpenAdmin just retired on HackTheBox. It’s an easy difficulty Linux based box, it need a bit of exploit, lot of recon, pivot and a bit GTFObins to finish, nice combo right? While this box is rated easy I wouldn’t recommend it for beginners since it require a lot a recon, it’s easy to miss important information and can be very frustrating if you are not used to it.</p>
 <p><strong>Tl;Dr:</strong> To get the user flag you had to exploit a Remote Code Execution exploit on an outdated <code>opennetadmin</code> instance. You get a shell as <code>www-data</code> from which you pivot to the <code>jimmy</code> user after finding his password in a database config file. From <code>jimmy</code> account you pivot again to <code>joanna</code> account by extracting her ssh private key using a php script since the Apache web server is configured to run as user <code>joanna</code> and we have write rights over the <code>Document Root</code> folder. Finally as <code>joanna</code> we can get the user flag.<br>The root flag was a bit less tricky and needed you to execute a shell from inside a privileged <code>nano</code>  that <code>joanna</code> is allowed to run as <code>root</code> without password.</p>
 <p>Alright, let’s get into it!</p>
 <hr>

