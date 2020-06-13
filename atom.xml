@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-05-29T07:45:35.984Z</updated>
+  <updated>2020-06-13T17:00:58.947Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,57 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Monteverde</title>
+    <link href="https://hg8.sh/monteverde/"/>
+    <id>https://hg8.sh/monteverde/</id>
+    <published>2020-06-12T22:00:00.000Z</published>
+    <updated>2020-06-13T17:00:58.947Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;583&quot; alt=&quot;monteverde-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
+    
+    
+      <category term="windows" scheme="https://hg8.sh/tags/windows/"/>
+    
+      <category term="Monteverde" scheme="https://hg8.sh/tags/Monteverde/"/>
+    
+      <category term="SMB" scheme="https://hg8.sh/tags/SMB/"/>
+    
+      <category term="RPC" scheme="https://hg8.sh/tags/RPC/"/>
+    
+      <category term="crackmapexec" scheme="https://hg8.sh/tags/crackmapexec/"/>
+    
+      <category term="winRM" scheme="https://hg8.sh/tags/winRM/"/>
+    
+      <category term="active directory" scheme="https://hg8.sh/tags/active-directory/"/>
+    
+      <category term="ADClient" scheme="https://hg8.sh/tags/ADClient/"/>
+    
+      <category term="evil-winrm" scheme="https://hg8.sh/tags/evil-winrm/"/>
+    
+      <category term="Azure" scheme="https://hg8.sh/tags/Azure/"/>
+    
+      <category term="Azure AD Connect" scheme="https://hg8.sh/tags/Azure-AD-Connect/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Resolute</title>
@@ -72,57 +123,6 @@
       <category term="dll injection" scheme="https://hg8.sh/tags/dll-injection/"/>
     
       <category term="msfvenom" scheme="https://hg8.sh/tags/msfvenom/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Monteverde</title>
-    <link href="https://hg8.sh/monteverde/"/>
-    <id>https://hg8.sh/monteverde/</id>
-    <published>2020-05-25T22:00:00.000Z</published>
-    <updated>2020-06-13T16:57:25.575Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;583&quot; alt=&quot;monteverde-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="windows" scheme="https://hg8.sh/tags/windows/"/>
-    
-      <category term="Monteverde" scheme="https://hg8.sh/tags/Monteverde/"/>
-    
-      <category term="SMB" scheme="https://hg8.sh/tags/SMB/"/>
-    
-      <category term="RPC" scheme="https://hg8.sh/tags/RPC/"/>
-    
-      <category term="crackmapexec" scheme="https://hg8.sh/tags/crackmapexec/"/>
-    
-      <category term="winRM" scheme="https://hg8.sh/tags/winRM/"/>
-    
-      <category term="active directory" scheme="https://hg8.sh/tags/active-directory/"/>
-    
-      <category term="ADClient" scheme="https://hg8.sh/tags/ADClient/"/>
-    
-      <category term="evil-winrm" scheme="https://hg8.sh/tags/evil-winrm/"/>
-    
-      <category term="Azure" scheme="https://hg8.sh/tags/Azure/"/>
-    
-      <category term="Azure AD Connect" scheme="https://hg8.sh/tags/Azure-AD-Connect/"/>
     
   </entry>
   
