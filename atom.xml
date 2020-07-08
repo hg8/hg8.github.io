@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-07-04T19:12:20.922Z</updated>
+  <updated>2020-07-08T18:56:17.972Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,43 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Pwnable.kr - Collision</title>
+    <link href="https://hg8.sh/posts/pwnable/collision/"/>
+    <id>https://hg8.sh/posts/pwnable/collision/</id>
+    <published>2020-07-07T22:00:00.000Z</published>
+    <updated>2020-07-08T18:56:17.972Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/86539110-6f804480-befa-11ea-8939-900e8e97bbad.png&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="pwnable" scheme="https://hg8.sh/categories/CTF/pwnable/"/>
+    
+      <category term="Toddler&#39;s Bottle" scheme="https://hg8.sh/categories/CTF/pwnable/Toddler-s-Bottle/"/>
+    
+    
+      <category term="re" scheme="https://hg8.sh/tags/re/"/>
+    
+      <category term="collision" scheme="https://hg8.sh/tags/collision/"/>
+    
+      <category term="pwn" scheme="https://hg8.sh/tags/pwn/"/>
+    
+      <category term="dynamic analysis" scheme="https://hg8.sh/tags/dynamic-analysis/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - ForwardSlash</title>
