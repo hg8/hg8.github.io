@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-07-15T15:52:28.907Z</updated>
+  <updated>2020-07-30T08:30:27.379Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Misc CTF - Request Smuggling</title>
+    <link href="https://hg8.sh/posts/misc-ctf/request-smuggling/"/>
+    <id>https://hg8.sh/posts/misc-ctf/request-smuggling/</id>
+    <published>2020-07-27T22:00:00.000Z</published>
+    <updated>2020-07-30T08:30:27.379Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;During a CTF I recently came across a very cool challenge on Request Smuggling. I have been wanting to try my theoretical knowledge of
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="request smuggling" scheme="https://hg8.sh/tags/request-smuggling/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Book</title>
@@ -907,49 +938,6 @@
       <category term="cve-2018-17246" scheme="https://hg8.sh/tags/cve-2018-17246/"/>
     
       <category term="lfi" scheme="https://hg8.sh/tags/lfi/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Writeup</title>
-    <link href="https://hg8.sh/posts/writeup/"/>
-    <id>https://hg8.sh/posts/writeup/</id>
-    <published>2019-10-11T22:00:00.000Z</published>
-    <updated>2020-05-27T11:38:53.574Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;587&quot; alt=&quot;writeup-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="sqli" scheme="https://hg8.sh/tags/sqli/"/>
-    
-      <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
-    
-      <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
-    
-      <category term="writeup" scheme="https://hg8.sh/tags/writeup/"/>
-    
-      <category term="cmsms" scheme="https://hg8.sh/tags/cmsms/"/>
-    
-      <category term="injection" scheme="https://hg8.sh/tags/injection/"/>
     
   </entry>
   
