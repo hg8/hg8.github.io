@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-07-30T08:30:27.379Z</updated>
+  <updated>2020-07-31T08:15:28.403Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,53 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Oouch</title>
+    <link href="https://hg8.sh/posts/oouch/"/>
+    <id>https://hg8.sh/posts/oouch/</id>
+    <published>2020-07-31T22:00:00.000Z</published>
+    <updated>2020-07-31T08:15:28.403Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;574&quot; alt=&quot;oouch-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
+    
+      <category term="Oouch" scheme="https://hg8.sh/tags/Oouch/"/>
+    
+      <category term="oauth" scheme="https://hg8.sh/tags/oauth/"/>
+    
+      <category term="oauth2" scheme="https://hg8.sh/tags/oauth2/"/>
+    
+      <category term="SSRF" scheme="https://hg8.sh/tags/SSRF/"/>
+    
+      <category term="uwsgi" scheme="https://hg8.sh/tags/uwsgi/"/>
+    
+      <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
+    
+      <category term="dbus" scheme="https://hg8.sh/tags/dbus/"/>
+    
+  </entry>
   
   <entry>
     <title>Misc CTF - Request Smuggling</title>
@@ -889,55 +936,6 @@
       <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
     
       <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Haystack</title>
-    <link href="https://hg8.sh/posts/haystack/"/>
-    <id>https://hg8.sh/posts/haystack/</id>
-    <published>2019-11-01T23:00:00.000Z</published>
-    <updated>2020-05-27T11:38:19.679Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;582&quot; alt=&quot;haystack-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="haystack" scheme="https://hg8.sh/tags/haystack/"/>
-    
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
-    
-      <category term="steganography" scheme="https://hg8.sh/tags/steganography/"/>
-    
-      <category term="elasticsearch" scheme="https://hg8.sh/tags/elasticsearch/"/>
-    
-      <category term="logstash" scheme="https://hg8.sh/tags/logstash/"/>
-    
-      <category term="kibana" scheme="https://hg8.sh/tags/kibana/"/>
-    
-      <category term="elk" scheme="https://hg8.sh/tags/elk/"/>
-    
-      <category term="cve-2018-17246" scheme="https://hg8.sh/tags/cve-2018-17246/"/>
-    
-      <category term="lfi" scheme="https://hg8.sh/tags/lfi/"/>
     
   </entry>
   
