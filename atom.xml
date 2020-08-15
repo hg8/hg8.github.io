@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-07-31T08:15:28.403Z</updated>
+  <updated>2020-08-15T17:57:40.726Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,49 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Traceback</title>
+    <link href="https://hg8.sh/posts/traceback/"/>
+    <id>https://hg8.sh/posts/traceback/</id>
+    <published>2020-08-14T22:00:00.000Z</published>
+    <updated>2020-08-15T17:57:40.726Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;582&quot; alt=&quot;traceback-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="traceback" scheme="https://hg8.sh/tags/traceback/"/>
+    
+      <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
+    
+      <category term="lua" scheme="https://hg8.sh/tags/lua/"/>
+    
+      <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
+    
+      <category term="motd" scheme="https://hg8.sh/tags/motd/"/>
+    
+      <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Oouch</title>
@@ -881,61 +924,6 @@
       <category term="filtering" scheme="https://hg8.sh/tags/filtering/"/>
     
       <category term="ifcfg" scheme="https://hg8.sh/tags/ifcfg/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Jarvis</title>
-    <link href="https://hg8.sh/posts/jarvis/"/>
-    <id>https://hg8.sh/posts/jarvis/</id>
-    <published>2019-11-08T23:00:00.000Z</published>
-    <updated>2020-05-27T11:38:22.926Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;582&quot; alt=&quot;jarvis-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
-    
-      <category term="jarvis" scheme="https://hg8.sh/tags/jarvis/"/>
-    
-      <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
-    
-      <category term="sql-injection" scheme="https://hg8.sh/tags/sql-injection/"/>
-    
-      <category term="sqlmap" scheme="https://hg8.sh/tags/sqlmap/"/>
-    
-      <category term="phpmyadmin" scheme="https://hg8.sh/tags/phpmyadmin/"/>
-    
-      <category term="cve-2018-12613" scheme="https://hg8.sh/tags/cve-2018-12613/"/>
-    
-      <category term="systemctl" scheme="https://hg8.sh/tags/systemctl/"/>
-    
-      <category term="service" scheme="https://hg8.sh/tags/service/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
-    
-      <category term="command-injection" scheme="https://hg8.sh/tags/command-injection/"/>
     
   </entry>
   
