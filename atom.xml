@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-08-21T14:31:11.990Z</updated>
+  <updated>2020-08-28T17:30:57.023Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,51 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Quick</title>
+    <link href="https://hg8.sh/posts/quick/"/>
+    <id>https://hg8.sh/posts/quick/</id>
+    <published>2020-08-28T22:00:00.000Z</published>
+    <updated>2020-08-28T17:30:57.023Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;584&quot; alt=&quot;quick-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="quick" scheme="https://hg8.sh/tags/quick/"/>
+    
+      <category term="http3" scheme="https://hg8.sh/tags/http3/"/>
+    
+      <category term="esigate" scheme="https://hg8.sh/tags/esigate/"/>
+    
+      <category term="ESI injection" scheme="https://hg8.sh/tags/ESI-injection/"/>
+    
+      <category term="custom exploitation" scheme="https://hg8.sh/tags/custom-exploitation/"/>
+    
+      <category term="CUPS" scheme="https://hg8.sh/tags/CUPS/"/>
+    
+      <category term="printer" scheme="https://hg8.sh/tags/printer/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Magic</title>
@@ -873,53 +918,6 @@
       <category term="eval" scheme="https://hg8.sh/tags/eval/"/>
     
       <category term="vault" scheme="https://hg8.sh/tags/vault/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Wall</title>
-    <link href="https://hg8.sh/posts/wall/"/>
-    <id>https://hg8.sh/posts/wall/</id>
-    <published>2019-12-06T23:00:00.000Z</published>
-    <updated>2020-05-30T18:41:42.662Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;582&quot; alt=&quot;wall-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="gobuster" scheme="https://hg8.sh/tags/gobuster/"/>
-    
-      <category term="waf" scheme="https://hg8.sh/tags/waf/"/>
-    
-      <category term="wall" scheme="https://hg8.sh/tags/wall/"/>
-    
-      <category term="wfuzz" scheme="https://hg8.sh/tags/wfuzz/"/>
-    
-      <category term="centreon" scheme="https://hg8.sh/tags/centreon/"/>
-    
-      <category term="cve-2019-13024" scheme="https://hg8.sh/tags/cve-2019-13024/"/>
-    
-      <category term="filter" scheme="https://hg8.sh/tags/filter/"/>
-    
-      <category term="screen" scheme="https://hg8.sh/tags/screen/"/>
     
   </entry>
   

