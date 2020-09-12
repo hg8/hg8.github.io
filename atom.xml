@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-08-28T17:30:57.023Z</updated>
+  <updated>2020-09-12T19:30:35.413Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,59 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Travel</title>
+    <link href="https://hg8.sh/travel/"/>
+    <id>https://hg8.sh/travel/</id>
+    <published>2020-09-11T22:00:00.000Z</published>
+    <updated>2020-09-12T19:30:35.413Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;580&quot; alt=&quot;travel-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="memcached" scheme="https://hg8.sh/tags/memcached/"/>
+    
+      <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
+    
+      <category term="SSRF" scheme="https://hg8.sh/tags/SSRF/"/>
+    
+      <category term="git" scheme="https://hg8.sh/tags/git/"/>
+    
+      <category term="travel" scheme="https://hg8.sh/tags/travel/"/>
+    
+      <category term="phpmemcached" scheme="https://hg8.sh/tags/phpmemcached/"/>
+    
+      <category term="Gopher" scheme="https://hg8.sh/tags/Gopher/"/>
+    
+      <category term="deserialization" scheme="https://hg8.sh/tags/deserialization/"/>
+    
+      <category term="ldap" scheme="https://hg8.sh/tags/ldap/"/>
+    
+      <category term="memcached injection" scheme="https://hg8.sh/tags/memcached-injection/"/>
+    
+      <category term="simplePie" scheme="https://hg8.sh/tags/simplePie/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Quick</title>
@@ -871,53 +924,6 @@
       <category term="gitlab" scheme="https://hg8.sh/tags/gitlab/"/>
     
       <category term="git hook" scheme="https://hg8.sh/tags/git-hook/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Craft</title>
-    <link href="https://hg8.sh/posts/craft/"/>
-    <id>https://hg8.sh/posts/craft/</id>
-    <published>2020-01-03T23:00:00.000Z</published>
-    <updated>2020-05-27T11:38:15.548Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;582&quot; alt=&quot;craft-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="git" scheme="https://hg8.sh/tags/git/"/>
-    
-      <category term="craft" scheme="https://hg8.sh/tags/craft/"/>
-    
-      <category term="gogs" scheme="https://hg8.sh/tags/gogs/"/>
-    
-      <category term="api" scheme="https://hg8.sh/tags/api/"/>
-    
-      <category term="flask" scheme="https://hg8.sh/tags/flask/"/>
-    
-      <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
-      <category term="eval" scheme="https://hg8.sh/tags/eval/"/>
-    
-      <category term="vault" scheme="https://hg8.sh/tags/vault/"/>
     
   </entry>
   
