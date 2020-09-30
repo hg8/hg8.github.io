@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-09-12T19:30:35.413Z</updated>
+  <updated>2020-09-30T09:05:58.458Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,49 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Admirer</title>
+    <link href="https://hg8.sh/posts/admirer/"/>
+    <id>https://hg8.sh/posts/admirer/</id>
+    <published>2020-09-25T22:00:00.000Z</published>
+    <updated>2020-09-30T09:05:58.458Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;584&quot; alt=&quot;admirer-hackthebox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="admirer" scheme="https://hg8.sh/tags/admirer/"/>
+    
+      <category term="enumeration" scheme="https://hg8.sh/tags/enumeration/"/>
+    
+      <category term="adminer" scheme="https://hg8.sh/tags/adminer/"/>
+    
+      <category term="ftp" scheme="https://hg8.sh/tags/ftp/"/>
+    
+      <category term="python library overwrite" scheme="https://hg8.sh/tags/python-library-overwrite/"/>
+    
+      <category term="mysql local file read" scheme="https://hg8.sh/tags/mysql-local-file-read/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Travel</title>
@@ -881,49 +924,6 @@
       <category term="redis" scheme="https://hg8.sh/tags/redis/"/>
     
       <category term="cve-2019-12840" scheme="https://hg8.sh/tags/cve-2019-12840/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Bitlab</title>
-    <link href="https://hg8.sh/posts/bitlab/"/>
-    <id>https://hg8.sh/posts/bitlab/</id>
-    <published>2020-01-10T23:00:00.000Z</published>
-    <updated>2020-05-27T11:38:11.713Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;587&quot; alt=&quot;bitlab-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
-    
-      <category term="bitlab" scheme="https://hg8.sh/tags/bitlab/"/>
-    
-      <category term="obfuscation" scheme="https://hg8.sh/tags/obfuscation/"/>
-    
-      <category term="git" scheme="https://hg8.sh/tags/git/"/>
-    
-      <category term="gitlab" scheme="https://hg8.sh/tags/gitlab/"/>
-    
-      <category term="git hook" scheme="https://hg8.sh/tags/git-hook/"/>
     
   </entry>
   
