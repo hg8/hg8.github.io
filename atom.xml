@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2020-11-07T19:41:06.239Z</updated>
+  <updated>2020-11-28T17:56:08.459Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,63 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - SneakyMailer</title>
+    <link href="https://hg8.sh/posts/sneakymailer/"/>
+    <id>https://hg8.sh/posts/sneakymailer/</id>
+    <published>2020-11-27T23:00:00.000Z</published>
+    <updated>2020-11-28T17:56:08.459Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;img width=&quot;576&quot; alt=&quot;SneakyMailer HackTheBox&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
+    
+    
+      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+      <category term="ftp" scheme="https://hg8.sh/tags/ftp/"/>
+    
+      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
+    
+      <category term="sneakymailer" scheme="https://hg8.sh/tags/sneakymailer/"/>
+    
+      <category term="smtp" scheme="https://hg8.sh/tags/smtp/"/>
+    
+      <category term="fishing" scheme="https://hg8.sh/tags/fishing/"/>
+    
+      <category term="imap" scheme="https://hg8.sh/tags/imap/"/>
+    
+      <category term="swaks" scheme="https://hg8.sh/tags/swaks/"/>
+    
+      <category term="php reverse shell" scheme="https://hg8.sh/tags/php-reverse-shell/"/>
+    
+      <category term="pypi" scheme="https://hg8.sh/tags/pypi/"/>
+    
+      <category term="pypiserver" scheme="https://hg8.sh/tags/pypiserver/"/>
+    
+      <category term="htpasswd" scheme="https://hg8.sh/tags/htpasswd/"/>
+    
+      <category term="setuptools" scheme="https://hg8.sh/tags/setuptools/"/>
+    
+      <category term="pip" scheme="https://hg8.sh/tags/pip/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Tabby</title>
@@ -887,47 +944,6 @@
       <category term="apache" scheme="https://hg8.sh/tags/apache/"/>
     
       <category term="ssh" scheme="https://hg8.sh/tags/ssh/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Mango</title>
-    <link href="https://hg8.sh/posts/mango/"/>
-    <id>https://hg8.sh/posts/mango/</id>
-    <published>2020-04-17T22:00:00.000Z</published>
-    <updated>2020-05-30T18:41:26.434Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;img width=&quot;572&quot; alt=&quot;mango-hackthebox&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-      <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-      <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-      <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-      <category term="gtfobins" scheme="https://hg8.sh/tags/gtfobins/"/>
-    
-      <category term="mango" scheme="https://hg8.sh/tags/mango/"/>
-    
-      <category term="mongodb" scheme="https://hg8.sh/tags/mongodb/"/>
-    
-      <category term="nosql injection" scheme="https://hg8.sh/tags/nosql-injection/"/>
-    
-      <category term="setuid" scheme="https://hg8.sh/tags/setuid/"/>
     
   </entry>
   
