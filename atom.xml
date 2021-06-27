@@ -46,6 +46,35 @@
   </entry>
   
   <entry>
+    <title>Misc CTF - Upload Restrictions Bypass</title>
+    <link href="https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/"/>
+    <id>https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/</id>
+    <published>2021-04-26T22:00:00.000Z</published>
+    <updated>2021-06-27T18:44:28.300Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This challenge highlight the potential risks of bad upload handling and how it can lead to remote code execution on server. In this</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="upload bypass" scheme="https://hg8.sh/tags/upload-bypass/"/>
+    
+  </entry>
+  
+  <entry>
     <title>HackTheBox - SneakyMailer</title>
     <link href="https://hg8.sh/posts/sneakymailer/"/>
     <id>https://hg8.sh/posts/sneakymailer/</id>
@@ -512,7 +541,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/request-smuggling/"/>
     <id>https://hg8.sh/posts/misc-ctf/request-smuggling/</id>
     <published>2020-07-27T22:00:00.000Z</published>
-    <updated>2020-07-30T08:30:27.379Z</updated>
+    <updated>2021-06-26T19:55:59.764Z</updated>
     
     
       
@@ -850,40 +879,6 @@
     <category term="encryption" scheme="https://hg8.sh/tags/encryption/"/>
     
     <category term="john" scheme="https://hg8.sh/tags/john/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Pwnable.kr - FD</title>
-    <link href="https://hg8.sh/posts/pwnable/fd/"/>
-    <id>https://hg8.sh/posts/pwnable/fd/</id>
-    <published>2020-05-02T22:00:00.000Z</published>
-    <updated>2020-05-18T13:21:46.608Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/82187694-12e6ad00-98ed-11ea-88da-0c05f6fcb13f.png&quot; alt=&quot;fd&quot;&gt;&lt;/p&gt;
-&lt;p&gt;One of</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="pwnable" scheme="https://hg8.sh/categories/CTF/pwnable/"/>
-    
-    <category term="Toddler&#39;s Bottle" scheme="https://hg8.sh/categories/CTF/pwnable/Toddler-s-Bottle/"/>
-    
-    
-    <category term="re" scheme="https://hg8.sh/tags/re/"/>
-    
-    <category term="fd" scheme="https://hg8.sh/tags/fd/"/>
-    
-    <category term="file descriptor" scheme="https://hg8.sh/tags/file-descriptor/"/>
     
   </entry>
   
