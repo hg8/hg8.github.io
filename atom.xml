@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2021-06-26T20:20:32.664Z</updated>
+  <updated>2021-06-29T18:16:06.178Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Misc CTF - XXE to SSRF</title>
+    <link href="https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/"/>
+    <id>https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/</id>
+    <published>2021-06-28T22:00:00.000Z</published>
+    <updated>2021-06-29T18:16:06.178Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This fun little challenge highlight two issue at once: XML External Entity (XXE) and Server-side request forgery (SSRF) and show how</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="xxe" scheme="https://hg8.sh/tags/xxe/"/>
+    
+    <category term="ssrf" scheme="https://hg8.sh/tags/ssrf/"/>
+    
+  </entry>
   
   <entry>
     <title>Misc CTF - GraphQL Injection</title>
@@ -838,47 +869,6 @@
     <category term="dll injection" scheme="https://hg8.sh/tags/dll-injection/"/>
     
     <category term="msfvenom" scheme="https://hg8.sh/tags/msfvenom/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Obscurity</title>
-    <link href="https://hg8.sh/posts/obscurity/"/>
-    <id>https://hg8.sh/posts/obscurity/</id>
-    <published>2020-05-08T22:00:00.000Z</published>
-    <updated>2020-05-28T17:25:44.212Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;587&quot; alt=&quot;obscurity-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="re" scheme="https://hg8.sh/tags/re/"/>
-    
-    <category term="python" scheme="https://hg8.sh/tags/python/"/>
-    
-    <category term="obscurity" scheme="https://hg8.sh/tags/obscurity/"/>
-    
-    <category term="custom-exploitation" scheme="https://hg8.sh/tags/custom-exploitation/"/>
-    
-    <category term="encryption" scheme="https://hg8.sh/tags/encryption/"/>
-    
-    <category term="john" scheme="https://hg8.sh/tags/john/"/>
     
   </entry>
   
