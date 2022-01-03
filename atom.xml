@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2021-06-30T19:04:03.353Z</updated>
+  <updated>2022-01-03T19:31:58.114Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,57 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Travel</title>
+    <link href="https://hg8.sh/posts/travels/"/>
+    <id>https://hg8.sh/posts/travels/</id>
+    <published>2022-01-01T23:00:00.000Z</published>
+    <updated>2022-01-03T19:31:58.114Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;img width=&quot;580&quot; alt=&quot;travel-hackthebox&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+    <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="memcached" scheme="https://hg8.sh/tags/memcached/"/>
+    
+    <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
+    
+    <category term="SSRF" scheme="https://hg8.sh/tags/SSRF/"/>
+    
+    <category term="git" scheme="https://hg8.sh/tags/git/"/>
+    
+    <category term="travel" scheme="https://hg8.sh/tags/travel/"/>
+    
+    <category term="phpmemcached" scheme="https://hg8.sh/tags/phpmemcached/"/>
+    
+    <category term="Gopher" scheme="https://hg8.sh/tags/Gopher/"/>
+    
+    <category term="deserialization" scheme="https://hg8.sh/tags/deserialization/"/>
+    
+    <category term="ldap" scheme="https://hg8.sh/tags/ldap/"/>
+    
+    <category term="memcached injection" scheme="https://hg8.sh/tags/memcached-injection/"/>
+    
+    <category term="simplePie" scheme="https://hg8.sh/tags/simplePie/"/>
+    
+  </entry>
   
   <entry>
     <title>Misc CTF - XSS to CSRF</title>
@@ -796,55 +847,6 @@
     <category term="NSPClient" scheme="https://hg8.sh/tags/NSPClient/"/>
     
     <category term="ssh tunnel" scheme="https://hg8.sh/tags/ssh-tunnel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Monteverde</title>
-    <link href="https://hg8.sh/posts/monteverde/"/>
-    <id>https://hg8.sh/posts/monteverde/</id>
-    <published>2020-06-12T22:00:00.000Z</published>
-    <updated>2020-06-15T11:59:29.205Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;583&quot; alt=&quot;monteverde-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-    <category term="windows" scheme="https://hg8.sh/tags/windows/"/>
-    
-    <category term="Monteverde" scheme="https://hg8.sh/tags/Monteverde/"/>
-    
-    <category term="SMB" scheme="https://hg8.sh/tags/SMB/"/>
-    
-    <category term="RPC" scheme="https://hg8.sh/tags/RPC/"/>
-    
-    <category term="crackmapexec" scheme="https://hg8.sh/tags/crackmapexec/"/>
-    
-    <category term="winRM" scheme="https://hg8.sh/tags/winRM/"/>
-    
-    <category term="active directory" scheme="https://hg8.sh/tags/active-directory/"/>
-    
-    <category term="ADClient" scheme="https://hg8.sh/tags/ADClient/"/>
-    
-    <category term="evil-winrm" scheme="https://hg8.sh/tags/evil-winrm/"/>
-    
-    <category term="Azure" scheme="https://hg8.sh/tags/Azure/"/>
-    
-    <category term="Azure AD Connect" scheme="https://hg8.sh/tags/Azure-AD-Connect/"/>
     
   </entry>
   
