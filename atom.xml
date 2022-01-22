@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2022-01-03T19:31:58.114Z</updated>
+  <updated>2022-01-22T21:28:17.288Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Misc CTF - Request Smuggling</title>
+    <link href="https://hg8.sh/posts/misc-ctf/request-smuggling/"/>
+    <id>https://hg8.sh/posts/misc-ctf/request-smuggling/</id>
+    <published>2022-01-14T23:00:00.000Z</published>
+    <updated>2022-01-22T21:28:17.288Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;During a CTF I recently came across a very cool challenge on Request Smuggling. I have been wanting to try my theoretical knowledge of</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="request smuggling" scheme="https://hg8.sh/tags/request-smuggling/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - Travel</title>
@@ -68,11 +99,107 @@
   </entry>
   
   <entry>
+    <title>Misc CTF - GraphQL Injection</title>
+    <link href="https://hg8.sh/posts/misc-ctf/graphql-injection/"/>
+    <id>https://hg8.sh/posts/misc-ctf/graphql-injection/</id>
+    <published>2021-11-25T23:00:00.000Z</published>
+    <updated>2022-01-22T21:27:38.671Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;GraphQL is becoming more and more common nowadays and this challenge was the perfect way to digg into the subject and understand the</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="GraphQL Injection" scheme="https://hg8.sh/tags/GraphQL-Injection/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Misc CTF - XXE to SSRF</title>
+    <link href="https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/"/>
+    <id>https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/</id>
+    <published>2021-10-28T22:00:00.000Z</published>
+    <updated>2022-01-22T21:28:08.389Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This fun little challenge highlight two issue at once: XML External Entity (XXE) and Server-side request forgery (SSRF) and show how</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="xxe" scheme="https://hg8.sh/tags/xxe/"/>
+    
+    <category term="ssrf" scheme="https://hg8.sh/tags/ssrf/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Misc CTF - PRNG Weakness</title>
+    <link href="https://hg8.sh/posts/misc-ctf/PRNG%20Weakness/"/>
+    <id>https://hg8.sh/posts/misc-ctf/PRNG%20Weakness/</id>
+    <published>2021-09-15T22:00:00.000Z</published>
+    <updated>2022-01-22T21:34:50.901Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This challenge aims to highlight the weaknesses of PRNG (Pseudorandom Number Generator) algorithms.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tl;Dr:&lt;/strong&gt; The</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+    <category term="prng" scheme="https://hg8.sh/tags/prng/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Misc CTF - XSS to CSRF</title>
     <link href="https://hg8.sh/posts/misc-ctf/xss-to-csrf/"/>
     <id>https://hg8.sh/posts/misc-ctf/xss-to-csrf/</id>
-    <published>2021-06-30T22:00:00.000Z</published>
-    <updated>2021-06-30T19:04:03.353Z</updated>
+    <published>2021-07-31T22:00:00.000Z</published>
+    <updated>2022-01-22T21:27:58.645Z</updated>
     
     
       
@@ -98,21 +225,24 @@
     
     <category term="web socket" scheme="https://hg8.sh/tags/web-socket/"/>
     
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
   </entry>
   
   <entry>
-    <title>Misc CTF - XXE to SSRF</title>
-    <link href="https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/"/>
-    <id>https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/</id>
-    <published>2021-06-28T22:00:00.000Z</published>
-    <updated>2021-06-30T18:52:25.611Z</updated>
+    <title>Misc CTF - Insecure Deserialization</title>
+    <link href="https://hg8.sh/posts/misc-ctf/insecure-deserialization/"/>
+    <id>https://hg8.sh/posts/misc-ctf/insecure-deserialization/</id>
+    <published>2021-04-30T22:00:00.000Z</published>
+    <updated>2022-01-22T21:25:44.687Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;This fun little challenge highlight two issue at once: XML External Entity (XXE) and Server-side request forgery (SSRF) and show how</summary>
+    <summary type="html">&lt;p&gt;This challenge highlight an important and too common vulnerability: Insecure Deserialization.&lt;/p&gt;
+&lt;p&gt;Let’s solve this challenge to</summary>
         
       
     
@@ -125,38 +255,9 @@
     
     <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
-    <category term="xxe" scheme="https://hg8.sh/tags/xxe/"/>
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
     
-    <category term="ssrf" scheme="https://hg8.sh/tags/ssrf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Misc CTF - GraphQL Injection</title>
-    <link href="https://hg8.sh/posts/misc-ctf/graphql-injection/"/>
-    <id>https://hg8.sh/posts/misc-ctf/graphql-injection/</id>
-    <published>2021-06-25T22:00:00.000Z</published>
-    <updated>2021-06-26T20:20:32.664Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;GraphQL is becoming more and more common nowadays and this challenge was the perfect way to digg into the subject and understand the</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="GraphQL Injection" scheme="https://hg8.sh/tags/GraphQL-Injection/"/>
+    <category term="insecure deserialization" scheme="https://hg8.sh/tags/insecure-deserialization/"/>
     
   </entry>
   
@@ -165,7 +266,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/"/>
     <id>https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/</id>
     <published>2021-04-26T22:00:00.000Z</published>
-    <updated>2021-06-27T18:44:28.300Z</updated>
+    <updated>2022-01-22T21:27:53.347Z</updated>
     
     
       
@@ -186,6 +287,39 @@
     <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
     
     <category term="upload bypass" scheme="https://hg8.sh/tags/upload-bypass/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Misc CTF - GraphQL Injection</title>
+    <link href="https://hg8.sh/posts/misc-ctf/sql-injection/"/>
+    <id>https://hg8.sh/posts/misc-ctf/sql-injection/</id>
+    <published>2021-03-11T23:00:00.000Z</published>
+    <updated>2022-01-22T21:15:35.405Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This seventh challenge aims to demonstrate a more than 20 years old bug: the infamous SQL injection. A perfect challenge for</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="beginner" scheme="https://hg8.sh/tags/beginner/"/>
+    
+    <category term="SQL Injection" scheme="https://hg8.sh/tags/SQL-Injection/"/>
     
   </entry>
   
@@ -652,35 +786,6 @@
   </entry>
   
   <entry>
-    <title>Misc CTF - Request Smuggling</title>
-    <link href="https://hg8.sh/posts/misc-ctf/request-smuggling/"/>
-    <id>https://hg8.sh/posts/misc-ctf/request-smuggling/</id>
-    <published>2020-07-27T22:00:00.000Z</published>
-    <updated>2021-06-26T19:55:59.764Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;During a CTF I recently came across a very cool challenge on Request Smuggling. I have been wanting to try my theoretical knowledge of</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="Misc" scheme="https://hg8.sh/categories/CTF/Misc/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="request smuggling" scheme="https://hg8.sh/tags/request-smuggling/"/>
-    
-  </entry>
-  
-  <entry>
     <title>HackTheBox - Book</title>
     <link href="https://hg8.sh/posts/book/"/>
     <id>https://hg8.sh/posts/book/</id>
@@ -722,131 +827,6 @@
     <category term="logrotten" scheme="https://hg8.sh/tags/logrotten/"/>
     
     <category term="CVE-2019-1014" scheme="https://hg8.sh/tags/CVE-2019-1014/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Pwnable.kr - Collision</title>
-    <link href="https://hg8.sh/posts/pwnable/collision/"/>
-    <id>https://hg8.sh/posts/pwnable/collision/</id>
-    <published>2020-07-07T22:00:00.000Z</published>
-    <updated>2020-07-08T18:56:17.972Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/86539110-6f804480-befa-11ea-8939-900e8e97bbad.png&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="pwnable" scheme="https://hg8.sh/categories/CTF/pwnable/"/>
-    
-    <category term="Toddler&#39;s Bottle" scheme="https://hg8.sh/categories/CTF/pwnable/Toddler-s-Bottle/"/>
-    
-    
-    <category term="re" scheme="https://hg8.sh/tags/re/"/>
-    
-    <category term="collision" scheme="https://hg8.sh/tags/collision/"/>
-    
-    <category term="pwn" scheme="https://hg8.sh/tags/pwn/"/>
-    
-    <category term="dynamic analysis" scheme="https://hg8.sh/tags/dynamic-analysis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - ForwardSlash</title>
-    <link href="https://hg8.sh/posts/forwardslash/"/>
-    <id>https://hg8.sh/posts/forwardslash/</id>
-    <published>2020-07-03T22:00:00.000Z</published>
-    <updated>2020-07-04T19:12:20.922Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;578&quot; alt=&quot;forwardslash-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="LFI" scheme="https://hg8.sh/tags/LFI/"/>
-    
-    <category term="forwardslash" scheme="https://hg8.sh/tags/forwardslash/"/>
-    
-    <category term="XML" scheme="https://hg8.sh/tags/XML/"/>
-    
-    <category term="XXE" scheme="https://hg8.sh/tags/XXE/"/>
-    
-    <category term="php filter" scheme="https://hg8.sh/tags/php-filter/"/>
-    
-    <category term="re" scheme="https://hg8.sh/tags/re/"/>
-    
-    <category term="crypto" scheme="https://hg8.sh/tags/crypto/"/>
-    
-    <category term="bruteforce" scheme="https://hg8.sh/tags/bruteforce/"/>
-    
-    <category term="luks" scheme="https://hg8.sh/tags/luks/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - ServMon</title>
-    <link href="https://hg8.sh/posts/servmon/"/>
-    <id>https://hg8.sh/posts/servmon/</id>
-    <published>2020-06-19T22:00:00.000Z</published>
-    <updated>2020-06-20T19:01:12.271Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;582&quot; alt=&quot;servMon-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
-    
-    
-    <category term="ftp" scheme="https://hg8.sh/tags/ftp/"/>
-    
-    <category term="windows" scheme="https://hg8.sh/tags/windows/"/>
-    
-    <category term="crackmapexec" scheme="https://hg8.sh/tags/crackmapexec/"/>
-    
-    <category term="ServMon" scheme="https://hg8.sh/tags/ServMon/"/>
-    
-    <category term="directory traversal" scheme="https://hg8.sh/tags/directory-traversal/"/>
-    
-    <category term="hydra" scheme="https://hg8.sh/tags/hydra/"/>
-    
-    <category term="NSPClient" scheme="https://hg8.sh/tags/NSPClient/"/>
-    
-    <category term="ssh tunnel" scheme="https://hg8.sh/tags/ssh-tunnel/"/>
     
   </entry>
   

