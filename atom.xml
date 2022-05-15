@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2022-01-22T21:28:17.288Z</updated>
+  <updated>2022-05-15T10:08:33.567Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,59 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HackTheBox - Fingerprint</title>
+    <link href="https://hg8.sh/posts/fingerprint/"/>
+    <id>https://hg8.sh/posts/fingerprint/</id>
+    <published>2022-05-13T22:00:00.000Z</published>
+    <updated>2022-05-15T10:08:33.567Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;img width=&quot;578&quot; alt=&quot;figerprint-hackthebox&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+    <category term="Insane Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Insane-Box/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="LFI" scheme="https://hg8.sh/tags/LFI/"/>
+    
+    <category term="JWT" scheme="https://hg8.sh/tags/JWT/"/>
+    
+    <category term="Cookie Forge" scheme="https://hg8.sh/tags/Cookie-Forge/"/>
+    
+    <category term="Crypto" scheme="https://hg8.sh/tags/Crypto/"/>
+    
+    <category term="ECB" scheme="https://hg8.sh/tags/ECB/"/>
+    
+    <category term="Command Injection" scheme="https://hg8.sh/tags/Command-Injection/"/>
+    
+    <category term="HQL Injection" scheme="https://hg8.sh/tags/HQL-Injection/"/>
+    
+    <category term="Bruteforce" scheme="https://hg8.sh/tags/Bruteforce/"/>
+    
+    <category term="XSS" scheme="https://hg8.sh/tags/XSS/"/>
+    
+    <category term="Reverse Shell" scheme="https://hg8.sh/tags/Reverse-Shell/"/>
+    
+    <category term="Flask" scheme="https://hg8.sh/tags/Flask/"/>
+    
+    <category term="SUID" scheme="https://hg8.sh/tags/SUID/"/>
+    
+  </entry>
   
   <entry>
     <title>Misc CTF - Request Smuggling</title>
@@ -782,51 +835,6 @@
     <category term="exploit" scheme="https://hg8.sh/tags/exploit/"/>
     
     <category term="dbus" scheme="https://hg8.sh/tags/dbus/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Book</title>
-    <link href="https://hg8.sh/posts/book/"/>
-    <id>https://hg8.sh/posts/book/</id>
-    <published>2020-07-10T22:00:00.000Z</published>
-    <updated>2020-07-15T15:52:28.907Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;584&quot; alt=&quot;book-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="book" scheme="https://hg8.sh/tags/book/"/>
-    
-    <category term="truncation" scheme="https://hg8.sh/tags/truncation/"/>
-    
-    <category term="XXS" scheme="https://hg8.sh/tags/XXS/"/>
-    
-    <category term="LFI" scheme="https://hg8.sh/tags/LFI/"/>
-    
-    <category term="PDF" scheme="https://hg8.sh/tags/PDF/"/>
-    
-    <category term="logrotate" scheme="https://hg8.sh/tags/logrotate/"/>
-    
-    <category term="logrotten" scheme="https://hg8.sh/tags/logrotten/"/>
-    
-    <category term="CVE-2019-1014" scheme="https://hg8.sh/tags/CVE-2019-1014/"/>
     
   </entry>
   
