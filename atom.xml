@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2022-07-23T20:55:13.245Z</updated>
+  <updated>2022-07-29T21:05:15.625Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,40 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Bug Bounty Story: Escalating SSRF to RCE on AWS</title>
+    <link href="https://hg8.sh/posts/bugbounty/ssrf-to-rce-aws/"/>
+    <id>https://hg8.sh/posts/bugbounty/ssrf-to-rce-aws/</id>
+    <published>2022-07-28T22:00:00.000Z</published>
+    <updated>2022-07-29T21:05:15.625Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Hey everyone, not a CTF write-up today but my first Bug Bounty Bounty story: SSRF escalation to RCE on AWS.&lt;/p&gt;
+&lt;p&gt;The vulnerability was</summary>
+        
+      
+    
+    
+    
+    <category term="Bug Bounty" scheme="https://hg8.sh/categories/Bug-Bounty/"/>
+    
+    
+    <category term="RCE" scheme="https://hg8.sh/tags/RCE/"/>
+    
+    <category term="SSRF" scheme="https://hg8.sh/tags/SSRF/"/>
+    
+    <category term="bug bounty" scheme="https://hg8.sh/tags/bug-bounty/"/>
+    
+    <category term="AWS" scheme="https://hg8.sh/tags/AWS/"/>
+    
+    <category term="IAM" scheme="https://hg8.sh/tags/IAM/"/>
+    
+  </entry>
   
   <entry>
     <title>HackTheBox - AdmirerToo</title>
@@ -808,47 +842,6 @@
     <category term="trace" scheme="https://hg8.sh/tags/trace/"/>
     
     <category term="suid" scheme="https://hg8.sh/tags/suid/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Traceback</title>
-    <link href="https://hg8.sh/posts/traceback/"/>
-    <id>https://hg8.sh/posts/traceback/</id>
-    <published>2020-08-14T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.652Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;582&quot; alt=&quot;traceback-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="webshell" scheme="https://hg8.sh/tags/webshell/"/>
-    
-    <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
-    
-    <category term="traceback" scheme="https://hg8.sh/tags/traceback/"/>
-    
-    <category term="lua" scheme="https://hg8.sh/tags/lua/"/>
-    
-    <category term="motd" scheme="https://hg8.sh/tags/motd/"/>
-    
-    <category term="run-parts" scheme="https://hg8.sh/tags/run-parts/"/>
     
   </entry>
   
