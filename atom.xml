@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2022-07-29T21:05:15.625Z</updated>
+  <updated>2022-09-03T15:15:49.884Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -17,11 +17,72 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>HackTheBox - Talkative</title>
+    <link href="https://hg8.sh/posts/talkative/"/>
+    <id>https://hg8.sh/posts/talkative/</id>
+    <published>2022-08-26T22:00:00.000Z</published>
+    <updated>2022-09-03T15:15:49.884Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/164916795-5c33ab53-424b-4846-9bff-7b4c19ca529d.png&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
+    
+    <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
+    
+    
+    <category term="RCE" scheme="https://hg8.sh/tags/RCE/"/>
+    
+    <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
+    
+    <category term="mongodb" scheme="https://hg8.sh/tags/mongodb/"/>
+    
+    <category term="Linux" scheme="https://hg8.sh/tags/Linux/"/>
+    
+    <category term="container" scheme="https://hg8.sh/tags/container/"/>
+    
+    <category term="CVE" scheme="https://hg8.sh/tags/CVE/"/>
+    
+    <category term="recon" scheme="https://hg8.sh/tags/recon/"/>
+    
+    <category term="jamovi" scheme="https://hg8.sh/tags/jamovi/"/>
+    
+    <category term="rocket.chat" scheme="https://hg8.sh/tags/rocket-chat/"/>
+    
+    <category term="pwncat" scheme="https://hg8.sh/tags/pwncat/"/>
+    
+    <category term="bolt" scheme="https://hg8.sh/tags/bolt/"/>
+    
+    <category term="cap-dac-read-search" scheme="https://hg8.sh/tags/cap-dac-read-search/"/>
+    
+    <category term="shocker" scheme="https://hg8.sh/tags/shocker/"/>
+    
+    <category term="webhook" scheme="https://hg8.sh/tags/webhook/"/>
+    
+    <category term="twig" scheme="https://hg8.sh/tags/twig/"/>
+    
+    <category term="ssti" scheme="https://hg8.sh/tags/ssti/"/>
+    
+    <category term="r-lang" scheme="https://hg8.sh/tags/r-lang/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Bug Bounty Story: Escalating SSRF to RCE on AWS</title>
     <link href="https://hg8.sh/posts/bugbounty/ssrf-to-rce-aws/"/>
     <id>https://hg8.sh/posts/bugbounty/ssrf-to-rce-aws/</id>
-    <published>2022-07-28T22:00:00.000Z</published>
-    <updated>2022-07-29T21:05:15.625Z</updated>
+    <published>2022-07-03T22:00:00.000Z</published>
+    <updated>2022-09-03T15:16:50.163Z</updated>
     
     
       
@@ -55,7 +116,7 @@
     <link href="https://hg8.sh/posts/admirertoo/"/>
     <id>https://hg8.sh/posts/admirertoo/</id>
     <published>2022-05-27T22:00:00.000Z</published>
-    <updated>2022-07-23T20:55:13.245Z</updated>
+    <updated>2022-08-04T08:37:52.825Z</updated>
     
     
       
@@ -114,7 +175,7 @@
     <link href="https://hg8.sh/posts/fingerprint/"/>
     <id>https://hg8.sh/posts/fingerprint/</id>
     <published>2022-05-13T22:00:00.000Z</published>
-    <updated>2022-05-15T10:08:33.567Z</updated>
+    <updated>2022-08-04T08:37:52.828Z</updated>
     
     
       
@@ -167,7 +228,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/request-smuggling/"/>
     <id>https://hg8.sh/posts/misc-ctf/request-smuggling/</id>
     <published>2022-01-14T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.967Z</updated>
+    <updated>2022-08-04T08:37:52.830Z</updated>
     
     
       
@@ -198,7 +259,7 @@
     <link href="https://hg8.sh/posts/travels/"/>
     <id>https://hg8.sh/posts/travels/</id>
     <published>2022-01-01T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.649Z</updated>
+    <updated>2022-08-04T08:37:52.838Z</updated>
     
     
       
@@ -249,7 +310,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/graphql-injection/"/>
     <id>https://hg8.sh/posts/misc-ctf/graphql-injection/</id>
     <published>2021-11-25T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.969Z</updated>
+    <updated>2022-08-04T08:37:52.829Z</updated>
     
     
       
@@ -280,7 +341,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/"/>
     <id>https://hg8.sh/posts/misc-ctf/xxe-to-ssrf/</id>
     <published>2021-10-28T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.969Z</updated>
+    <updated>2022-08-04T08:37:52.832Z</updated>
     
     
       
@@ -313,7 +374,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/PRNG%20Weakness/"/>
     <id>https://hg8.sh/posts/misc-ctf/PRNG%20Weakness/</id>
     <published>2021-09-15T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.968Z</updated>
+    <updated>2022-08-04T08:37:52.829Z</updated>
     
     
       
@@ -345,7 +406,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/xss-to-csrf/"/>
     <id>https://hg8.sh/posts/misc-ctf/xss-to-csrf/</id>
     <published>2021-07-31T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.970Z</updated>
+    <updated>2022-08-04T08:37:52.831Z</updated>
     
     
       
@@ -380,7 +441,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/insecure-deserialization/"/>
     <id>https://hg8.sh/posts/misc-ctf/insecure-deserialization/</id>
     <published>2021-04-30T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.970Z</updated>
+    <updated>2022-08-04T08:37:52.830Z</updated>
     
     
       
@@ -412,7 +473,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/"/>
     <id>https://hg8.sh/posts/misc-ctf/upload-restriction-bypass/</id>
     <published>2021-04-26T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.966Z</updated>
+    <updated>2022-08-04T08:37:52.831Z</updated>
     
     
       
@@ -443,7 +504,7 @@
     <link href="https://hg8.sh/posts/misc-ctf/sql-injection/"/>
     <id>https://hg8.sh/posts/misc-ctf/sql-injection/</id>
     <published>2021-03-11T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:30.967Z</updated>
+    <updated>2022-08-04T08:37:52.830Z</updated>
     
     
       
@@ -474,7 +535,7 @@
     <link href="https://hg8.sh/posts/sneakymailer/"/>
     <id>https://hg8.sh/posts/sneakymailer/</id>
     <published>2020-11-27T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.621Z</updated>
+    <updated>2022-08-04T08:37:52.837Z</updated>
     
     
       
@@ -529,7 +590,7 @@
     <link href="https://hg8.sh/posts/tabby/"/>
     <id>https://hg8.sh/posts/tabby/</id>
     <published>2020-11-06T23:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.626Z</updated>
+    <updated>2022-08-04T08:37:52.837Z</updated>
     
     
       
@@ -574,7 +635,7 @@
     <link href="https://hg8.sh/posts/blunder/"/>
     <id>https://hg8.sh/posts/blunder/</id>
     <published>2020-10-16T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.632Z</updated>
+    <updated>2022-08-04T08:37:52.826Z</updated>
     
     
       
@@ -623,7 +684,7 @@
     <link href="https://hg8.sh/posts/cache/"/>
     <id>https://hg8.sh/posts/cache/</id>
     <published>2020-10-09T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.642Z</updated>
+    <updated>2022-08-04T08:37:52.827Z</updated>
     
     
       
@@ -670,7 +731,7 @@
     <link href="https://hg8.sh/posts/admirer/"/>
     <id>https://hg8.sh/posts/admirer/</id>
     <published>2020-09-25T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.630Z</updated>
+    <updated>2022-08-04T08:37:52.825Z</updated>
     
     
       
@@ -711,7 +772,7 @@
     <link href="https://hg8.sh/posts/travel/"/>
     <id>https://hg8.sh/posts/travel/</id>
     <published>2020-09-11T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.617Z</updated>
+    <updated>2022-08-04T08:37:52.838Z</updated>
     
     
       
@@ -762,7 +823,7 @@
     <link href="https://hg8.sh/posts/quick/"/>
     <id>https://hg8.sh/posts/quick/</id>
     <published>2020-08-28T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.670Z</updated>
+    <updated>2022-08-04T08:37:52.836Z</updated>
     
     
       
@@ -797,51 +858,6 @@
     <category term="CUPS" scheme="https://hg8.sh/tags/CUPS/"/>
     
     <category term="printer" scheme="https://hg8.sh/tags/printer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Magic</title>
-    <link href="https://hg8.sh/posts/magic/"/>
-    <id>https://hg8.sh/posts/magic/</id>
-    <published>2020-08-21T22:00:00.000Z</published>
-    <updated>2022-02-28T13:09:08.628Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;587&quot; alt=&quot;magic-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="sqli" scheme="https://hg8.sh/tags/sqli/"/>
-    
-    <category term="magic" scheme="https://hg8.sh/tags/magic/"/>
-    
-    <category term="upload" scheme="https://hg8.sh/tags/upload/"/>
-    
-    <category term="double extension" scheme="https://hg8.sh/tags/double-extension/"/>
-    
-    <category term="rce" scheme="https://hg8.sh/tags/rce/"/>
-    
-    <category term="web shell" scheme="https://hg8.sh/tags/web-shell/"/>
-    
-    <category term="trace" scheme="https://hg8.sh/tags/trace/"/>
-    
-    <category term="suid" scheme="https://hg8.sh/tags/suid/"/>
     
   </entry>
   
