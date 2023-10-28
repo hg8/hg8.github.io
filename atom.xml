@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2023-10-28T17:56:05.816Z</updated>
+  <updated>2023-10-28T19:33:41.600Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -17,18 +17,49 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Buffer Overflow: Code Execution By Shellcode Injection</title>
+    <link href="https://hg8.sh/posts/binary-exploitation/buffer-overflow-code-execution-by-shellcode-injection/"/>
+    <id>https://hg8.sh/posts/binary-exploitation/buffer-overflow-code-execution-by-shellcode-injection/</id>
+    <published>2023-10-27T22:00:00.000Z</published>
+    <updated>2023-10-28T19:33:41.600Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://github.com/hg8/hg8.github.io/assets/9076747/5be7a79d-5052-4ec5-b14f-b34221c5852e&quot; alt=&quot;buffer overflow part 3</summary>
+        
+      
+    
+    
+    
+    <category term="Binary Exploitation" scheme="https://hg8.sh/categories/Binary-Exploitation/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="binary exploitation" scheme="https://hg8.sh/tags/binary-exploitation/"/>
+    
+    <category term="buffer overflow" scheme="https://hg8.sh/tags/buffer-overflow/"/>
+    
+    <category term="c" scheme="https://hg8.sh/tags/c/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Buffer Overflow: Reversing Assembly</title>
     <link href="https://hg8.sh/posts/binary-exploitation/buffer-overflow-reversing-assembly/"/>
     <id>https://hg8.sh/posts/binary-exploitation/buffer-overflow-reversing-assembly/</id>
-    <published>2023-10-27T22:00:00.000Z</published>
-    <updated>2023-10-28T17:56:05.816Z</updated>
+    <published>2023-09-11T22:00:00.000Z</published>
+    <updated>2023-10-28T19:32:21.613Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/203412163-e8f180a6-5d96-4878-944b-8db1db3f0d25.jpg&quot; alt=&quot;buffer overflow</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://github.com/hg8/hg8.github.io/assets/9076747/ee65be39-04a5-49e2-b21a-b934ef44f696&quot; alt=&quot;buffer overflow</summary>
         
       
     
@@ -52,14 +83,14 @@
     <link href="https://hg8.sh/posts/binary-exploitation/buffer-overflow-introduction/"/>
     <id>https://hg8.sh/posts/binary-exploitation/buffer-overflow-introduction/</id>
     <published>2022-11-21T23:00:00.000Z</published>
-    <updated>2023-10-28T18:10:05.718Z</updated>
+    <updated>2023-10-28T19:31:16.037Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/203412163-e8f180a6-5d96-4878-944b-8db1db3f0d25.jpg&quot; alt=&quot;buffer overflow</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://github.com/hg8/hg8.github.io/assets/9076747/4eec46e9-8a8c-451e-8653-ada526ee7029&quot; alt=&quot;buffer overflow</summary>
         
       
     
@@ -785,47 +816,6 @@
     <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
     
     <category term="CVE-2019-5736" scheme="https://hg8.sh/tags/CVE-2019-5736/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Admirer</title>
-    <link href="https://hg8.sh/posts/admirer/"/>
-    <id>https://hg8.sh/posts/admirer/</id>
-    <published>2020-09-25T22:00:00.000Z</published>
-    <updated>2022-08-04T08:37:52.825Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;584&quot; alt=&quot;admirer-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Easy Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Easy-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="admirer" scheme="https://hg8.sh/tags/admirer/"/>
-    
-    <category term="enumeration" scheme="https://hg8.sh/tags/enumeration/"/>
-    
-    <category term="adminer" scheme="https://hg8.sh/tags/adminer/"/>
-    
-    <category term="mysql local file read" scheme="https://hg8.sh/tags/mysql-local-file-read/"/>
-    
-    <category term="ftp" scheme="https://hg8.sh/tags/ftp/"/>
-    
-    <category term="python library overwrite" scheme="https://hg8.sh/tags/python-library-overwrite/"/>
     
   </entry>
   
