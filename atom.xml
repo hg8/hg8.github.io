@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2022-11-22T20:48:37.976Z</updated>
+  <updated>2023-10-28T17:56:05.816Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -17,11 +17,42 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Buffer Overflow: Reversing Assembly</title>
+    <link href="https://hg8.sh/posts/binary-exploitation/buffer-overflow-reversing-assembly/"/>
+    <id>https://hg8.sh/posts/binary-exploitation/buffer-overflow-reversing-assembly/</id>
+    <published>2023-10-27T22:00:00.000Z</published>
+    <updated>2023-10-28T17:56:05.816Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/9076747/203412163-e8f180a6-5d96-4878-944b-8db1db3f0d25.jpg&quot; alt=&quot;buffer overflow</summary>
+        
+      
+    
+    
+    
+    <category term="Binary Exploitation" scheme="https://hg8.sh/categories/Binary-Exploitation/"/>
+    
+    
+    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
+    
+    <category term="binary exploitation" scheme="https://hg8.sh/tags/binary-exploitation/"/>
+    
+    <category term="buffer overflow" scheme="https://hg8.sh/tags/buffer-overflow/"/>
+    
+    <category term="c" scheme="https://hg8.sh/tags/c/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Buffer Overflow: Introduction</title>
     <link href="https://hg8.sh/posts/binary-exploitation/buffer-overflow-introduction/"/>
     <id>https://hg8.sh/posts/binary-exploitation/buffer-overflow-introduction/</id>
     <published>2022-11-21T23:00:00.000Z</published>
-    <updated>2022-11-22T20:48:37.976Z</updated>
+    <updated>2023-10-28T18:10:05.718Z</updated>
     
     
       
@@ -795,57 +826,6 @@
     <category term="ftp" scheme="https://hg8.sh/tags/ftp/"/>
     
     <category term="python library overwrite" scheme="https://hg8.sh/tags/python-library-overwrite/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Travel</title>
-    <link href="https://hg8.sh/posts/travel/"/>
-    <id>https://hg8.sh/posts/travel/</id>
-    <published>2020-09-11T22:00:00.000Z</published>
-    <updated>2022-08-04T08:37:52.838Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;580&quot; alt=&quot;travel-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Hard Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Hard-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="git" scheme="https://hg8.sh/tags/git/"/>
-    
-    <category term="memcached" scheme="https://hg8.sh/tags/memcached/"/>
-    
-    <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
-    
-    <category term="SSRF" scheme="https://hg8.sh/tags/SSRF/"/>
-    
-    <category term="ldap" scheme="https://hg8.sh/tags/ldap/"/>
-    
-    <category term="travel" scheme="https://hg8.sh/tags/travel/"/>
-    
-    <category term="phpmemcached" scheme="https://hg8.sh/tags/phpmemcached/"/>
-    
-    <category term="memcached injection" scheme="https://hg8.sh/tags/memcached-injection/"/>
-    
-    <category term="Gopher" scheme="https://hg8.sh/tags/Gopher/"/>
-    
-    <category term="deserialization" scheme="https://hg8.sh/tags/deserialization/"/>
-    
-    <category term="simplePie" scheme="https://hg8.sh/tags/simplePie/"/>
     
   </entry>
   
