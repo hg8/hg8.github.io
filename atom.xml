@@ -6,7 +6,7 @@
   <link href="https://hg8.sh/atom.xml" rel="self"/>
   
   <link href="https://hg8.sh/"/>
-  <updated>2023-10-28T19:33:41.600Z</updated>
+  <updated>2023-11-05T18:02:56.478Z</updated>
   <id>https://hg8.sh/</id>
   
   <author>
@@ -15,6 +15,45 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Pwnable.kr - bof</title>
+    <link href="https://hg8.sh/posts/pwnable/bof/"/>
+    <id>https://hg8.sh/posts/pwnable/bof/</id>
+    <published>2023-11-04T23:00:00.000Z</published>
+    <updated>2023-11-05T18:02:56.478Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280545217-a30f8c4a-c968-4793-a4db-722904a7adbe.png&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
+    
+    <category term="pwnable" scheme="https://hg8.sh/categories/CTF/pwnable/"/>
+    
+    <category term="Toddler&#39;s Bottle" scheme="https://hg8.sh/categories/CTF/pwnable/Toddler-s-Bottle/"/>
+    
+    
+    <category term="re" scheme="https://hg8.sh/tags/re/"/>
+    
+    <category term="buffer overflow" scheme="https://hg8.sh/tags/buffer-overflow/"/>
+    
+    <category term="pwn" scheme="https://hg8.sh/tags/pwn/"/>
+    
+    <category term="dynamic analysis" scheme="https://hg8.sh/tags/dynamic-analysis/"/>
+    
+    <category term="bof" scheme="https://hg8.sh/tags/bof/"/>
+    
+    <category term="pwntools" scheme="https://hg8.sh/tags/pwntools/"/>
+    
+  </entry>
   
   <entry>
     <title>Buffer Overflow: Code Execution By Shellcode Injection</title>
@@ -769,53 +808,6 @@
     <category term="sudo" scheme="https://hg8.sh/tags/sudo/"/>
     
     <category term="CVE-2019-14287" scheme="https://hg8.sh/tags/CVE-2019-14287/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HackTheBox - Cache</title>
-    <link href="https://hg8.sh/posts/cache/"/>
-    <id>https://hg8.sh/posts/cache/</id>
-    <published>2020-10-09T22:00:00.000Z</published>
-    <updated>2022-08-04T08:37:52.827Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;img width=&quot;578&quot; alt=&quot;cache-hackthebox&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="CTF" scheme="https://hg8.sh/categories/CTF/"/>
-    
-    <category term="HackTheBox" scheme="https://hg8.sh/categories/CTF/HackTheBox/"/>
-    
-    <category term="Medium Box" scheme="https://hg8.sh/categories/CTF/HackTheBox/Medium-Box/"/>
-    
-    
-    <category term="linux" scheme="https://hg8.sh/tags/linux/"/>
-    
-    <category term="cache" scheme="https://hg8.sh/tags/cache/"/>
-    
-    <category term="openerm" scheme="https://hg8.sh/tags/openerm/"/>
-    
-    <category term="sqli" scheme="https://hg8.sh/tags/sqli/"/>
-    
-    <category term="John" scheme="https://hg8.sh/tags/John/"/>
-    
-    <category term="bcrypt" scheme="https://hg8.sh/tags/bcrypt/"/>
-    
-    <category term="RCE" scheme="https://hg8.sh/tags/RCE/"/>
-    
-    <category term="memcached" scheme="https://hg8.sh/tags/memcached/"/>
-    
-    <category term="docker" scheme="https://hg8.sh/tags/docker/"/>
-    
-    <category term="CVE-2019-5736" scheme="https://hg8.sh/tags/CVE-2019-5736/"/>
     
   </entry>
   
