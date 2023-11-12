@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="We continue our beginner series on Binary Exploitation with pwnable.kr which appears to have a reasonable curve of difficulty making it ideal for learning. Let’s go for this 4rd challenge: flag. Chal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pwnable.kr - Flag">
+<meta property="og:url" content="https://hg8.sh/posts/pwnable/flag/index.html">
+<meta property="og:site_name" content="hg8&#39;s Notes — My notes about infosec world. Pentest&#x2F;Bug Bounty&#x2F;CTF Writeups.">
+<meta property="og:description" content="We continue our beginner series on Binary Exploitation with pwnable.kr which appears to have a reasonable curve of difficulty making it ideal for learning. Let’s go for this 4rd challenge: flag. Chal">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/282297542-4a536c54-7ff6-45ee-a8da-72bed96925a2.png">
+<meta property="og:image" content="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280253789-52df00e1-b0f1-41f2-a6e7-01c89db5d9fb.png">
+<meta property="og:image" content="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280254580-5b11293b-e809-448a-ba87-5032b363f983.png">
+<meta property="article:published_time" content="2023-11-11T23:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-12T12:19:02.409Z">
+<meta property="article:author" content="hg8">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="dynamic analysis">
+<meta property="article:tag" content="pwntools">
+<meta property="article:tag" content="flag">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/282297542-4a536c54-7ff6-45ee-a8da-72bed96925a2.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+     
+    <title>Pwnable.kr - Flag :: hg8&#39;s Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups.</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="hg8's Notes — My notes about infosec world. Pentest/Bug Bounty/CTF Writeups." type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/posts/pwnable/bof/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+    </span>
+    <br/>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Test-amp-Analysis"><span class="toc-number">2.</span> <span class="toc-text">Test &amp; Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Malloc"><span class="toc-number">2.1.</span> <span class="toc-text">Malloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binary-analysis"><span class="toc-number">2.2.</span> <span class="toc-text">Binary analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dynamic-Analysis"><span class="toc-number">2.3.</span> <span class="toc-text">Dynamic Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#But-wait-what%E2%80%99s-the-link-with-Malloc"><span class="toc-number">2.4.</span> <span class="toc-text">But wait, what’s the link with Malloc ?</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        <header id="header">
+  <a href="/">
+  
+      <div id="logo" style="background-image: url(/images/logo.webp);"></div>
+  
+    <span class="logo__mark"></span>
+    <span class="logo__text">./hg8.sh</span>
+    <span class="logo__cursor"></span>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/archives/">Posts</a></li>
+       
+        <li><a href="/search/">Search</a></li>
+      
+    </ul>
+  </div>
+</header>
+
+        
+          <br>
+          <br>
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Pwnable.kr - Flag
+    </h1>
+
+
+
+    <div class="meta"> 
+      
+    <div class="postdate">
+      
+        <time datetime="2023-11-11T23:00:00.000Z" itemprop="datePublished">12-11-2023</time>
+        
+      
+    </div>
+
+
+      — Written by 
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">hg8</span>
+      </span>
+      —
+      4 min read
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/282297542-4a536c54-7ff6-45ee-a8da-72bed96925a2.png" alt="flag"></p>
+<p>We continue our beginner series on Binary Exploitation with <a target="_blank" rel="noopener" href="http://pwnable.kr/">pwnable.kr</a> which appears to have a reasonable curve of difficulty making it ideal for learning.</p>
+<p>Let’s go for this 4rd challenge: flag.</p>
+<h2 id="Challenge-Description"><a href="#Challenge-Description" class="headerlink" title="Challenge Description"></a>Challenge Description</h2><blockquote>
+<p><strong>Flag</strong></p>
+<p>Papa brought me a packed present! let’s open it.</p>
+<p>Download : <a target="_blank" rel="noopener" href="http://pwnable.kr/bin/flag">http://pwnable.kr/bin/flag</a></p>
+<p>This is reversing task. all you need is binary</p>
+</blockquote>
+<h2 id="Test-amp-Analysis"><a href="#Test-amp-Analysis" class="headerlink" title="Test &amp; Analysis"></a>Test &amp; Analysis</h2><p>This time we can retrieve the binary but not its source code.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ wget [http://pwnable.kr/bin/flag](http://pwnable.kr/bin/flag)</span><br></pre></td></tr></table></figure>
+
+<p>The program doesn’t seem to take input:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ ./flag</span><br><span class="line">I will malloc() and strcpy the flag there. take it.</span><br><span class="line">[hg8@archbook ~]$ ./flag aaaaaaaaaaaaaaaaaaaa</span><br><span class="line">I will malloc() and strcpy the flag there. take it.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Malloc"><a href="#Malloc" class="headerlink" title="Malloc"></a>Malloc</h3><p>The binary output is taking about <code>malloc()</code>, what is that exactly ? Let’s take a look at the manual page:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ man malloc</span><br><span class="line">DESCRIPTION</span><br><span class="line">   malloc()</span><br><span class="line">       The  malloc()  <span class="keyword">function</span>  allocates  size bytes and returns a pointer to the allocated memory.  The memory is not initialized.  If size is 0, <span class="keyword">then</span> malloc() returns a unique pointer value that can later be successfully passed to free().  (See <span class="string">&quot;Nonportable behavior&quot;</span> <span class="keyword">for</span></span><br><span class="line">       portability issues.)</span><br></pre></td></tr></table></figure>
+
+<p>Malloc stands for “memory allocation”, it is to allocate memory dynamically during program execution. When you call <strong><code>malloc()</code></strong>, it reserves a block of memory of a specified size and returns a pointer to the first byte of this memory block. This memory is then typically used for creating dynamic data structures like arrays, linked lists, or other objects.</p>
+<h3 id="Binary-analysis"><a href="#Binary-analysis" class="headerlink" title="Binary analysis"></a>Binary analysis</h3><p>Since we don’t have the source code, let’s see what informations we can retrieve from the binary itself, running <code>file</code> indicate the </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ file flag</span><br><span class="line">flag: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, no section header</span><br></pre></td></tr></table></figure>
+
+<p>Bummer, <code>no section header</code> means that all the debugging info, code, data, symbols, and other metadata have been stripped out.</p>
+<p>Let’s now use <code>strings</code> to see if we can find some interesting strings in the binary:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ file flag</span><br><span class="line">[...]</span><br><span class="line">su`<span class="string">&quot;]R</span></span><br><span class="line"><span class="string">UPX!</span></span><br><span class="line"><span class="string">UPX!</span></span><br></pre></td></tr></table></figure>
+
+<p>UPX is a name I am familiar with, it stands for “Ultimate Packer for Executables”. It is a compression utility designed to compress and decompress executable files.</p>
+<p>This kind of tools are often referred as “packer”. It’s primarily used for reducing the size of executable files to save storage space and improve execution times, but it can also be employed for security-related tasks.</p>
+<p>A good news with UPX, is that under normal conditions, it’s quite easy to decompress a packed executable. Let’s give a try by downloading and executing UPX:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ upx -d flag</span><br><span class="line">                       Ultimate Packer <span class="keyword">for</span> eXecutables</span><br><span class="line">                          Copyright (C) 1996 - 2023</span><br><span class="line">UPX 4.2.0       Markus Oberhumer, Laszlo Molnar &amp; John Reiser   Oct 26th 2023</span><br><span class="line"></span><br><span class="line">        File size         Ratio      Format      Name</span><br><span class="line">   --------------------   ------   -----------   -----------</span><br><span class="line">    887219 &lt;-    335288   37.79%   linux/amd64   flag</span><br><span class="line"></span><br><span class="line">Unpacked 1 file.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dynamic-Analysis"><a href="#Dynamic-Analysis" class="headerlink" title="Dynamic Analysis"></a>Dynamic Analysis</h3><p>Now that we unpacked the binary, we can start with the usual dynamic analysis using <code>gdb</code> to understand what is happening the program is running.</p>
+<p>Let’s start by disassembling the <code>main()</code>:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gdb flag-unpacked</span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   <span class="number">0x0000000000401164</span> &lt;+<span class="number">0</span>&gt;:     <span class="keyword">push</span>   <span class="built_in">rbp</span></span><br><span class="line">   <span class="number">0x0000000000401165</span> &lt;+<span class="number">1</span>&gt;:     <span class="keyword">mov</span>    <span class="built_in">rbp</span>,<span class="built_in">rsp</span></span><br><span class="line">   <span class="number">0x0000000000401168</span> &lt;+<span class="number">4</span>&gt;:     <span class="keyword">sub</span>    <span class="built_in">rsp</span>,<span class="number">0x10</span></span><br><span class="line">   <span class="number">0x000000000040116c</span> &lt;+<span class="number">8</span>&gt;:     <span class="keyword">mov</span>    <span class="built_in">edi</span>,<span class="number">0x496658</span></span><br><span class="line">   <span class="number">0x0000000000401171</span> &lt;+<span class="number">13</span>&gt;:    <span class="keyword">call</span>   <span class="number">0x402080</span> &lt;puts&gt;</span><br><span class="line">   <span class="number">0x0000000000401176</span> &lt;+<span class="number">18</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">edi</span>,<span class="number">0x64</span></span><br><span class="line">   <span class="number">0x000000000040117b</span> &lt;+<span class="number">23</span>&gt;:    <span class="keyword">call</span>   <span class="number">0x4099d0</span> &lt;malloc&gt;</span><br><span class="line">   <span class="number">0x0000000000401180</span> &lt;+<span class="number">28</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">QWORD</span> <span class="built_in">PTR</span> [<span class="built_in">rbp</span>-<span class="number">0x8</span>],<span class="built_in">rax</span></span><br><span class="line">   <span class="number">0x0000000000401184</span> &lt;+<span class="number">32</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">rdx</span>,<span class="built_in">QWORD</span> <span class="built_in">PTR</span> [<span class="built_in">rip</span>+<span class="number">0x2c0ee5</span>]        # <span class="number">0x6c2070</span> &lt;flag&gt;</span><br><span class="line">   <span class="number">0x000000000040118b</span> &lt;+<span class="number">39</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">rax</span>,<span class="built_in">QWORD</span> <span class="built_in">PTR</span> [<span class="built_in">rbp</span>-<span class="number">0x8</span>]</span><br><span class="line">   <span class="number">0x000000000040118f</span> &lt;+<span class="number">43</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">rsi</span>,<span class="built_in">rdx</span></span><br><span class="line">   <span class="number">0x0000000000401192</span> &lt;+<span class="number">46</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">rdi</span>,<span class="built_in">rax</span></span><br><span class="line">   <span class="number">0x0000000000401195</span> &lt;+<span class="number">49</span>&gt;:    <span class="keyword">call</span>   <span class="number">0x400320</span></span><br><span class="line">   <span class="number">0x000000000040119a</span> &lt;+<span class="number">54</span>&gt;:    <span class="keyword">mov</span>    <span class="built_in">eax</span>,<span class="number">0x0</span></span><br><span class="line">   <span class="number">0x000000000040119f</span> &lt;+<span class="number">59</span>&gt;:    <span class="keyword">leave</span></span><br><span class="line">   <span class="number">0x00000000004011a0</span> &lt;+<span class="number">60</span>&gt;:    <span class="keyword">ret</span></span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
+
+<p>Seems like a comment is indicating a address of the flag: <code># 0x6c2070 &lt;flag&gt;</code></p>
+<p>Let’s print out the content of <code>0x6c2070</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; x/1s *0x6c2070</span><br><span class="line">0x496628:       <span class="string">&quot;UPX...? sounds like a delivery service :)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Bingo! We got our flag.</p>
+<p>Turn out that since there is obfuscations we could also have used <code>strings</code> again to retrieve the flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ strings ./flag-unpacked | grep <span class="string">&quot;delivery&quot;</span></span><br><span class="line">UPX...? sounds like a delivery service :)</span><br></pre></td></tr></table></figure>
+
+<h3 id="But-wait-what’s-the-link-with-Malloc"><a href="#But-wait-what’s-the-link-with-Malloc" class="headerlink" title="But wait, what’s the link with Malloc ?"></a>But wait, what’s the link with Malloc ?</h3><p>Let’s do a proper analysis. First let’s set a breakpoint in main:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hg8@archbook ~]$ gdb flag-unpacked</span><br><span class="line">pwndbg&gt; <span class="built_in">break</span> main</span><br><span class="line">Breakpoint 1 at 0x401168</span><br></pre></td></tr></table></figure>
+
+<p>Then run the program with <code>r</code> and run the binary step by step to see what’s happening in memory (<code>ni</code>). </p>
+<p>After a few steps we can see malloc being called with 0x64 as argument (<code>RDI</code>), that 100.</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280253789-52df00e1-b0f1-41f2-a6e7-01c89db5d9fb.png" alt="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280253789-52df00e1-b0f1-41f2-a6e7-01c89db5d9fb.png"></p>
+<p>And a few instruction further we can see the being send to the memory area reserved by malloc:</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280254580-5b11293b-e809-448a-ba87-5032b363f983.png" alt="https://github-production-user-asset-6210df.s3.amazonaws.com/9076747/280254580-5b11293b-e809-448a-ba87-5032b363f983.png"></p>
+<hr>
+<p>That’s it folks! I hope you enjoyed this series on Buffer Overflow.</p>
+<p>As always do not hesitate to contact me for any questions or feedback!</p>
+<p>See you next time ;)</p>
+<p>-hg8</p>
+
+  </div>
+</article>
+<br>
+<br>
+
+
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a> › <a class="category-link" href="/categories/CTF/pwnable/">pwnable</a> › <a class="category-link" href="/categories/CTF/pwnable/Toddler-s-Bottle/">Toddler's Bottle</a>
+    </div>
+
+
+
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/dynamic-analysis/" rel="tag">dynamic analysis</a>, <a class="tag-link-link" href="/tags/flag/" rel="tag">flag</a>, <a class="tag-link-link" href="/tags/pwn/" rel="tag">pwn</a>, <a class="tag-link-link" href="/tags/pwntools/" rel="tag">pwntools</a>, <a class="tag-link-link" href="/tags/re/" rel="tag">re</a>
+    </div>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Posts</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Test-amp-Analysis"><span class="toc-number">2.</span> <span class="toc-text">Test &amp; Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Malloc"><span class="toc-number">2.1.</span> <span class="toc-text">Malloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binary-analysis"><span class="toc-number">2.2.</span> <span class="toc-text">Binary analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dynamic-Analysis"><span class="toc-number">2.3.</span> <span class="toc-text">Dynamic Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#But-wait-what%E2%80%99s-the-link-with-Malloc"><span class="toc-number">2.4.</span> <span class="toc-text">But wait, what’s the link with Malloc ?</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    <a href="https://hg8.sh">hg8.sh</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Archives</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+</body>
+</html>
